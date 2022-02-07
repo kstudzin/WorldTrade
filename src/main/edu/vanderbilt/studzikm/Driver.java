@@ -20,17 +20,12 @@ public class Driver {
 			World world = CountryParser.createWorld(countryFile, resources);
 			System.out.println(world);
 
-			DefaultTransforms transforms = new DefaultTransforms(resources);
-
-			for (Country country : world) {
-				System.out.println(country);
-				boolean result = transforms.ALLOYS_TRANSFORM.transform(country);
-				if (result) {
-					System.out.println(country);
-				} else {
-					System.out.println("Transform failed ");
-				}
-			}
+			StateGenerator generator = new DefaultStateGenerator(resources);
+			Search search = new Search(generator, world);
+			World searchResult = search.search(world.getCountry("Atlantis"), 1000, 1);
+			
+			System.out.println("Found best state: " + searchResult);
+			
 
 		} catch (IOException e) {
 			System.out.printf("Could not parse resource file %s%n", resourceFile);

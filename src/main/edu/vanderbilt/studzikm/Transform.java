@@ -32,8 +32,10 @@ public class Transform {
 
 	// TODO: Add parameter to validate multiple transforms
 	private int validateInputs(Country country) {
+		System.out.println("Country: " + country);
 		return (int) input
 				.entrySet().stream()
+				.peek(System.out::println)
 				.filter(e -> country.getResource(e.getKey()) >= e.getValue())
 				.count();
 	}

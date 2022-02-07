@@ -7,10 +7,12 @@ import java.util.Map;
 public class Country {
 
 	private String name;
+	private UtilityComputation utilComp;
 	private Map<Resource, Integer> resources = new HashMap<>();
 	
-	public Country(String name) {
+	public Country(String name, UtilityComputation utilityComp) {
 		this.name = name;
+		this.utilComp = utilityComp;
 	}
 
 	public String getName() {
@@ -45,6 +47,10 @@ public class Country {
 		.orElse(null);
 		
 		updateResouce(resource, delta);
+	}
+	
+	public double computeUtility(World world) {
+		return utilComp.compute(world, this);
 	}
 
 	@Override

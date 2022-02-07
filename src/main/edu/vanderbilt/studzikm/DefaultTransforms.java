@@ -1,5 +1,7 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 public class DefaultTransforms {
@@ -7,6 +9,8 @@ public class DefaultTransforms {
 	public final Transform HOUSING_TRANSFORM;
 	public final Transform ALLOYS_TRANSFORM;
 	public final Transform ELECTRONICS_TRANSFORM;
+	
+	public final Collection<Transform> ALL_TRANSFORMS;
 	
 	DefaultTransforms(Map<String, Resource> resources) {
 		HOUSING_TRANSFORM = new TransformBuilder()
@@ -35,5 +39,7 @@ public class DefaultTransforms {
 				.addOutput(resources.get("R22"), 2)
 				.addOutput(resources.get("R22'"), 1)
 				.build();
+
+		ALL_TRANSFORMS = Arrays.asList(HOUSING_TRANSFORM, ALLOYS_TRANSFORM, ELECTRONICS_TRANSFORM);
 	}
 }

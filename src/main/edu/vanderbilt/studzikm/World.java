@@ -14,8 +14,7 @@ public class World implements Iterable<Country> {
 	
 	public Country getCountry(String countryName) {
 		return countries.get(countryName);
-	}
-
+	}	
 
 	@Override
 	public int hashCode() {

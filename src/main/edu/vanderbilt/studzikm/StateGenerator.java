@@ -1,7 +1,9 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Map;
+
 public interface StateGenerator {
 
-	World generateStates(World initialState, Country self);
+	Map<World, Transform> generateStates(World initialState, Country self);
 
 }
