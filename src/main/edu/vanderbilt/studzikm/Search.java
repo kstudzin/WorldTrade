@@ -1,5 +1,6 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,10 +14,10 @@ public class Search {
 	public Search(StateGenerator stateGenerator,
 			World initState) {
 		this.stateGenerator = stateGenerator;
-		frontier.addFirst(new SearchNode(initState, null, null));
+		frontier.addFirst(new SearchNode(initState));
 	}
 
-	public World search(Country country, double threshold, int maxDepth) {
+	public List<Transform> search(Country country, double threshold, int maxDepth) {
 
 		int depth = 0;
 
@@ -28,10 +29,11 @@ public class Search {
 					.sorted((x, y) -> (int)(country.computeUtility(x.getKey()) - country.computeUtility(y.getKey())))
 					.map(e -> new SearchNode(e.getKey(), n, e.getValue()))
 					.collect(Collectors.toList());
-			
-			World maxUtility = next.get(0).getState();
-			if (Double.compare(threshold, country.computeUtility(maxUtility)) <= 0 || depth > maxDepth) {
-				return maxUtility;
+			depth++;
+
+			SearchNode maxUtility = next.get(0);
+			if (Double.compare(threshold, country.computeUtility(maxUtility.getState())) <= 0 || depth >= maxDepth) {
+				return retrieveActions(maxUtility);
 			}
 
 			next.stream()
@@ -40,8 +42,20 @@ public class Search {
 				frontier.addFirst(node);
 				}
 			);
+
 		}
 
 		return null;
+	}
+
+	private List<Transform> retrieveActions(SearchNode maxUtility) {
+
+		SearchNode parent = maxUtility.getParent();
+		List<Transform> actions = new ArrayList<>();
+		while (parent != null) {
+			actions.add(parent.getAction());
+			parent = parent.getParent();
+		}
+		return actions;
 	}
 }

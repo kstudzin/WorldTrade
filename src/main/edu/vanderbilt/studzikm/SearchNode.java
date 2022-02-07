@@ -12,9 +12,17 @@ public class SearchNode {
 	private Transform action;
 
 	public SearchNode(World current, SearchNode parent, Transform action) {
+		if (parent == null) throw new NullPointerException("If parent is null use SearchNode(World) constructor");
+		if (action == null) throw new NullPointerException("If action is null use SearchNode(World) constructor");
+
 		this.state = current;
 		this.parent = parent;
-		this.action = action;
+		this.parent.setAction(action);
+	}
+
+
+	public SearchNode(World current) {
+		this.state = current;
 	}
 
 
@@ -32,6 +40,9 @@ public class SearchNode {
 		return action;
 	}
 
+	public void setAction(Transform action) {
+		this.action = action;
+	}
 
 	public Set<SearchNode> getChildren() {
 		return Collections.unmodifiableSet(children);

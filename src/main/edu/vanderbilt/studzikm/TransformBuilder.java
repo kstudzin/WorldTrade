@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class TransformBuilder {
 
+	private String name;
 	private Map<Resource, Integer> input = new HashMap<>();
 	private Map<Resource, Integer> output = new HashMap<>();
 
@@ -18,7 +19,12 @@ public class TransformBuilder {
 		return this;
 	}
 
+	public TransformBuilder name(String name) {
+		this.name = name;
+		return this;
+	}
+
 	public Transform build() {
-		return new Transform(input, output);
+		return new Transform(input, output, name);
 	}
 }

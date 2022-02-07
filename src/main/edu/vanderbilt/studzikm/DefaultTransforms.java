@@ -14,6 +14,7 @@ public class DefaultTransforms {
 
 	DefaultTransforms(Map<String, Resource> resources) {
 		HOUSING_TRANSFORM = new TransformBuilder()
+				.name("housing")
 				.addInput(resources.get("R1"), 5)
 				.addInput(resources.get("R2"), 1)
 				.addInput(resources.get("R3"), 5)
@@ -24,6 +25,7 @@ public class DefaultTransforms {
 				.build();
 
 		ALLOYS_TRANSFORM = new TransformBuilder()
+				.name("alloys")
 				.addInput(resources.get("R1"), 1)
 				.addInput(resources.get("R2"), 2)
 				.addOutput(resources.get("R1"), 1)
@@ -32,6 +34,7 @@ public class DefaultTransforms {
 				.build();
 
 		ELECTRONICS_TRANSFORM = new TransformBuilder()
+				.name("electronics")
 				.addInput(resources.get("R1"), 1)
 				.addInput(resources.get("R2"), 3)
 				.addInput(resources.get("R21"), 2)

@@ -6,10 +6,12 @@ import java.util.Map.Entry;
 
 public class Transform {
 
+	private String name;
 	private Map<Resource, Integer> input = new HashMap<>();
 	private Map<Resource, Integer> output = new HashMap<>();
 	
-	public Transform(Map<Resource, Integer> input, Map<Resource, Integer> output) {
+	public Transform(Map<Resource, Integer> input, Map<Resource, Integer> output, String name) {
+		this.name = name;
 		this.input = input;
 		this.output = output;
 	}
@@ -28,6 +30,11 @@ public class Transform {
 		 }
 
 		 return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Transform [name=" + name + "]";
 	}
 
 	// TODO: Add parameter to validate multiple transforms
