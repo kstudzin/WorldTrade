@@ -9,9 +9,9 @@ public class DefaultTransforms {
 	public final Transform HOUSING_TRANSFORM;
 	public final Transform ALLOYS_TRANSFORM;
 	public final Transform ELECTRONICS_TRANSFORM;
-	
+
 	public final Collection<Transform> ALL_TRANSFORMS;
-	
+
 	DefaultTransforms(Map<String, Resource> resources) {
 		HOUSING_TRANSFORM = new TransformBuilder()
 				.addInput(resources.get("R1"), 5)
@@ -22,7 +22,7 @@ public class DefaultTransforms {
 				.addOutput(resources.get("R23'"), 1)
 				.addOutput(resources.get("R1"), 5)
 				.build();
-		
+
 		ALLOYS_TRANSFORM = new TransformBuilder()
 				.addInput(resources.get("R1"), 1)
 				.addInput(resources.get("R2"), 2)
@@ -30,7 +30,7 @@ public class DefaultTransforms {
 				.addOutput(resources.get("R21"), 1)
 				.addOutput(resources.get("R21'"), 1)
 				.build();
-		
+
 		ELECTRONICS_TRANSFORM = new TransformBuilder()
 				.addInput(resources.get("R1"), 1)
 				.addInput(resources.get("R2"), 3)

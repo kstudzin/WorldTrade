@@ -10,14 +10,14 @@ public class SearchNode {
 	private SearchNode parent;
 	private Set<SearchNode> children = new HashSet<>();
 	private Transform action;
-	
+
 	public SearchNode(World current, SearchNode parent, Transform action) {
 		this.state = current;
 		this.parent = parent;
 		this.action = action;
 	}
-	
-	
+
+
 	public World getState() {
 		return state;
 	}

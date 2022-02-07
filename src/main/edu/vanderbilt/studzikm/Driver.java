@@ -23,9 +23,8 @@ public class Driver {
 			StateGenerator generator = new DefaultStateGenerator(resources);
 			Search search = new Search(generator, world);
 			World searchResult = search.search(world.getCountry("Atlantis"), 1000, 1);
-			
+
 			System.out.println("Found best state: " + searchResult);
-			
 
 		} catch (IOException e) {
 			System.out.printf("Could not parse resource file %s%n", resourceFile);

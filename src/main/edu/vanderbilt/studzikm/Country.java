@@ -9,7 +9,7 @@ public class Country {
 	private String name;
 	private UtilityComputation utilComp;
 	private Map<Resource, Integer> resources = new HashMap<>();
-	
+
 	public Country(String name, UtilityComputation utilityComp) {
 		this.name = name;
 		this.utilComp = utilityComp;
@@ -38,7 +38,7 @@ public class Country {
 	public void updateResouce(Resource resource, Integer delta) {
 		resources.computeIfPresent(resource, (key, val) -> val + delta);
 	}
-	
+
 	public void updateResouce(String resourceName, Integer delta) {
 		Resource resource = resources.keySet()
 		.stream()
@@ -48,7 +48,7 @@ public class Country {
 		
 		updateResouce(resource, delta);
 	}
-	
+
 	public double computeUtility(World world) {
 		return utilComp.compute(world, this);
 	}

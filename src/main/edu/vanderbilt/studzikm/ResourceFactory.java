@@ -14,10 +14,10 @@ public class ResourceFactory {
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(resourcesFile))) {
 			String line = reader.readLine(); // Skip header
-	
+
 			while ((line = reader.readLine()) != null) {
 				String[] values = line.split(",");
-	
+
 				String name = values[0];
 				Double weight = Double.valueOf(values[1]);
 				resources.put(name, new Resource(name, weight));

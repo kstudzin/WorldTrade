@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Search {
-	
+
 	private StateGenerator stateGenerator;
 	private Deque<SearchNode> frontier = new LinkedList<>();
-	
+
 	public Search(StateGenerator stateGenerator,
 			World initState) {
 		this.stateGenerator = stateGenerator;
@@ -17,7 +17,7 @@ public class Search {
 	}
 
 	public World search(Country country, double threshold, int maxDepth) {
-		
+
 		int depth = 0;
 
 		while (!frontier.isEmpty()) {
@@ -41,7 +41,7 @@ public class Search {
 				}
 			);
 		}
-		
+
 		return null;
 	}
 }

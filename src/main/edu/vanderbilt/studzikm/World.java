@@ -11,7 +11,7 @@ public class World implements Iterable<Country> {
 	public void addCountry(Country country) {
 		countries.put(country.getName(), country);
 	}
-	
+
 	public Country getCountry(String countryName) {
 		return countries.get(countryName);
 	}	
