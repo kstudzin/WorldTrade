@@ -6,10 +6,10 @@ import java.util.Map.Entry;
 
 public class Transform {
 
-	private Map<String, Integer> input = new HashMap<>();
-	private Map<String, Integer> output = new HashMap<>();
+	private Map<Resource, Integer> input = new HashMap<>();
+	private Map<Resource, Integer> output = new HashMap<>();
 	
-	public Transform(Map<String, Integer> input, Map<String, Integer> output) {
+	public Transform(Map<Resource, Integer> input, Map<Resource, Integer> output) {
 		this.input = input;
 		this.output = output;
 	}
@@ -19,11 +19,11 @@ public class Transform {
 			 return false;
 		 }
 		 
-		 for (Entry<String, Integer> resource : input.entrySet()) {
+		 for (Entry<Resource, Integer> resource : input.entrySet()) {
 			 country.updateResouce(resource.getKey(), resource.getValue() * -1);
 		 }
 		 
-		 for (Entry<String, Integer> resource : output.entrySet()) {
+		 for (Entry<Resource, Integer> resource : output.entrySet()) {
 			 country.updateResouce(resource.getKey(), resource.getValue());
 		 }
 
@@ -32,10 +32,9 @@ public class Transform {
 
 	// TODO: Add parameter to validate multiple transforms
 	private int validateInputs(Country country) {
-		return (int) country.getResources()
+		return (int) input
 				.entrySet().stream()
-				.filter(e -> input.containsKey(e.getKey().getName()) && 
-						e.getValue() >= input.get(e.getKey().getName()))
+				.filter(e -> country.getResource(e.getKey()) >= e.getValue())
 				.count();
 	}
 }

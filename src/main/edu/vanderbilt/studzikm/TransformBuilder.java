@@ -5,16 +5,16 @@ import java.util.Map;
 
 public class TransformBuilder {
 
-	private Map<String, Integer> input = new HashMap<>();
-	private Map<String, Integer> output = new HashMap<>();
+	private Map<Resource, Integer> input = new HashMap<>();
+	private Map<Resource, Integer> output = new HashMap<>();
 
-	public TransformBuilder addInput(String resourceName, Integer requiredAmount) {
-		input.put(resourceName, requiredAmount);
+	public TransformBuilder addInput(Resource resource, Integer requiredAmount) {
+		input.put(resource, requiredAmount);
 		return this;
 	}
 	
-	public TransformBuilder addOutput(String resourcename, Integer requiredAmount) {
-		output.put(resourcename, requiredAmount);
+	public TransformBuilder addOutput(Resource resource, Integer requiredAmount) {
+		output.put(resource, requiredAmount);
 		return this;
 	}
 	

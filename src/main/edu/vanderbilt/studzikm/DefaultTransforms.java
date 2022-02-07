@@ -1,37 +1,39 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Map;
+
 public class DefaultTransforms {
 
-	public static final Transform HOUSING_TRANSFORM;
-	public static final Transform ALLOYS_TRANSFORM;
-	public static final Transform ELECTRONICS_TRANSFORM;
+	public final Transform HOUSING_TRANSFORM;
+	public final Transform ALLOYS_TRANSFORM;
+	public final Transform ELECTRONICS_TRANSFORM;
 	
-	static {
+	DefaultTransforms(Map<String, Resource> resources) {
 		HOUSING_TRANSFORM = new TransformBuilder()
-				.addInput("population", 5)
-				.addInput("metallic_elements", 1)
-				.addInput("timber", 5)
-				.addInput("metallic_alloys", 3)
-				.addOutput("housing", 1)
-				.addOutput("housing_waste", 1)
-				.addOutput("population", 5)
+				.addInput(resources.get("R1"), 5)
+				.addInput(resources.get("R2"), 1)
+				.addInput(resources.get("R3"), 5)
+				.addInput(resources.get("R21"), 3)
+				.addOutput(resources.get("R23"), 1)
+				.addOutput(resources.get("R23'"), 1)
+				.addOutput(resources.get("R1"), 5)
 				.build();
 		
 		ALLOYS_TRANSFORM = new TransformBuilder()
-				.addInput("population", 1)
-				.addInput("metallic_elements", 2)
-				.addOutput("population", 1)
-				.addOutput("metallic_alloys", 1)
-				.addOutput("metallic_alloys_waste", 1)
+				.addInput(resources.get("R1"), 1)
+				.addInput(resources.get("R2"), 2)
+				.addOutput(resources.get("R1"), 1)
+				.addOutput(resources.get("R21"), 1)
+				.addOutput(resources.get("R21'"), 1)
 				.build();
 		
 		ELECTRONICS_TRANSFORM = new TransformBuilder()
-				.addInput("population", 1)
-				.addInput("metallic_elements", 3)
-				.addInput("metallic_alloys", 2)
-				.addOutput("population", 1)
-				.addOutput("electronics", 2)
-				.addOutput("electronics_waste", 1)
+				.addInput(resources.get("R1"), 1)
+				.addInput(resources.get("R2"), 3)
+				.addInput(resources.get("R21"), 2)
+				.addOutput(resources.get("R1"), 1)
+				.addOutput(resources.get("R22"), 2)
+				.addOutput(resources.get("R22'"), 1)
 				.build();
 	}
 }

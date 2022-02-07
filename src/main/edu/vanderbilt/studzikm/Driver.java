@@ -20,13 +20,15 @@ public class Driver {
 			World world = CountryParser.createWorld(countryFile, resources);
 			System.out.println(world);
 
+			DefaultTransforms transforms = new DefaultTransforms(resources);
+
 			for (Country country : world) {
 				System.out.println(country);
-				boolean result = DefaultTransforms.HOUSING_TRANSFORM.transform(country);
+				boolean result = transforms.ALLOYS_TRANSFORM.transform(country);
 				if (result) {
 					System.out.println(country);
 				} else {
-					
+					System.out.println("Transform failed ");
 				}
 			}
 
