@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class Transform {
+public class Transform implements Action{
 
 	private String name;
 	private Map<Resource, Integer> input = new HashMap<>();

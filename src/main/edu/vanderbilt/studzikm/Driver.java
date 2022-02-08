@@ -21,11 +21,13 @@ public class Driver {
 			World world = CountryParser.createWorld(countryFile, resources);
 			System.out.println(world);
 
-			StateGenerator generator = new DefaultStateGenerator(resources);
+			Double[] allowedTradePercent = {0.5, 1.0};
+			TransferFactory transferFactory = new DefaultTransfers(resources, allowedTradePercent);
+			StateGenerator generator = new DefaultStateGenerator(resources, transferFactory);
 			Search search = new Search(generator, world);
 
 			System.out.println("Before: " + world.getCountry("Atlantis"));
-			List<Transform> searchResult = search.search(world.getCountry("Atlantis"), 1000, 100);
+			List<Action> searchResult = search.search(world.getCountry("Atlantis"), 1000, 1);
 			System.out.println("After:  " + world.getCountry("Atlantis"));
 
 			System.out.println("Found best state: " + searchResult);

@@ -17,7 +17,7 @@ public class Search {
 		frontier.addFirst(new SearchNode(initState));
 	}
 
-	public List<Transform> search(Country country, double threshold, int maxDepth) {
+	public List<Action> search(Country country, double threshold, int maxDepth) {
 
 		int depth = 0;
 
@@ -48,10 +48,10 @@ public class Search {
 		return null;
 	}
 
-	private List<Transform> retrieveActions(SearchNode maxUtility) {
+	private List<Action> retrieveActions(SearchNode maxUtility) {
 
 		SearchNode parent = maxUtility.getParent();
-		List<Transform> actions = new ArrayList<>();
+		List<Action> actions = new ArrayList<>();
 		while (parent != null) {
 			actions.add(parent.getAction());
 			parent = parent.getParent();

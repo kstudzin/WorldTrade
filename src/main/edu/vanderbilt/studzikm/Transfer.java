@@ -1,7 +1,7 @@
 package edu.vanderbilt.studzikm;
 
 
-public class Transfer {
+public class Transfer implements Action{
 
 	private Resource resource;
 	private Double percent;
@@ -19,5 +19,14 @@ public class Transfer {
 		receiver.updateResource(resource, tradeQuantity);
 
 		return true;
+	}
+
+	public Resource getResource() {
+		return resource;
+	}
+
+	@Override
+	public String toString() {
+		return "Transfer [resource=" + resource + ", percent=" + percent + "]";
 	}
 }

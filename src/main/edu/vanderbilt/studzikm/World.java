@@ -3,6 +3,7 @@ package edu.vanderbilt.studzikm;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class World implements Iterable<Country> {
 	private Map<String, Country> countries = new HashMap<>();
@@ -21,7 +22,11 @@ public class World implements Iterable<Country> {
 
 	public Country getCountry(String countryName) {
 		return countries.get(countryName);
-	}	
+	}
+
+	public Stream<Country> stream() {
+		return countries.values().stream();
+	}
 
 	@Override
 	public int hashCode() {

@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface StateGenerator {
 
-	Map<World, Transform> generateStates(World initialState, Country self);
+	Map<World, Action> generateStates(World initialState, Country self);
 
 }

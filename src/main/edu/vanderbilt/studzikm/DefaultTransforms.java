@@ -12,7 +12,7 @@ public class DefaultTransforms {
 
 	public final Collection<Transform> ALL_TRANSFORMS;
 
-	DefaultTransforms(Map<String, Resource> resources) {
+	public DefaultTransforms(Map<String, Resource> resources) {
 		HOUSING_TRANSFORM = new TransformBuilder()
 				.name("housing")
 				.addInput(resources.get("R1"), 5)

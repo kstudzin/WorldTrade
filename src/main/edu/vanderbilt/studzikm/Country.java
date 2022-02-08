@@ -34,7 +34,7 @@ public class Country {
 	}
 
 	public Integer getResource(Resource resource) {
-		return resources.get(resource);
+		return resources.getOrDefault(resource, 0);
 	}
 
 	public void addResource(Resource resource, Integer amount) {
