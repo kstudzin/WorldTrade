@@ -22,11 +22,11 @@ public class Transform {
 		 }
 		 
 		 for (Entry<Resource, Integer> resource : input.entrySet()) {
-			 country.updateResouce(resource.getKey(), resource.getValue() * -1);
+			 country.updateResource(resource.getKey(), resource.getValue() * -1);
 		 }
 		 
 		 for (Entry<Resource, Integer> resource : output.entrySet()) {
-			 country.updateResouce(resource.getKey(), resource.getValue());
+			 country.updateResource(resource.getKey(), resource.getValue());
 		 }
 
 		 return true;

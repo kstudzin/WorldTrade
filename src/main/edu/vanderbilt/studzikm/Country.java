@@ -41,18 +41,18 @@ public class Country {
 		resources.put(resource, amount);
 	}
 
-	public void updateResouce(Resource resource, Integer delta) {
+	public void updateResource(Resource resource, Integer delta) {
 		resources.computeIfPresent(resource, (key, val) -> val + delta);
 	}
 
-	public void updateResouce(String resourceName, Integer delta) {
+	public void updateResource(String resourceName, Integer delta) {
 		Resource resource = resources.keySet()
 		.stream()
 		.filter(k -> k.getName() == resourceName)
 		.findFirst()
 		.orElse(null);
 		
-		updateResouce(resource, delta);
+		updateResource(resource, delta);
 	}
 
 	public double computeUtility(World world) {
