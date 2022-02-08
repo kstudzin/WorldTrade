@@ -24,10 +24,9 @@ public class Search {
 		while (!frontier.isEmpty()) {
 			SearchNode n = frontier.removeFirst();
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country)
-					.entrySet() // Entry includes World and Transform
 					.stream()
-					.sorted((x, y) -> (int)(country.computeUtility(x.getKey()) - country.computeUtility(y.getKey())))
-					.map(e -> new SearchNode(e.getKey(), n, e.getValue()))
+					.sorted((x, y) -> (int)(x.getUtility() - y.getUtility()))
+					.map(e -> new SearchNode(e.getWorld(), n, e.getAction()))
 					.collect(Collectors.toList());
 			depth++;
 
