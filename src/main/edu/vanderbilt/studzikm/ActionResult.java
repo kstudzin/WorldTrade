@@ -1,13 +1,13 @@
 package edu.vanderbilt.studzikm;
 
-public class ActionResult {
+public class ActionResult<T extends Action> {
 
-	private World world;
-	private Action transform;
-	private Country performer;
-	private Double utility;
+	protected World world;
+	protected T transform;
+	protected Country performer;
+	protected Double utility;
 
-	public ActionResult(World world, Action transform, Country performer) {
+	public ActionResult(World world, T transform, Country performer) {
 		this.world = world;
 		this.transform = transform;
 		this.performer = performer;
@@ -18,11 +18,17 @@ public class ActionResult {
 		return world;
 	}
 
-	public Action getAction() {
+	public T getAction() {
 		return transform;
 	}
 
 	public Double getUtility() {
 		return utility;
+	}
+
+	@Override
+	public String toString() {
+		return "ActionResult [world=" + world + ", transform=" + transform + ", performer=" + performer.getName() + ", utility="
+				+ utility + "]";
 	}
 }

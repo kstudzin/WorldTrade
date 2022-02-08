@@ -15,10 +15,10 @@ public class DefaultStateGenerator implements StateGenerator {
 		this.transfers = transferFactory.getTransfers();
 	}
 
-	public Collection<ActionResult> generateStates(World initialState, Country self) {
+	public <T extends Action> Collection<ActionResult<? extends Action>> generateStates(World initialState, Country self) {
 
 
-		Collection<ActionResult> result = new HashSet<>();
+		Collection<ActionResult<? extends Action>> result = new HashSet<>();
 
 		result.addAll(generateTransformations(initialState, self));
 		result.addAll(generateTransferAsSender(initialState, self));
@@ -26,14 +26,14 @@ public class DefaultStateGenerator implements StateGenerator {
 		return result;
 	}
 
-	private Collection<ActionResult> generateTransferAsSender(World initialState, Country self) {
+	private Collection<ActionResult<Transfer>> generateTransferAsSender(World initialState, Country self) {
 		return transfers.stream()
 		.filter(t -> self.getResource(t.getResource()) > 0)
 		.flatMap(transfer -> performTransfer(transfer, initialState, self).stream())
 		.collect(Collectors.toSet());
 	}
 
-	private Collection<ActionResult> generateTransformations(World initialState, Country self) {
+	private Collection<ActionResult<Transform>> generateTransformations(World initialState, Country self) {
 
 		return transforms.ALL_TRANSFORMS.stream()
 		.map(transform -> performTransformation(transform, new World(initialState), new Country(self)))
@@ -41,23 +41,23 @@ public class DefaultStateGenerator implements StateGenerator {
 
 	}
 
-	private Collection<ActionResult> performTransfer(Transfer transfer, World world, Country sender) {
+	private Collection<ActionResult<Transfer>> performTransfer(Transfer transfer, World world, Country sender) {
 		return world.stream()
 		.map(orig -> performTransfer(transfer, new World(world), new Country(orig), new Country(sender)))
 		.collect(Collectors.toSet());
 	}
 	
-	private ActionResult performTransfer(Transfer transfer, World world, Country reciever, Country sender) {
+	private ActionResult<Transfer> performTransfer(Transfer transfer, World world, Country reciever, Country sender) {
 		transfer.trade(sender, reciever);
 		world.addCountry(sender);
 		world.addCountry(reciever);
-		return new ActionResult(world, transfer, sender);
+		return new TransferResult(world, transfer, sender, reciever);
 	}
 
-	private ActionResult performTransformation(Transform transform, World world, Country country){
+	private ActionResult<Transform> performTransformation(Transform transform, World world, Country country){
 		transform.transform(country);
 		world.addCountry(country);
-		return new ActionResult (world, transform, country);
+		return new ActionResult<>(world, transform, country);
 	}
 
 }
