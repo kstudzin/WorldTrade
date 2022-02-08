@@ -7,6 +7,13 @@ import java.util.Map;
 public class World implements Iterable<Country> {
 	private Map<String, Country> countries = new HashMap<>();
 
+	public World() {
+		// Ensure default constructor in addition to copy
+	}
+
+	public World(World copy) {
+		this.countries.putAll(copy.countries);
+	}
 
 	public void addCountry(Country country) {
 		countries.put(country.getName(), country);

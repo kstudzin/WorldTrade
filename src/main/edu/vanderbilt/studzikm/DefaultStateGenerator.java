@@ -16,8 +16,10 @@ public class DefaultStateGenerator implements StateGenerator {
 
 		Map<World, Transform> result = new HashMap<>();
 		for (Transform transform : transforms.ALL_TRANSFORMS) {
-			transform.transform(self);
-			initialState.addCountry(self);
+			Country countryCopy = new Country(self);
+			transform.transform(countryCopy);
+			World newState = new World(initialState);
+			newState.addCountry(countryCopy);
 			result.put(initialState, transform);
 		}
 

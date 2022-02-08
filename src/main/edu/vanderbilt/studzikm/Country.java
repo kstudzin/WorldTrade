@@ -15,6 +15,12 @@ public class Country {
 		this.utilComp = utilityComp;
 	}
 
+	public Country(Country copy) {
+		this.name = copy.name;
+		this.utilComp = copy.utilComp;
+		this.resources.putAll(copy.resources);
+	}
+
 	public String getName() {
 		return name;
 	}
