@@ -25,7 +25,7 @@ public class Search {
 			SearchNode n = frontier.removeFirst();
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country)
 					.stream()
-					.sorted((x, y) -> (int)(x.getUtility() - y.getUtility()))
+					.sorted((x, y) -> y.getUtility().compareTo(x.getUtility()))
 					.map(e -> new SearchNode(e.getWorld(), n, e))
 					.collect(Collectors.toList());
 			depth++;
