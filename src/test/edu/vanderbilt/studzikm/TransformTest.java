@@ -2,7 +2,6 @@ package edu.vanderbilt.studzikm;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ class TransformTest {
 	}
 
 	@Test
-	void test() {
+	void testHousingTransform() {
 		Country country = new Country("TestCountry", new DefaultUtilityComputation());
 		country.addResource(r1, 10);
 		country.addResource(r2, 5);
