@@ -20,11 +20,11 @@ public class Transform implements Action{
 		 if (validateInputs(country) != input.size()) {
 			 return false;
 		 }
-		 
+
 		 for (Entry<Resource, Integer> resource : input.entrySet()) {
 			 country.updateResource(resource.getKey(), resource.getValue() * -1);
 		 }
-		 
+
 		 for (Entry<Resource, Integer> resource : output.entrySet()) {
 			 country.updateResource(resource.getKey(), resource.getValue());
 		 }
