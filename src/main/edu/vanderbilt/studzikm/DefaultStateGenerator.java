@@ -43,6 +43,7 @@ public class DefaultStateGenerator implements StateGenerator {
 
 	private Collection<ActionResult<Transfer>> performTransfer(Transfer transfer, World world, Country sender) {
 		return world.stream()
+		.filter(reciever -> reciever != sender)
 		.map(orig -> performTransfer(transfer, new World(world), new Country(orig), new Country(sender)))
 		.collect(Collectors.toSet());
 	}
