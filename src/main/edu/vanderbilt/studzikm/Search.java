@@ -35,8 +35,7 @@ public class Search {
 				return retrieveActions(maxUtility);
 			}
 
-			next.stream()
-			.forEach(node -> {
+			next.forEach(node -> {
 				n.addChild(node); 
 				frontier.addFirst(node);
 				}
