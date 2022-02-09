@@ -42,7 +42,7 @@ public class Country {
 	}
 
 	public void updateResource(Resource resource, Integer delta) {
-		resources.computeIfPresent(resource, (key, val) -> val + delta);
+		resources.compute(resource, (key, val) -> val == null ? delta : val + delta);
 	}
 
 	public void updateResource(String resourceName, Integer delta) {
