@@ -52,4 +52,21 @@ class TransformTest {
 		assertEquals(1, country.getResource(r23p));
 	}
 
+	@Test
+	void testElectronicsTransform() {
+		Country country = new Country("TestCountry", new DefaultUtilityComputation());
+		country.addResource(r1, 10);
+		country.addResource(r2, 6);
+		country.addResource(r21, 4);
+
+		boolean result = transforms.ELECTRONICS_TRANSFORM.transform(country);
+
+		assertTrue(result);
+		assertEquals(10, country.getResource(r1));
+		assertEquals(3, country.getResource(r2));
+		assertEquals(2, country.getResource(r21));
+		assertEquals(2, country.getResource(r22));
+		assertEquals(1, country.getResource(r22p));
+	}
+
 }
