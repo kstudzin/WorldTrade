@@ -37,6 +37,7 @@ public class DefaultStateGenerator implements StateGenerator {
 
 		return transforms.ALL_TRANSFORMS.stream()
 		.map(transform -> performTransformation(transform, new World(initialState), new Country(self)))
+		.filter(ar -> ar != null)
 		.collect(Collectors.toSet());
 
 	}
@@ -45,18 +46,27 @@ public class DefaultStateGenerator implements StateGenerator {
 		return world.stream()
 		.filter(reciever -> reciever != sender)
 		.map(orig -> performTransfer(transfer, new World(world), new Country(orig), new Country(sender)))
+		.filter(ar -> ar != null)
 		.collect(Collectors.toSet());
 	}
 	
 	private ActionResult<Transfer> performTransfer(Transfer transfer, World world, Country reciever, Country sender) {
-		transfer.trade(sender, reciever);
+		boolean success = transfer.trade(sender, reciever);
+		if (!success) {
+			return null;
+		}
+
 		world.addCountry(sender);
 		world.addCountry(reciever);
 		return new TransferResult(world, transfer, sender, reciever);
 	}
 
 	private ActionResult<Transform> performTransformation(Transform transform, World world, Country country){
-		transform.transform(country);
+		boolean success = transform.transform(country);
+		if (!success) {
+			return null;
+		}
+
 		world.addCountry(country);
 		return new ActionResult<>(world, transform, country);
 	}
