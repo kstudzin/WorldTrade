@@ -17,7 +17,7 @@ public class Search {
 		frontier.addFirst(new SearchNode(initState));
 	}
 
-	public List<Action> search(Country country, double threshold, int maxDepth) {
+	public List<ActionResult<? extends Action>> search(Country country, double threshold, int maxDepth) {
 
 		int depth = 0;
 
@@ -26,7 +26,7 @@ public class Search {
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country)
 					.stream()
 					.sorted((x, y) -> (int)(x.getUtility() - y.getUtility()))
-					.map(e -> new SearchNode(e.getWorld(), n, e.getAction()))
+					.map(e -> new SearchNode(e.getWorld(), n, e))
 					.collect(Collectors.toList());
 			depth++;
 
@@ -47,10 +47,10 @@ public class Search {
 		return null;
 	}
 
-	private List<Action> retrieveActions(SearchNode maxUtility) {
+	private List<ActionResult<? extends Action>> retrieveActions(SearchNode maxUtility) {
 
 		SearchNode parent = maxUtility.getParent();
-		List<Action> actions = new ArrayList<>();
+		List<ActionResult<?>> actions = new ArrayList<>();
 		while (parent != null) {
 			actions.add(parent.getAction());
 			parent = parent.getParent();

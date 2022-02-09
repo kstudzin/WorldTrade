@@ -9,9 +9,9 @@ public class SearchNode {
 	private World state;
 	private SearchNode parent;
 	private Set<SearchNode> children = new HashSet<>();
-	private Action action;
+	private ActionResult<?> action;
 
-	public SearchNode(World current, SearchNode parent, Action action) {
+	public SearchNode(World current, SearchNode parent, ActionResult<?> action) {
 		if (parent == null) throw new NullPointerException("If parent is null use SearchNode(World) constructor");
 		if (action == null) throw new NullPointerException("If action is null use SearchNode(World) constructor");
 
@@ -36,11 +36,11 @@ public class SearchNode {
 	}
 
 
-	public Action getAction() {
+	public ActionResult<?> getAction() {
 		return action;
 	}
 
-	public void setAction(Action action) {
+	public void setAction(ActionResult<?> action) {
 		this.action = action;
 	}
 

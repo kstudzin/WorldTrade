@@ -28,7 +28,7 @@ public class ActionResult<T extends Action> {
 
 	@Override
 	public String toString() {
-		return "ActionResult [world=" + world + ", transform=" + transform + ", performer=" + performer.getName() + ", utility="
-				+ utility + "]";
+		return "ActionResult [transform=" + transform + ", performer=" + performer.getName() + ", utility="
+				+ utility + ", world=" + world + "]";
 	}
 }
