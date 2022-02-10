@@ -3,6 +3,7 @@ package edu.vanderbilt.studzikm;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class World implements Iterable<Country> {
@@ -57,7 +58,9 @@ public class World implements Iterable<Country> {
 
 	@Override
 	public String toString() {
-		return "World [countries=" + countries + "]";
+		return "\n" + countries.values().stream()
+		.map(Country::toString)
+		.collect(Collectors.joining("\n"));
 	}
 
 	@Override

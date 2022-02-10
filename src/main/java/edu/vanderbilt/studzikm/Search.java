@@ -35,8 +35,8 @@ public class Search {
 					.collect(Collectors.toList());
 			depth++;
 
-			System.out.println("\nFound " + next.size() + " next states\n");
-			next.forEach(node -> System.out.println(node.getAction()));
+			log.debug("Found " + next.size() + " next states");
+			next.forEach(node -> log.trace(node.getAction()));
 
 			SearchNode maxUtility = next.get(0);
 			if (Double.compare(threshold, country.computeUtility(maxUtility.getState())) <= 0 || depth >= maxDepth) {

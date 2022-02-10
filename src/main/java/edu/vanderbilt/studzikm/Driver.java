@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Driver {
 
@@ -11,36 +12,40 @@ public class Driver {
 		File countryFile = new File(args[0]);
 		File resourceFile = new File(args[1]);
 
-		System.out.println("Resource file name: " + resourceFile);
-		System.out.println("Country file name: " + countryFile);
+		System.out.printf("Resource file name: %s\n", resourceFile);
+		System.out.printf("Country file name:  %s\n", countryFile);
 
 		try {
 			Map<String, Resource> resources = ResourceFactory.importResources(resourceFile);
-			System.out.println(resources);
+			System.out.printf("\nResource list: \n%s\n", resources);
 
 			World world = CountryParser.createWorld(countryFile, resources);
+			System.out.printf("\nInitial World State: %s\n", world);
 
-			System.out.println("\nInitial World State: ");
-			System.out.println(world);
-
-			System.out.println("\nInitial country utility: ");
-			world.stream()
-			.forEach(c -> System.out.println("\t" + c.getName() + " " + c.computeUtility(world)));
+			System.out.printf("\nInitial country utility: \n%s\n", world.stream()
+					.map(country -> new StringBuilder("\t")
+							.append(country.getName())
+							.append(" ")
+							.append(country.computeUtility(world)))
+					.collect(Collectors.joining("\n")));
 
 			Double[] allowedTradePercent = {0.5, 1.0};
 			TransferFactory transferFactory = new DefaultTransfers(resources, allowedTradePercent);
 			StateGenerator generator = new DefaultStateGenerator(resources, transferFactory);
+
+			System.out.printf("\nBefore: \n%s\n", world.getCountry("Atlantis"));
 			Search search = new Search(generator, world);
 
-			System.out.println("\nBefore: " + world.getCountry("Atlantis"));
 			List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1000, 1);
-			System.out.println("\nAfter:  " + searchResult.get(0).getWorld().getCountry("Atlantis"));
+			System.out.printf("\nAfter:  \n%s\n", searchResult.get(0).getWorld().getCountry("Atlantis"));
 
-			System.out.println("Found best state: " + searchResult);
+			System.out.printf("\nFound best state: \n%s\n", searchResult);
 
 		} catch (IOException e) {
-			System.out.printf("Could not parse resource file %s%n", resourceFile);
+			System.out.printf("\nCould not parse resource file %s%n", resourceFile);
 		}
+
+		System.out.printf("\n\nExiting.\n");
 
 	}
 }
