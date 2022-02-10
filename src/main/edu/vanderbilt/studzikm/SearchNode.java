@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class SearchNode {
 
+
 	private World state;
 	private SearchNode parent;
 	private Set<SearchNode> children = new HashSet<>();
@@ -17,7 +18,7 @@ public class SearchNode {
 
 		this.state = current;
 		this.parent = parent;
-		this.parent.setAction(action);
+		this.action = action;
 	}
 
 
@@ -57,4 +58,11 @@ public class SearchNode {
 	public void addChild(SearchNode child) {
 		this.children.add(child);
 	}
+
+	@Override
+	public String toString() {
+		return "SearchNode [parent=" + parent.hashCode() + ", children=" + children.size() + ", action=" + action
+				+ ", state=" + state + "]";
+	}
+
 }

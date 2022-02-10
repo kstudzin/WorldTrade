@@ -48,9 +48,9 @@ public class Search {
 
 	private List<ActionResult<? extends Action>> retrieveActions(SearchNode maxUtility) {
 
-		SearchNode parent = maxUtility.getParent();
+		SearchNode parent = maxUtility;
 		List<ActionResult<?>> actions = new ArrayList<>();
-		while (parent != null) {
+		while (parent.getAction() != null) {
 			actions.add(parent.getAction());
 			parent = parent.getParent();
 		}
