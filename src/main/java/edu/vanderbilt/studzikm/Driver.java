@@ -19,16 +19,22 @@ public class Driver {
 			System.out.println(resources);
 
 			World world = CountryParser.createWorld(countryFile, resources);
+
+			System.out.println("\nInitial World State: ");
 			System.out.println(world);
+
+			System.out.println("\nInitial country utility: ");
+			world.stream()
+			.forEach(c -> System.out.println("\t" + c.getName() + " " + c.computeUtility(world)));
 
 			Double[] allowedTradePercent = {0.5, 1.0};
 			TransferFactory transferFactory = new DefaultTransfers(resources, allowedTradePercent);
 			StateGenerator generator = new DefaultStateGenerator(resources, transferFactory);
 			Search search = new Search(generator, world);
 
-			System.out.println("Before: " + world.getCountry("Atlantis"));
+			System.out.println("\nBefore: " + world.getCountry("Atlantis"));
 			List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1000, 1);
-			System.out.println("After:  " + searchResult.get(0).getWorld().getCountry("Atlantis"));
+			System.out.println("\nAfter:  " + searchResult.get(0).getWorld().getCountry("Atlantis"));
 
 			System.out.println("Found best state: " + searchResult);
 

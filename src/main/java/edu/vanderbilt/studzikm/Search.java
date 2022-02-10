@@ -6,7 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Search {
+
+	Logger log = LogManager.getLogger(Search.class);
 
 	private StateGenerator stateGenerator;
 	private Deque<SearchNode> frontier = new LinkedList<>();
@@ -29,6 +34,9 @@ public class Search {
 					.map(e -> new SearchNode(e.getWorld(), n, e))
 					.collect(Collectors.toList());
 			depth++;
+
+			System.out.println("\nFound " + next.size() + " next states\n");
+			next.forEach(node -> System.out.println(node.getAction()));
 
 			SearchNode maxUtility = next.get(0);
 			if (Double.compare(threshold, country.computeUtility(maxUtility.getState())) <= 0 || depth >= maxDepth) {
