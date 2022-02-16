@@ -38,6 +38,9 @@ public class Search {
 			log.debug("Found " + next.size() + " next states");
 			next.forEach(node -> log.trace(node.getAction()));
 
+			if (next.isEmpty()) {
+				continue;
+			}
 			SearchNode maxUtility = next.get(0);
 			if (Double.compare(threshold, country.computeUtility(maxUtility.getState())) <= 0 || depth >= maxDepth) {
 				return retrieveActions(maxUtility);
