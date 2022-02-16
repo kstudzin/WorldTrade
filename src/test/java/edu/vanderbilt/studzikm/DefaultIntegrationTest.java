@@ -94,7 +94,7 @@ public class DefaultIntegrationTest {
 
 	@Test
 	void testBasicSetup() {
-		List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1000, 1);
+		List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1);
 
 		assertEquals(1, searchResult.size());
 

@@ -36,7 +36,7 @@ public class Driver {
 			System.out.printf("\nBefore: \n%s\n", world.getCountry("Atlantis"));
 			Search search = new Search(generator, world);
 
-			List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1000, 1);
+			List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1);
 			System.out.printf("\nAfter:  \n%s\n", searchResult.get(0).getWorld().getCountry("Atlantis"));
 
 			System.out.printf("\nFound best state: \n%s\n", searchResult);

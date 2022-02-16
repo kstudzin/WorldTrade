@@ -22,7 +22,7 @@ public class Search {
 		frontier.addFirst(new SearchNode(initState));
 	}
 
-	public List<ActionResult<? extends Action>> search(Country country, double threshold, int maxDepth) {
+	public List<ActionResult<? extends Action>> search(Country country, int maxDepth) {
 
 		int depth = 0;
 
@@ -42,7 +42,8 @@ public class Search {
 				continue;
 			}
 			SearchNode maxUtility = next.get(0);
-			if (Double.compare(threshold, country.computeUtility(maxUtility.getState())) <= 0 || depth >= maxDepth) {
+
+			if (depth >= maxDepth) {
 				return retrieveActions(maxUtility);
 			}
 
