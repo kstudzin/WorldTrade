@@ -1,18 +1,24 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Map;
+import java.util.function.Supplier;
+
 public class DiscountedRewardComputation implements RewardComputation {
 
 	private Double gamma;
-	private Double initQuality;
+	private Map<String, Double> initialQualities;
 
-	public DiscountedRewardComputation(Double gamma, Double initQuality) {
+	public DiscountedRewardComputation(Double gamma, Map<String, Double> initialQualities) {
 		this.gamma = gamma;
-		this.initQuality = initQuality;
+		this.initialQualities = initialQualities;
 	}
 
 	@Override
-	public Double computeReward(ActionResult<?> result) {
-		return (Math.pow(gamma, result.getSchedulePosition()) * result.getQuality()) - initQuality;
+	public Double computeReward(ActionResult<?> result, Supplier<Country> retrieveCountry) {
+		Country country = retrieveCountry.get();
+
+		return (Math.pow(gamma, result.getSchedulePosition()) * country.computeQuality()) - 
+				initialQualities.get(country.getName());
 	}
 
 }

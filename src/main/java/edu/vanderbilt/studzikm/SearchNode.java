@@ -24,7 +24,7 @@ public class SearchNode {
 
 
 	public SearchNode(World current, Country self) {
-		this.action = new ActionResult<>(current, new NullAction(), self);
+		this.action = new ActionResult<>(current, new NullAction(), self, new DefaultRewardComputation(), 0);
 	}
 
 
@@ -74,8 +74,7 @@ public class SearchNode {
 
 	@Override
 	public String toString() {
-		return "SearchNode [parent=" + parent.hashCode() + ", children=" + children.size() + ", action=" + action
-				+ ", state=" + getState() + "]";
+		return "SearchNode [parent=" + parent.hashCode() + ", children=" + children.size() + ", action=" + action + "]";
 	}
 
 }

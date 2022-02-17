@@ -15,21 +15,15 @@ public class Search {
 
 	private StateGenerator stateGenerator;
 	private SearchNodeFactory nodeFactory;
-	private RewardComputationBuilder rewardComputationBuilder;
 	private Deque<SearchNode> frontier = new LinkedList<>();
 
 	public Search(StateGenerator stateGenerator,
-			SearchNodeFactory nodeFactory,
-			RewardComputationBuilder rewardComputationBuilder) {
+			SearchNodeFactory nodeFactory) {
 		this.stateGenerator = stateGenerator;
 		this.nodeFactory = nodeFactory;
-		this.rewardComputationBuilder = rewardComputationBuilder;
 	}
 
 	public List<ActionResult<? extends Action>> search(World initState, Country country, int maxDepth) {
-		RewardComputation rewardComputation = rewardComputationBuilder
-				.setInitialQuality(country.computeQuality())
-				.build();
 		frontier.addFirst(nodeFactory.createRoot(initState, country));
 
 		int depth = 0;
@@ -38,10 +32,8 @@ public class Search {
 			SearchNode n = frontier.removeFirst();
 
 			depth++;
-			int effectivelyFinalDepth = depth; 
-			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country)
+			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country, depth)
 					.stream()
-					.peek(result -> result.computeReward(rewardComputation, effectivelyFinalDepth))
 					.sorted((x, y) -> y.getReward().compareTo(x.getReward()))
 					.map(e -> nodeFactory.createNode(n, e))
 					.collect(Collectors.toList());
@@ -52,8 +44,8 @@ public class Search {
 			if (next.isEmpty()) {
 				continue;
 			}
-			SearchNode maxUtility = next.get(0);
 
+			SearchNode maxUtility = next.get(0);
 			if (depth >= maxDepth) {
 				return retrieveActions(maxUtility);
 			}
@@ -73,10 +65,12 @@ public class Search {
 
 		SearchNode parent = maxUtility;
 		List<ActionResult<?>> actions = new ArrayList<>();
+
 		while (parent.getDepth() != 0) {
 			actions.add(parent.getAction());
 			parent = parent.getParent();
 		}
+
 		return actions;
 	}
 }

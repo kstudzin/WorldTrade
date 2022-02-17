@@ -1,8 +1,10 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Map;
+
 public interface RewardComputationBuilder {
 
-	RewardComputationBuilder setInitialQuality(double initialQuality);
+	RewardComputationBuilder setInitialQualities(Map<String, Double> initialQualities);
 
 	RewardComputation build();
 }

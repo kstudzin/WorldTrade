@@ -9,11 +9,17 @@ public class ActionResult<T extends Action> {
 	Double reward;
 	int schedulePosition;
 
-	public ActionResult(World world, T transform, Country performer) {
+	public ActionResult(World world, 
+			T transform, 
+			Country performer, 
+			RewardComputation rewardComputation,
+			int schedulePosition) {
 		this.world = world;
 		this.transform = transform;
 		this.performer = performer;
 		this.quality = this.performer.computeQuality();
+		this.reward = rewardComputation.computeReward(this, this::getPerformer);
+		this.schedulePosition = schedulePosition;
 	}
 
 	public World getWorld() {
@@ -36,11 +42,8 @@ public class ActionResult<T extends Action> {
 		return schedulePosition;
 	}
 
-	public void computeReward(RewardComputation rewardComputation, int depth) {
-		if (reward == null) {
-			schedulePosition = depth;
-			reward = rewardComputation.computeReward(this);
-		}
+	public Country getPerformer() {
+		return performer;
 	}
 
 	@Override

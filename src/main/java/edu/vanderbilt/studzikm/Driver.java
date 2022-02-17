@@ -31,13 +31,21 @@ public class Driver {
 
 			Double[] allowedTradePercent = {0.5, 1.0};
 			TransferFactory transferFactory = new DefaultTransfers(resources, allowedTradePercent);
-			StateGenerator generator = new DefaultStateGenerator(resources, transferFactory);
 
-			DiscountedRewardComputationBuilder rewardComputationBuilder = new DiscountedRewardComputationBuilder()
-					.setGamma(1);
+			Map<String, Double> initialQualitites = world.stream()
+					.collect(Collectors.toMap(Country::getName, Country::computeQuality));
+			RewardComputation rewardComputation = 
+					new DiscountedRewardComputationBuilder()
+					.setGamma(1)
+					.setInitialQualities(initialQualitites)
+					.build();
+			StateGenerator generator = new DefaultStateGenerator(resources, 
+					transferFactory, 
+					rewardComputation);
+
 			SearchNodeFactory nodeFactory = new SearchNodeFactory();
 
-			Search search = new Search(generator, nodeFactory, rewardComputationBuilder);
+			Search search = new Search(generator, nodeFactory);
 			List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 1);
 
 			System.out.printf("\nFinal World State: %s\n", world);

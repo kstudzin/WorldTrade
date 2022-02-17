@@ -1,9 +1,11 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Map;
+
 public class DiscountedRewardComputationBuilder implements RewardComputationBuilder {
 
 	private double gamma;
-	private double initialQuality;
+	private Map<String, Double> initialQualities;
 
 	public DiscountedRewardComputationBuilder() { }
 
@@ -12,14 +14,14 @@ public class DiscountedRewardComputationBuilder implements RewardComputationBuil
 		return this;
 	}
 
-	public DiscountedRewardComputationBuilder setInitialQuality(double initialQuality) {
-		this.initialQuality = initialQuality;
+	public DiscountedRewardComputationBuilder setInitialQualities(Map<String, Double> initialQualities) {
+		this.initialQualities = initialQualities;
 		return this;
 	}
 
 	@Override
 	public RewardComputation build() {
-		return new DiscountedRewardComputation(gamma, initialQuality);
+		return new DiscountedRewardComputation(gamma, initialQualities);
 	}
 
 }

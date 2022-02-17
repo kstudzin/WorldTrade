@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,13 +35,20 @@ public class DefaultIntegrationTest {
 	}
 
 	private Search setUpSearch() {
-		DiscountedRewardComputationBuilder rewardCompBuilder = new DiscountedRewardComputationBuilder()
-				.setGamma(1);
-		return new Search(stateGenerator, nodeFactory, rewardCompBuilder);
+		return new Search(stateGenerator, nodeFactory);
 	}
 
 	private StateGenerator setUpStateGenerator() {
-		return new DefaultStateGenerator(resources, transfers);
+		Map<String, Double> initialQualities = world.stream()
+				.collect(Collectors.toMap(Country::getName, Country::computeQuality));
+
+		RewardComputation rewardComp = 
+				new DiscountedRewardComputationBuilder()
+				.setGamma(1)
+				.setInitialQualities(initialQualities)
+				.build();
+
+		return new DefaultStateGenerator(resources, transfers, rewardComp);
 	}
 
 	private TransferFactory setUpTransfers() {
