@@ -20,6 +20,10 @@ repositories {
 }
 
 dependencies {
+	// For running junit tests in eclipse
+	testImplementation(platform('org.junit:junit-bom:5.8.2'))
+	testImplementation('org.junit.jupiter:junit-jupiter')
+
 	// Use JUnit Jupiter API for testing.
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
 
