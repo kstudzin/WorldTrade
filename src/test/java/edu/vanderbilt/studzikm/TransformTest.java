@@ -35,7 +35,7 @@ class TransformTest {
 
 	@Test
 	void testHousingTransform() {
-		Country country = new Country("TestCountry", new DefaultUtilityComputation());
+		Country country = new Country("TestCountry", new DefaultQualityComputation());
 		country.addResource(r1, 10);
 		country.addResource(r2, 5);
 		country.addResource(r3, 10);
@@ -54,7 +54,7 @@ class TransformTest {
 
 	@Test
 	void testElectronicsTransform() {
-		Country country = new Country("TestCountry", new DefaultUtilityComputation());
+		Country country = new Country("TestCountry", new DefaultQualityComputation());
 		country.addResource(r1, 10);
 		country.addResource(r2, 6);
 		country.addResource(r21, 4);

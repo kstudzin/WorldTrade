@@ -1,7 +1,6 @@
 package edu.vanderbilt.studzikm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +15,7 @@ public class DefaultIntegrationTest {
 	World world;
 	TransferFactory transfers;
 	StateGenerator stateGenerator;
+	SearchNodeFactory nodeFactory;
 	Search search;
 
 	@BeforeEach
@@ -24,11 +24,18 @@ public class DefaultIntegrationTest {
 		world = setUpWorld();
 		transfers = setUpTransfers();
 		stateGenerator = setUpStateGenerator();
+		nodeFactory = setUpNodeFactory();
 		search = setUpSearch();
 	}
 
+	private SearchNodeFactory setUpNodeFactory() {
+		DiscountedRewardComputationBuilder rewardCompBuilder = new DiscountedRewardComputationBuilder()
+				.setGamma(.9);
+		return new SearchNodeFactory(rewardCompBuilder);
+	}
+
 	private Search setUpSearch() {
-		return new Search(stateGenerator, world);
+		return new Search(stateGenerator, nodeFactory);
 	}
 
 	private StateGenerator setUpStateGenerator() {
@@ -43,31 +50,31 @@ public class DefaultIntegrationTest {
 	private World setUpWorld() {
 		World world = new World();
 
-		Country atlantis = new Country("Atlantis", new DefaultUtilityComputation());
+		Country atlantis = new Country("Atlantis", new DefaultQualityComputation());
 		atlantis.addResource(resources.get("R1"), 100);
 		atlantis.addResource(resources.get("R2"), 700);
 		atlantis.addResource(resources.get("R3"), 2000);
 		world.addCountry(atlantis);
 
-		Country brobdingnag = new Country("Brobdingnag", new DefaultUtilityComputation());
+		Country brobdingnag = new Country("Brobdingnag", new DefaultQualityComputation());
 		brobdingnag.addResource(resources.get("R1"), 50);
 		brobdingnag.addResource(resources.get("R2"), 300);
 		brobdingnag.addResource(resources.get("R3"), 1200);
 		world.addCountry(brobdingnag);
 
-		Country carpania = new Country("Carpania", new DefaultUtilityComputation());
+		Country carpania = new Country("Carpania", new DefaultQualityComputation());
 		carpania.addResource(resources.get("R1"), 25);
 		carpania.addResource(resources.get("R2"), 100);
 		carpania.addResource(resources.get("R3"), 300);
 		world.addCountry(carpania);
 
-		Country dinotopia = new Country("Dinotopia", new DefaultUtilityComputation());
+		Country dinotopia = new Country("Dinotopia", new DefaultQualityComputation());
 		dinotopia.addResource(resources.get("R1"), 30);
 		dinotopia.addResource(resources.get("R2"), 200);
 		dinotopia.addResource(resources.get("R3"), 200);
 		world.addCountry(dinotopia);
 
-		Country erewhon = new Country("Erewhon", new DefaultUtilityComputation());
+		Country erewhon = new Country("Erewhon", new DefaultQualityComputation());
 		erewhon.addResource(resources.get("R1"), 70);
 		erewhon.addResource(resources.get("R2"), 500);
 		erewhon.addResource(resources.get("R3"), 1700);
@@ -94,13 +101,13 @@ public class DefaultIntegrationTest {
 
 	@Test
 	void testBasicSetup() {
-		List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1);
+		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 1);
 
 		assertEquals(1, searchResult.size());
 
 		ActionResult<?> actionResult = searchResult.get(0);
 		assertEquals("Atlantis", actionResult.performer.getName());
-		assertEquals(2800, actionResult.utility);
+		assertEquals(2800, actionResult.getQuality());
 		assertEquals("Transform [name=alloys]", actionResult.transform.toString());
 	}
 }

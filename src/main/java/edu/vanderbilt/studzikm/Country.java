@@ -7,17 +7,17 @@ import java.util.Map;
 public class Country {
 
 	private String name;
-	private UtilityComputation utilComp;
+	private QualityComputation qualityComputation;
 	private Map<Resource, Integer> resources = new HashMap<>();
 
-	public Country(String name, UtilityComputation utilityComp) {
+	public Country(String name, QualityComputation utilityComp) {
 		this.name = name;
-		this.utilComp = utilityComp;
+		this.qualityComputation = utilityComp;
 	}
 
 	public Country(Country copy) {
 		this.name = copy.name;
-		this.utilComp = copy.utilComp;
+		this.qualityComputation = copy.qualityComputation;
 		this.resources.putAll(copy.resources);
 	}
 
@@ -55,8 +55,8 @@ public class Country {
 		updateResource(resource, delta);
 	}
 
-	public double computeUtility(World world) {
-		return utilComp.compute(world, this);
+	public double computeQuality() {
+		return qualityComputation.compute(this);
 	}
 
 	@Override

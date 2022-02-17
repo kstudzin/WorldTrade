@@ -6,29 +6,35 @@ import java.util.Set;
 
 public class SearchNode {
 
-
-	private World state;
 	private SearchNode parent;
 	private Set<SearchNode> children = new HashSet<>();
 	private ActionResult<?> action;
+	private Integer depth;
+	private RewardComputation rewardComputation;
+	private double reward;
 
-	public SearchNode(World current, SearchNode parent, ActionResult<?> action) {
+	public SearchNode(SearchNode parent, ActionResult<?> action, Integer depth) {
 		if (parent == null) throw new NullPointerException("If parent is null use SearchNode(World) constructor");
 		if (action == null) throw new NullPointerException("If action is null use SearchNode(World) constructor");
 
-		this.state = current;
 		this.parent = parent;
 		this.action = action;
+		this.depth = depth;
+		this.rewardComputation = this.parent.rewardComputation;
+		this.reward = this.rewardComputation.computeReward(this);
 	}
 
 
-	public SearchNode(World current) {
-		this.state = current;
+	public SearchNode(World current, Country self, RewardComputation rewardComputation) {
+		this.action = new ActionResult<>(current, new NullAction(), self);
+		this.rewardComputation = rewardComputation;
+		this.depth = 0;
+		this.reward = 0;
 	}
 
 
 	public World getState() {
-		return state;
+		return action.getWorld();
 	}
 
 
@@ -43,6 +49,18 @@ public class SearchNode {
 
 	public void setAction(ActionResult<?> action) {
 		this.action = action;
+	}
+
+	public Double getQuality() {
+		return action.getQuality();
+	}
+
+	public Integer getDepth() {
+		return depth;
+	}
+
+	public Double getReward() {
+		return reward;
 	}
 
 	public Set<SearchNode> getChildren() {
@@ -62,7 +80,7 @@ public class SearchNode {
 	@Override
 	public String toString() {
 		return "SearchNode [parent=" + parent.hashCode() + ", children=" + children.size() + ", action=" + action
-				+ ", state=" + state + "]";
+				+ ", state=" + getState() + "]";
 	}
 
 }

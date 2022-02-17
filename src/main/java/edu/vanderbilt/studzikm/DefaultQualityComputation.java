@@ -5,21 +5,21 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
-public class DefaultUtilityComputation implements UtilityComputation {
+public class DefaultQualityComputation implements QualityComputation {
 
 	private Map<Resource, Integer> proportionalityConsts;
 
-	public DefaultUtilityComputation() {
+	public DefaultQualityComputation() {
 		this.proportionalityConsts = new HashMap<>();
 	}
 
-	public DefaultUtilityComputation(Map<Resource, Integer> proportionalityConsts) {
+	public DefaultQualityComputation(Map<Resource, Integer> proportionalityConsts) {
 		Preconditions.checkNotNull(proportionalityConsts, "To use default constants, use the default constructor");
 		this.proportionalityConsts = proportionalityConsts;
 	}
 
 	@Override
-	public double compute(World world, Country country) {
+	public double compute(Country country) {
 		return country.getResources()
 				.entrySet()
 				.stream()

@@ -17,7 +17,7 @@ public class CountryParser {
 			while((line = reader.readLine()) != null) {
 				String[] values = line.split(",");
 				
-				Country country = new Country(values[0], new DefaultUtilityComputation());
+				Country country = new Country(values[0], new DefaultQualityComputation());
 				world.addCountry(country);
 				
 				for (int i = 1; i < values.length; i++) {

@@ -14,26 +14,30 @@ public class Search {
 	Logger log = LogManager.getLogger(Search.class);
 
 	private StateGenerator stateGenerator;
+	private SearchNodeFactory nodeFactory;
 	private Deque<SearchNode> frontier = new LinkedList<>();
 
 	public Search(StateGenerator stateGenerator,
-			World initState) {
+			SearchNodeFactory nodeFactory) {
 		this.stateGenerator = stateGenerator;
-		frontier.addFirst(new SearchNode(initState));
+		this.nodeFactory = nodeFactory;
 	}
 
-	public List<ActionResult<? extends Action>> search(Country country, int maxDepth) {
+	public List<ActionResult<? extends Action>> search(World initState, Country country, int maxDepth) {
+		frontier.addFirst(nodeFactory.createRoot(initState, country));
 
 		int depth = 0;
 
 		while (!frontier.isEmpty()) {
 			SearchNode n = frontier.removeFirst();
+
+			depth++;
+			int effectivelyFinalDepth = depth; 
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country)
 					.stream()
-					.sorted((x, y) -> y.getUtility().compareTo(x.getUtility()))
-					.map(e -> new SearchNode(e.getWorld(), n, e))
+					.sorted((x, y) -> y.getQuality().compareTo(x.getQuality()))
+					.map(e -> nodeFactory.createNode(n, e, effectivelyFinalDepth))
 					.collect(Collectors.toList());
-			depth++;
 
 			log.debug("Found " + next.size() + " next states");
 			next.forEach(node -> log.trace(node.getAction()));
@@ -62,7 +66,7 @@ public class Search {
 
 		SearchNode parent = maxUtility;
 		List<ActionResult<?>> actions = new ArrayList<>();
-		while (parent.getAction() != null) {
+		while (parent.getDepth() != 0) {
 			actions.add(parent.getAction());
 			parent = parent.getParent();
 		}

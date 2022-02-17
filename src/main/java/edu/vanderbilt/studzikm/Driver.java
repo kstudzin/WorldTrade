@@ -26,17 +26,21 @@ public class Driver {
 					.map(country -> new StringBuilder("\t")
 							.append(country.getName())
 							.append(" ")
-							.append(country.computeUtility(world)))
+							.append(country.computeQuality()))
 					.collect(Collectors.joining("\n")));
 
 			Double[] allowedTradePercent = {0.5, 1.0};
 			TransferFactory transferFactory = new DefaultTransfers(resources, allowedTradePercent);
 			StateGenerator generator = new DefaultStateGenerator(resources, transferFactory);
 
-			System.out.printf("\nBefore: \n%s\n", world.getCountry("Atlantis"));
-			Search search = new Search(generator, world);
+			DiscountedRewardComputationBuilder rewardComputationBuilder = new DiscountedRewardComputationBuilder()
+					.setGamma(1);
+			SearchNodeFactory nodeFactory = new SearchNodeFactory(rewardComputationBuilder);
 
-			List<ActionResult<?>> searchResult = search.search(world.getCountry("Atlantis"), 1);
+			System.out.printf("\nBefore: \n%s\n", world.getCountry("Atlantis"));
+			Search search = new Search(generator, nodeFactory);
+
+			List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 1);
 			System.out.printf("\nAfter:  \n%s\n", searchResult.get(0).getWorld().getCountry("Atlantis"));
 
 			System.out.printf("\nFound best state: \n%s\n", searchResult);
