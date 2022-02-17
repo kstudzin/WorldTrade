@@ -2,36 +2,47 @@ package edu.vanderbilt.studzikm;
 
 public class TransferResult extends ActionResult<Transfer> {
 
-	private Country participant;
-	private double participantReward;
+	enum Role {
+		SENDER, RECIEVER
+	}
+
+	private Country other;
+	private double otherReward;
+	private Role selfRole;
 
 	public TransferResult(World world, 
 			Transfer transform, 
-			Country performer, 
-			Country participant, 
+			Country self, 
+			Country other, 
 			RewardComputation rewardCompuation, 
-			int schedulePosition) {
-		super(world, transform, performer, rewardCompuation, schedulePosition);
-		this.participant = participant;
-		this.participantReward = rewardCompuation.computeReward(this, this::getParticipant);
+			int schedulePosition,
+			Role selfRole) {
+		super(world, transform, self, rewardCompuation, schedulePosition);
+		this.other = other; 
+		this.otherReward = rewardCompuation.computeReward(this, this::getOther);
+		this.selfRole = selfRole;
 	}
 
-	public Country getParticipant() {
-		return participant;
+	public Role getRole() {
+		return selfRole;
+	}
+
+	public Country getOther() {
+		return other;
 	}
 
 	public double getSuccessProbability(SuccessProbabilityComputation computation) {
 		return computation.compute(this);
 	}
 
-	public double getParicipantReward() {
-		return participantReward;
+	public double getOtherReward() {
+		return otherReward;
 	}
 
 	@Override
 	public String toString() {
-		return "TransferResult [participant=" + participant.getName() + ", transform=" + transform
-				+ ", performer=" + performer.getName() + ", quality=" + quality + ", reward=" + reward + ", world=" + world + "]";
+		return "TransferResult [participant=" + other.getName() + ", transform=" + action
+				+ ", performer=" + self.getName() + ", quality=" + quality + ", reward=" + reward + ", world=" + world + "]";
 	}
 
 }

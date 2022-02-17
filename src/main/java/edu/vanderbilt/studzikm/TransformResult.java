@@ -4,10 +4,10 @@ public class TransformResult extends ActionResult<Transform> {
 
 	public TransformResult(World world, 
 			Transform transform, 
-			Country performer, 
+			Country self, 
 			RewardComputation rewardCompuation, 
 			int schedulePosition) {
-		super(world, transform, performer, rewardCompuation, schedulePosition);
+		super(world, transform, self, rewardCompuation, schedulePosition);
 	}
 
 	public double getSuccessProbability(SuccessProbabilityComputation computation) {

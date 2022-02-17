@@ -3,22 +3,22 @@ package edu.vanderbilt.studzikm;
 public class ActionResult<T extends Action> {
 
 	World world;
-	T transform;
-	Country performer;
+	T action;
+	Country self;
 	Double quality;
 	Double reward;
 	int schedulePosition;
 
 	public ActionResult(World world, 
 			T transform, 
-			Country performer, 
+			Country self, 
 			RewardComputation rewardComputation,
 			int schedulePosition) {
 		this.world = world;
-		this.transform = transform;
-		this.performer = performer;
-		this.quality = this.performer.computeQuality();
-		this.reward = rewardComputation.computeReward(this, this::getPerformer);
+		this.action = transform;
+		this.self = self;
+		this.quality = this.self.computeQuality();
+		this.reward = rewardComputation.computeReward(this, this::getSelf);
 		this.schedulePosition = schedulePosition;
 	}
 
@@ -27,7 +27,7 @@ public class ActionResult<T extends Action> {
 	}
 
 	public T getAction() {
-		return transform;
+		return action;
 	}
 
 	public Double getQuality() {
@@ -42,13 +42,13 @@ public class ActionResult<T extends Action> {
 		return schedulePosition;
 	}
 
-	public Country getPerformer() {
-		return performer;
+	public Country getSelf() {
+		return self;
 	}
 
 	@Override
 	public String toString() {
-		return "ActionResult [transform=" + transform + ", performer=" + performer.getName() + ", quality="
+		return "ActionResult [transform=" + action + ", self=" + self.getName() + ", quality="
 				+ quality + ", reward=" + reward + ", world=" + world + "]";
 	}
 }
