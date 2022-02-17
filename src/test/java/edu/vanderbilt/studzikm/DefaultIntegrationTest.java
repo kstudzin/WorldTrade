@@ -117,8 +117,9 @@ public class DefaultIntegrationTest {
 
 		ActionResult<?> actionResult = searchResult.get(0);
 		assertEquals("Atlantis", actionResult.self.getName());
-		assertEquals(2797.7, actionResult.getQuality());
-		assertEquals(-2.300000000000182, actionResult.getReward());
-		assertEquals("Transform [name=alloys]", actionResult.action.toString());
+		assertEquals(4500, actionResult.getQuality());
+		assertEquals(1700, actionResult.getReward());
+		assertEquals("Transfer [resource=Resource [name=R3, weight=1.0], percent=1.0]", actionResult.action.toString());
+		assertEquals("Erewhon", ((TransferResult)actionResult).getOther().getName());
 	}
 }
