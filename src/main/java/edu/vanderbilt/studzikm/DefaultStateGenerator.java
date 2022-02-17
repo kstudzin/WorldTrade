@@ -2,6 +2,7 @@ package edu.vanderbilt.studzikm;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,11 +26,12 @@ public class DefaultStateGenerator implements StateGenerator {
 	public Collection<?> generateStates(World initialState, Country self, int depth) {
 
 		return Stream.of(
-				generateTransformations(initialState, self, depth), 
-				generateTransferAsSender(initialState, self, depth), 
+				generateTransformations(initialState, self, depth),
+				generateTransferAsSender(initialState, self, depth),
 				generateTransferAsReciever(initialState, self, depth)
 				)
 				.flatMap(Function.identity())
+				.filter(Objects::nonNull)
 				.collect(Collectors.toSet());
 	}
 
@@ -55,15 +57,13 @@ public class DefaultStateGenerator implements StateGenerator {
 	private Stream<? extends ActionResult<?>> generateTransformations(World initialState, Country self, int depth) {
 
 		return transforms.ALL_TRANSFORMS.stream()
-		.map(transform -> performTransformation(transform, new World(initialState), new Country(self), depth))
-		.filter(ar -> ar != null);
+		.map(transform -> performTransformation(transform, new World(initialState), new Country(self), depth));
 	}
 
 	private Stream<? extends ActionResult<?>> performTransferAsSender(Transfer transfer, World world, Country sender, int depth, Role selfRole) {
 		return world.stream()
 		.filter(reciever -> reciever != sender)
-		.map(orig -> performTransfer(transfer, new World(world), new Country(orig), new Country(sender), depth, selfRole))
-		.filter(ar -> ar != null);
+		.map(orig -> performTransfer(transfer, new World(world), new Country(orig), new Country(sender), depth, selfRole));
 	}
 	
 	private TransferResult performTransfer(Transfer transfer, World world, Country reciever, Country sender, int depth, Role selfRole) {
