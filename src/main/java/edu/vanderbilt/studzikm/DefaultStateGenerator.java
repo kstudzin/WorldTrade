@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.vanderbilt.studzikm.TransferResult.Role;
 
@@ -34,22 +35,21 @@ public class DefaultStateGenerator implements StateGenerator {
 	private Collection<ActionResult<? extends Action>> generateTransferAsReciever(World initialState, Country self, int depth) {
 
 		return transfers.stream()
-		.flatMap(transfer -> performTransferAsReciever(transfer, initialState, self, depth).stream())
+		.flatMap(transfer -> performTransferAsReciever(transfer, initialState, self, depth))
 		.collect(Collectors.toSet());
 	}
 
-	private Collection<ActionResult<Transfer>> performTransferAsReciever(Transfer transfer, World world, Country self, int depth) {
+	private Stream<ActionResult<Transfer>> performTransferAsReciever(Transfer transfer, World world, Country self, int depth) {
 
 		return world.stream()
 		.filter(sender -> sender != self)
-		.map(sender -> performTransfer(transfer, new World(world), new Country(self), new Country(sender), depth, Role.RECIEVER))
-		.collect(Collectors.toSet());
+		.map(sender -> performTransfer(transfer, new World(world), new Country(self), new Country(sender), depth, Role.RECIEVER));
 	}
 
 	private Collection<ActionResult<Transfer>> generateTransferAsSender(World initialState, Country self, int depth) {
 		return transfers.stream()
 		.filter(t -> self.getResource(t.getResource()) > 0)
-		.flatMap(transfer -> performTransferAsSender(transfer, initialState, self, depth, Role.SENDER).stream())
+		.flatMap(transfer -> performTransferAsSender(transfer, initialState, self, depth, Role.SENDER))
 		.collect(Collectors.toSet());
 	}
 
@@ -62,12 +62,11 @@ public class DefaultStateGenerator implements StateGenerator {
 
 	}
 
-	private Collection<ActionResult<Transfer>> performTransferAsSender(Transfer transfer, World world, Country sender, int depth, Role selfRole) {
+	private Stream<ActionResult<Transfer>> performTransferAsSender(Transfer transfer, World world, Country sender, int depth, Role selfRole) {
 		return world.stream()
 		.filter(reciever -> reciever != sender)
 		.map(orig -> performTransfer(transfer, new World(world), new Country(orig), new Country(sender), depth, selfRole))
-		.filter(ar -> ar != null)
-		.collect(Collectors.toSet());
+		.filter(ar -> ar != null);
 	}
 	
 	private ActionResult<Transfer> performTransfer(Transfer transfer, World world, Country reciever, Country sender, int depth, Role selfRole) {
