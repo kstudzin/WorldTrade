@@ -4,14 +4,17 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class SearchNode {
+	Logger log = LogManager.getLogger(SearchNode.class);
 
 	private SearchNode parent;
 	private Set<SearchNode> children = new HashSet<>();
 	private ActionResult<?> action;
 	private Integer depth;
 	private RewardComputation rewardComputation;
-	private double reward;
 
 	public SearchNode(SearchNode parent, ActionResult<?> action, Integer depth) {
 		if (parent == null) throw new NullPointerException("If parent is null use SearchNode(World) constructor");
@@ -21,15 +24,17 @@ public class SearchNode {
 		this.action = action;
 		this.depth = depth;
 		this.rewardComputation = this.parent.rewardComputation;
-		this.reward = this.rewardComputation.computeReward(this);
+
+		double reward = this.rewardComputation.computeReward(this);
+		this.action.setReward(reward);
 	}
 
 
 	public SearchNode(World current, Country self, RewardComputation rewardComputation) {
 		this.action = new ActionResult<>(current, new NullAction(), self);
+		this.action.setReward(0.0);
 		this.rewardComputation = rewardComputation;
 		this.depth = 0;
-		this.reward = 0;
 	}
 
 
@@ -60,7 +65,7 @@ public class SearchNode {
 	}
 
 	public Double getReward() {
-		return reward;
+		return action.getReward();
 	}
 
 	public Set<SearchNode> getChildren() {

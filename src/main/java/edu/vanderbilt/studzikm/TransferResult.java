@@ -16,7 +16,7 @@ public class TransferResult extends ActionResult<Transfer> {
 	@Override
 	public String toString() {
 		return "TransferResult [participant=" + participant.getName() + ", transform=" + transform
-				+ ", performer=" + performer.getName() + ", quality=" + quality + ", world=" + world + "]";
+				+ ", performer=" + performer.getName() + ", quality=" + quality + ", reward=" + reward + ", world=" + world + "]";
 	}
 
 }

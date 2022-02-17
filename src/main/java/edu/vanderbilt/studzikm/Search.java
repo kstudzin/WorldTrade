@@ -35,8 +35,8 @@ public class Search {
 			int effectivelyFinalDepth = depth; 
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country)
 					.stream()
-					.sorted((x, y) -> y.getQuality().compareTo(x.getQuality()))
 					.map(e -> nodeFactory.createNode(n, e, effectivelyFinalDepth))
+					.sorted((x, y) -> y.getReward().compareTo(x.getReward()))
 					.collect(Collectors.toList());
 
 			log.debug("Found " + next.size() + " next states");

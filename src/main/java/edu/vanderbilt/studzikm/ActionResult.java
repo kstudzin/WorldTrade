@@ -6,6 +6,7 @@ public class ActionResult<T extends Action> {
 	T transform;
 	Country performer;
 	Double quality;
+	Double reward;
 
 	public ActionResult(World world, T transform, Country performer) {
 		this.world = world;
@@ -26,9 +27,17 @@ public class ActionResult<T extends Action> {
 		return quality;
 	}
 
+	public Double getReward() {
+		return reward;
+	}
+
+	public void setReward(Double reward) {
+		this.reward = reward;
+	}
+
 	@Override
 	public String toString() {
 		return "ActionResult [transform=" + transform + ", performer=" + performer.getName() + ", quality="
-				+ quality + ", world=" + world + "]";
+				+ quality + ", reward=" + reward + ", world=" + world + "]";
 	}
 }

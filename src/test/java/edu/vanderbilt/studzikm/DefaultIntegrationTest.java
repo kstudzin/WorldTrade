@@ -108,6 +108,7 @@ public class DefaultIntegrationTest {
 		ActionResult<?> actionResult = searchResult.get(0);
 		assertEquals("Atlantis", actionResult.performer.getName());
 		assertEquals(2800, actionResult.getQuality());
+		assertEquals(-280, actionResult.getReward());
 		assertEquals("Transform [name=alloys]", actionResult.transform.toString());
 	}
 }
