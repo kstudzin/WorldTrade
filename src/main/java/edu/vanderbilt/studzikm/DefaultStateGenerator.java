@@ -68,7 +68,7 @@ public class DefaultStateGenerator implements StateGenerator {
 		}
 
 		world.addCountry(country);
-		return new ActionResult<>(world, transform, country);
+		return new TransformResult(world, transform, country);
 	}
 
 }

@@ -35,15 +35,13 @@ public class Driver {
 
 			DiscountedRewardComputationBuilder rewardComputationBuilder = new DiscountedRewardComputationBuilder()
 					.setGamma(1);
-			SearchNodeFactory nodeFactory = new SearchNodeFactory(rewardComputationBuilder);
+			SearchNodeFactory nodeFactory = new SearchNodeFactory();
 
-			System.out.printf("\nBefore: \n%s\n", world.getCountry("Atlantis"));
-			Search search = new Search(generator, nodeFactory);
-
+			Search search = new Search(generator, nodeFactory, rewardComputationBuilder);
 			List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 1);
-			System.out.printf("\nAfter:  \n%s\n", searchResult.get(0).getWorld().getCountry("Atlantis"));
 
-			System.out.printf("\nFound best state: \n%s\n", searchResult);
+			System.out.printf("\nFinal World State: %s\n", world);
+
 
 		} catch (IOException e) {
 			System.out.printf("\nCould not parse resource file %s%n", resourceFile);

@@ -7,6 +7,7 @@ public class ActionResult<T extends Action> {
 	Country performer;
 	Double quality;
 	Double reward;
+	int schedulePosition;
 
 	public ActionResult(World world, T transform, Country performer) {
 		this.world = world;
@@ -31,8 +32,15 @@ public class ActionResult<T extends Action> {
 		return reward;
 	}
 
-	public void setReward(Double reward) {
-		this.reward = reward;
+	public int getSchedulePosition() {
+		return schedulePosition;
+	}
+
+	public void computeReward(RewardComputation rewardComputation, int depth) {
+		if (reward == null) {
+			schedulePosition = depth;
+			reward = rewardComputation.computeReward(this);
+		}
 	}
 
 	@Override

@@ -29,13 +29,13 @@ public class DefaultIntegrationTest {
 	}
 
 	private SearchNodeFactory setUpNodeFactory() {
-		DiscountedRewardComputationBuilder rewardCompBuilder = new DiscountedRewardComputationBuilder()
-				.setGamma(.9);
-		return new SearchNodeFactory(rewardCompBuilder);
+		return new SearchNodeFactory();
 	}
 
 	private Search setUpSearch() {
-		return new Search(stateGenerator, nodeFactory);
+		DiscountedRewardComputationBuilder rewardCompBuilder = new DiscountedRewardComputationBuilder()
+				.setGamma(1);
+		return new Search(stateGenerator, nodeFactory, rewardCompBuilder);
 	}
 
 	private StateGenerator setUpStateGenerator() {
@@ -89,26 +89,27 @@ public class DefaultIntegrationTest {
 		resources.put("R1", new Resource("R1", 1.0));
 		resources.put("R2", new Resource("R2", 1.0));
 		resources.put("R3", new Resource("R3", 1.0));
-		resources.put("R21", new Resource("R21", 1.0));
-		resources.put("R22", new Resource("R22", 1.0));
-		resources.put("R23", new Resource("R23", 1.0));
-		resources.put("R21'", new Resource("R21'", 1.0));
-		resources.put("R22'", new Resource("R22'", 1.0));
-		resources.put("R23'", new Resource("R23'", 1.0));
+		resources.put("R21", new Resource("R21", 0.2));
+		resources.put("R22", new Resource("R22", 0.5));
+		resources.put("R23", new Resource("R23", 0.8));
+		resources.put("R21'", new Resource("R21'", -0.5));
+		resources.put("R22'", new Resource("R22'", -0.8));
+		resources.put("R23'", new Resource("R23'", -0.4));
 
 		return resources;
 	}
 
 	@Test
 	void testBasicSetup() {
+		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
 		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 1);
 
 		assertEquals(1, searchResult.size());
 
 		ActionResult<?> actionResult = searchResult.get(0);
 		assertEquals("Atlantis", actionResult.performer.getName());
-		assertEquals(2800, actionResult.getQuality());
-		assertEquals(-280, actionResult.getReward());
+		assertEquals(2797.7, actionResult.getQuality());
+		assertEquals(-2.300000000000182, actionResult.getReward());
 		assertEquals("Transform [name=alloys]", actionResult.transform.toString());
 	}
 }

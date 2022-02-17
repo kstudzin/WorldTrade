@@ -13,28 +13,18 @@ public class SearchNode {
 	private SearchNode parent;
 	private Set<SearchNode> children = new HashSet<>();
 	private ActionResult<?> action;
-	private Integer depth;
-	private RewardComputation rewardComputation;
 
-	public SearchNode(SearchNode parent, ActionResult<?> action, Integer depth) {
+	public SearchNode(SearchNode parent, ActionResult<?> action) {
 		if (parent == null) throw new NullPointerException("If parent is null use SearchNode(World) constructor");
 		if (action == null) throw new NullPointerException("If action is null use SearchNode(World) constructor");
 
 		this.parent = parent;
 		this.action = action;
-		this.depth = depth;
-		this.rewardComputation = this.parent.rewardComputation;
-
-		double reward = this.rewardComputation.computeReward(this);
-		this.action.setReward(reward);
 	}
 
 
-	public SearchNode(World current, Country self, RewardComputation rewardComputation) {
+	public SearchNode(World current, Country self) {
 		this.action = new ActionResult<>(current, new NullAction(), self);
-		this.action.setReward(0.0);
-		this.rewardComputation = rewardComputation;
-		this.depth = 0;
 	}
 
 
@@ -60,10 +50,6 @@ public class SearchNode {
 		return action.getQuality();
 	}
 
-	public Integer getDepth() {
-		return depth;
-	}
-
 	public Double getReward() {
 		return action.getReward();
 	}
@@ -80,6 +66,10 @@ public class SearchNode {
 
 	public void addChild(SearchNode child) {
 		this.children.add(child);
+	}
+
+	public int getDepth() {
+		return action.getSchedulePosition();
 	}
 
 	@Override

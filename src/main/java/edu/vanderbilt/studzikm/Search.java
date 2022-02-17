@@ -15,15 +15,21 @@ public class Search {
 
 	private StateGenerator stateGenerator;
 	private SearchNodeFactory nodeFactory;
+	private RewardComputationBuilder rewardComputationBuilder;
 	private Deque<SearchNode> frontier = new LinkedList<>();
 
 	public Search(StateGenerator stateGenerator,
-			SearchNodeFactory nodeFactory) {
+			SearchNodeFactory nodeFactory,
+			RewardComputationBuilder rewardComputationBuilder) {
 		this.stateGenerator = stateGenerator;
 		this.nodeFactory = nodeFactory;
+		this.rewardComputationBuilder = rewardComputationBuilder;
 	}
 
 	public List<ActionResult<? extends Action>> search(World initState, Country country, int maxDepth) {
+		RewardComputation rewardComputation = rewardComputationBuilder
+				.setInitialQuality(country.computeQuality())
+				.build();
 		frontier.addFirst(nodeFactory.createRoot(initState, country));
 
 		int depth = 0;
@@ -35,8 +41,9 @@ public class Search {
 			int effectivelyFinalDepth = depth; 
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country)
 					.stream()
-					.map(e -> nodeFactory.createNode(n, e, effectivelyFinalDepth))
+					.peek(result -> result.computeReward(rewardComputation, effectivelyFinalDepth))
 					.sorted((x, y) -> y.getReward().compareTo(x.getReward()))
+					.map(e -> nodeFactory.createNode(n, e))
 					.collect(Collectors.toList());
 
 			log.debug("Found " + next.size() + " next states");

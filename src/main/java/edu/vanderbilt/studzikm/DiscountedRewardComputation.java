@@ -11,8 +11,8 @@ public class DiscountedRewardComputation implements RewardComputation {
 	}
 
 	@Override
-	public Double computeReward(SearchNode node) {
-		return (Math.pow(gamma, node.getDepth()) * node.getQuality()) - initQuality;
+	public Double computeReward(ActionResult<?> result) {
+		return (Math.pow(gamma, result.getSchedulePosition()) * result.getQuality()) - initQuality;
 	}
 
 }
