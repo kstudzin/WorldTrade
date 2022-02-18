@@ -122,4 +122,50 @@ public class DefaultIntegrationTest {
 		assertEquals("Transfer [resource=Resource [name=R3, weight=1.0], percent=1.0]", actionResult.action.toString());
 		assertEquals("Erewhon", ((TransferResult)actionResult).getOther().getName());
 	}
+
+	@Test
+	void testBasicSetupDepth2() {
+		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
+		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 2);
+
+		assertEquals(2, searchResult.size());
+
+		ActionResult<?> actionResult = searchResult.get(0);
+		assertEquals("Atlantis", actionResult.self.getName());
+		assertEquals(5700, actionResult.getQuality());
+		assertEquals(2900, actionResult.getReward());
+		assertEquals("Transfer [resource=Resource [name=R3, weight=1.0], percent=1.0]", actionResult.action.toString());
+		assertEquals("Brobdingnag", ((TransferResult)actionResult).getOther().getName());
+	}
+
+	@Test
+	void testBasicSetupDepth3() {
+		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
+		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 3);
+
+		assertEquals(3, searchResult.size());
+
+		ActionResult<?> actionResult = searchResult.get(0);
+		assertEquals("Atlantis", actionResult.self.getName());
+		assertEquals(6200, actionResult.getQuality());
+		assertEquals(3400, actionResult.getReward());
+		assertEquals("Transfer [resource=Resource [name=R2, weight=1.0], percent=1.0]", actionResult.action.toString());
+		assertEquals("Erewhon", ((TransferResult)actionResult).getOther().getName());
+	}
+
+	@Test
+	void testBasicSetupDepth4() {
+		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
+		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 4);
+
+		assertEquals(4, searchResult.size());
+
+		ActionResult<?> actionResult = searchResult.get(0);
+		assertEquals("Atlantis", actionResult.self.getName());
+		assertEquals(6500, actionResult.getQuality());
+		assertEquals(3700, actionResult.getReward());
+		assertEquals("Transfer [resource=Resource [name=R2, weight=1.0], percent=1.0]", actionResult.action.toString());
+		assertEquals("Brobdingnag", ((TransferResult)actionResult).getOther().getName());
+	}
+
 }
