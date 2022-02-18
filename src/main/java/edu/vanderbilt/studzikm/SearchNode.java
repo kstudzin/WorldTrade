@@ -74,7 +74,9 @@ public class SearchNode {
 
 	@Override
 	public String toString() {
-		return "SearchNode [parent=" + parent.hashCode() + ", children=" + children.size() + ", action=" + action + "]";
+		return "SearchNode [parent=" + (parent == null ? "none" : parent.hashCode()) + ", "
+				+ "children=" + children.size() + ", "
+				+ "action=" + action + "]";
 	}
 
 }

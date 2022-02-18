@@ -48,7 +48,10 @@ public class ActionResult<T extends Action> {
 
 	@Override
 	public String toString() {
-		return "ActionResult [transform=" + action + ", self=" + self.getName() + ", quality="
-				+ quality + ", reward=" + reward + ", world=" + world + "]";
+		return "ActionResult [action=" + action + ", "
+				+ "self=" + self.getName() + ", "
+				+ "quality=" + quality + ", "
+				+ "reward=" + reward + ", "
+				+ "world=" + world + "]";
 	}
 }
