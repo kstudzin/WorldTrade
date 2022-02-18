@@ -79,19 +79,6 @@ public class DefaultStateGenerator implements StateGenerator {
 				Role.SENDER));
 	}
 
-	private Stream<? extends ActionResult<?>> generateTransformations(
-			World initialState, 
-			Country self, 
-			int depth) {
-
-		return transforms.ALL_TRANSFORMS.stream()
-		.map(transform -> performTransformation(
-				transform, 
-				new World(initialState), 
-				new Country(self), 
-				depth));
-	}
-
 	private Stream<? extends ActionResult<?>> performTransferAsSender(
 			Transfer transfer, 
 			World world, 
@@ -130,6 +117,19 @@ public class DefaultStateGenerator implements StateGenerator {
 		Country other = selfRole == Role.RECIEVER ? sender : reciever;
 
 		return new TransferResult(world, transfer, self, other, rewardComputation, depth, selfRole);
+	}
+
+	private Stream<? extends ActionResult<?>> generateTransformations(
+			World initialState, 
+			Country self, 
+			int depth) {
+
+		return transforms.ALL_TRANSFORMS.stream()
+		.map(transform -> performTransformation(
+				transform, 
+				new World(initialState), 
+				new Country(self), 
+				depth));
 	}
 
 	private TransformResult performTransformation(
