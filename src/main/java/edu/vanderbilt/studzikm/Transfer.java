@@ -14,6 +14,9 @@ public class Transfer implements Action{
 	public boolean trade(Country sender, Country receiver) {
 		Integer senderAmount = sender.getResource(resource);
 		Integer tradeQuantity = (int) (senderAmount * percent);
+		if (tradeQuantity <= 0) {
+			return false;
+		}
 
 		sender.updateResource(resource, tradeQuantity * -1);
 		receiver.updateResource(resource, tradeQuantity);

@@ -70,7 +70,6 @@ public class DefaultStateGenerator implements StateGenerator {
 			int depth) {
 
 		return transfers.stream()
-		.filter(t -> self.getResource(t.getResource()) > 0)
 		.flatMap(transfer -> performTransferAsSender(
 				transfer, 
 				initialState, 
@@ -96,7 +95,7 @@ public class DefaultStateGenerator implements StateGenerator {
 				depth, 
 				selfRole));
 	}
-	
+
 	private TransferResult performTransfer(
 			Transfer transfer, 
 			World world, 
