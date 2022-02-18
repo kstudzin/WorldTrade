@@ -35,38 +35,89 @@ public class DefaultStateGenerator implements StateGenerator {
 				.collect(Collectors.toSet());
 	}
 
-	private Stream<? extends ActionResult<?>> generateTransferAsReciever(World initialState, Country self, int depth) {
+	private Stream<? extends ActionResult<?>> generateTransferAsReciever(
+			World initialState, 
+			Country self, 
+			int depth) {
 
 		return transfers.stream()
-		.flatMap(transfer -> performTransferAsReciever(transfer, initialState, self, depth));
+		.flatMap(transfer -> performTransferAsReciever(
+				transfer, 
+				initialState, 
+				self, 
+				depth));
 	}
 
-	private Stream<?extends ActionResult<?>> performTransferAsReciever(Transfer transfer, World world, Country self, int depth) {
+	private Stream<?extends ActionResult<?>> performTransferAsReciever(
+			Transfer transfer, 
+			World world, 
+			Country self, 
+			int depth) {
 
 		return world.stream()
 		.filter(sender -> sender != self)
-		.map(sender -> performTransfer(transfer, new World(world), new Country(self), new Country(sender), depth, Role.RECIEVER));
+		.map(sender -> performTransfer(transfer, 
+				new World(world), 
+				new Country(self), 
+				new Country(sender), 
+				depth, 
+				Role.RECIEVER));
 	}
 
-	private Stream<? extends ActionResult<?>> generateTransferAsSender(World initialState, Country self, int depth) {
+	private Stream<? extends ActionResult<?>> generateTransferAsSender(
+			World initialState, 
+			Country self, 
+			int depth) {
+
 		return transfers.stream()
 		.filter(t -> self.getResource(t.getResource()) > 0)
-		.flatMap(transfer -> performTransferAsSender(transfer, initialState, self, depth, Role.SENDER));
+		.flatMap(transfer -> performTransferAsSender(
+				transfer, 
+				initialState, 
+				self, 
+				depth, 
+				Role.SENDER));
 	}
 
-	private Stream<? extends ActionResult<?>> generateTransformations(World initialState, Country self, int depth) {
+	private Stream<? extends ActionResult<?>> generateTransformations(
+			World initialState, 
+			Country self, 
+			int depth) {
 
 		return transforms.ALL_TRANSFORMS.stream()
-		.map(transform -> performTransformation(transform, new World(initialState), new Country(self), depth));
+		.map(transform -> performTransformation(
+				transform, 
+				new World(initialState), 
+				new Country(self), 
+				depth));
 	}
 
-	private Stream<? extends ActionResult<?>> performTransferAsSender(Transfer transfer, World world, Country sender, int depth, Role selfRole) {
+	private Stream<? extends ActionResult<?>> performTransferAsSender(
+			Transfer transfer, 
+			World world, 
+			Country sender, 
+			int depth, 
+			Role selfRole) {
+
 		return world.stream()
 		.filter(reciever -> reciever != sender)
-		.map(orig -> performTransfer(transfer, new World(world), new Country(orig), new Country(sender), depth, selfRole));
+		.map(orig -> performTransfer(
+				transfer, 
+				new World(world), 
+				new Country(orig), 
+				new Country(sender), 
+				depth, 
+				selfRole));
 	}
 	
-	private TransferResult performTransfer(Transfer transfer, World world, Country reciever, Country sender, int depth, Role selfRole) {
+	private TransferResult performTransfer(
+			Transfer transfer, 
+			World world, 
+			Country reciever, 
+			Country sender, 
+			int depth, 
+			Role selfRole) {
+
 		boolean success = transfer.trade(sender, reciever);
 		if (!success) {
 			return null;
@@ -81,7 +132,12 @@ public class DefaultStateGenerator implements StateGenerator {
 		return new TransferResult(world, transfer, self, other, rewardComputation, depth, selfRole);
 	}
 
-	private TransformResult performTransformation(Transform transform, World world, Country country, int depth){
+	private TransformResult performTransformation(
+			Transform transform, 
+			World world, 
+			Country country, 
+			int depth) {
+
 		boolean success = transform.transform(country);
 		if (!success) {
 			return null;
