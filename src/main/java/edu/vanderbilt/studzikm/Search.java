@@ -30,12 +30,13 @@ public class Search {
 
 		while (!frontier.isEmpty()) {
 			SearchNode n = frontier.removeFirst();
+			log.debug("Expanding node: " + n);
 
 			depth++;
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country, depth)
 					.stream()
 					.map(state -> (ActionResult<?>)state)
-					.sorted((x, y) -> y.getReward().compareTo(x.getReward()))
+					.sorted((x, y) -> x.getReward().compareTo(y.getReward()))
 					.map(e -> nodeFactory.createNode(n, e))
 					.collect(Collectors.toList());
 
@@ -44,18 +45,14 @@ public class Search {
 
 			if (next.isEmpty()) {
 				continue;
-			}
-
-			SearchNode maxUtility = next.get(0);
-			if (depth >= maxDepth) {
+			} else if (depth >= maxDepth) {
+				SearchNode maxUtility = next.get(next.size() - 1);
 				return retrieveActions(maxUtility);
 			}
 
-			next.forEach(node -> {
-				n.addChild(node); 
-				frontier.addFirst(node);
-				}
-			);
+			next.stream()
+			.peek(n::addChild)
+			.forEach(frontier::addFirst);
 
 		}
 
