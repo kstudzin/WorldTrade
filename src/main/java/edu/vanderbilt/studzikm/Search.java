@@ -33,7 +33,7 @@ public class Search {
 			log.debug("Expanding node: " + n);
 
 			depth++;
-			List<SearchNode> next = stateGenerator.generateStates(n.getState(), country, depth)
+			List<SearchNode> next = stateGenerator.generateStates(n.getState(), n.getCountry(), depth)
 					.stream()
 					.map(state -> (ActionResult<?>)state)
 					.sorted((x, y) -> x.getReward().compareTo(y.getReward()))

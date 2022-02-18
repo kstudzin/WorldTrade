@@ -32,6 +32,9 @@ public class SearchNode {
 		return action.getWorld();
 	}
 
+	public Country getCountry() {
+		return action.getSelf();
+	}
 
 	public SearchNode getParent() {
 		return parent;
