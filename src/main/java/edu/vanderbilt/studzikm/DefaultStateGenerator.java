@@ -87,10 +87,10 @@ public class DefaultStateGenerator implements StateGenerator {
 
 		return world.stream()
 		.filter(reciever -> reciever != sender)
-		.map(orig -> performTransfer(
+		.map(reciever -> performTransfer(
 				transfer, 
 				new World(world), 
-				new Country(orig), 
+				new Country(reciever), 
 				new Country(sender), 
 				depth, 
 				selfRole));
