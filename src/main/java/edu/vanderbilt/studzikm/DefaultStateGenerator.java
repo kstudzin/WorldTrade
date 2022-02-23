@@ -104,8 +104,8 @@ public class DefaultStateGenerator implements StateGenerator {
 			int depth, 
 			Role selfRole) {
 
-		boolean success = transfer.trade(sender, reciever);
-		if (!success) {
+		ResourceDelta delta = transfer.trade(sender, reciever);
+		if (delta == null) {
 			return null;
 		}
 
@@ -115,7 +115,7 @@ public class DefaultStateGenerator implements StateGenerator {
 		Country self = selfRole == Role.RECIEVER ? reciever : sender;
 		Country other = selfRole == Role.RECIEVER ? sender : reciever;
 
-		return new TransferResult(world, transfer, self, other, rewardComputation, depth, selfRole);
+		return new TransferResult(world, transfer, self, other, rewardComputation, depth, selfRole, delta);
 	}
 
 	private Stream<? extends ActionResult<?>> generateTransformations(
@@ -137,13 +137,13 @@ public class DefaultStateGenerator implements StateGenerator {
 			Country country, 
 			int depth) {
 
-		boolean success = transform.transform(country);
-		if (!success) {
+		ResourceDelta delta = transform.transform(country);
+		if (delta == null) {
 			return null;
 		}
 
 		world.addCountry(country);
-		return new TransformResult(world, transform, country, rewardComputation, depth);
+		return new TransformResult(world, transform, country, rewardComputation, depth, delta);
 	}
 
 }

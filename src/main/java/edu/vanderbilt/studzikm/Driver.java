@@ -46,9 +46,9 @@ public class Driver {
 			SearchNodeFactory nodeFactory = new SearchNodeFactory();
 
 			Search search = new Search(generator, nodeFactory);
-			List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 1);
+			Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 7);
 
-			System.out.printf("\nFinal World State: %s\n", world);
+			System.out.println(searchResult);
 
 
 		} catch (IOException e) {

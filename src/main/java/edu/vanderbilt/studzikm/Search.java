@@ -23,7 +23,7 @@ public class Search {
 		this.nodeFactory = nodeFactory;
 	}
 
-	public List<ActionResult<? extends Action>> search(World initState, Country country, int maxDepth) {
+	public Schedule search(World initState, Country country, int maxDepth) {
 		frontier.addFirst(nodeFactory.createRoot(initState, country));
 
 		int depth = 0;
@@ -46,8 +46,8 @@ public class Search {
 			if (next.isEmpty()) {
 				continue;
 			} else if (depth >= maxDepth) {
-				SearchNode maxUtility = next.get(next.size() - 1);
-				return retrieveActions(maxUtility);
+				SearchNode maxReward = next.get(next.size() - 1);
+				return Schedule.create(maxReward);
 			}
 
 			next.stream()
@@ -59,16 +59,4 @@ public class Search {
 		return null;
 	}
 
-	private List<ActionResult<? extends Action>> retrieveActions(SearchNode maxUtility) {
-
-		SearchNode parent = maxUtility;
-		List<ActionResult<?>> actions = new ArrayList<>();
-
-		while (parent.getDepth() != 0) {
-			actions.add(parent.getAction());
-			parent = parent.getParent();
-		}
-
-		return actions;
-	}
 }

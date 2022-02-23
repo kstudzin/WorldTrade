@@ -16,8 +16,9 @@ public class TransferResult extends ActionResult<Transfer> {
 			Country other, 
 			RewardComputation rewardCompuation, 
 			int schedulePosition,
-			Role selfRole) {
-		super(world, transform, self, rewardCompuation, schedulePosition);
+			Role selfRole,
+			ResourceDelta delta) {
+		super(world, transform, self, rewardCompuation, schedulePosition, delta);
 		this.other = other; 
 		this.otherReward = rewardCompuation.computeReward(this, this::getOther);
 		this.selfRole = selfRole;

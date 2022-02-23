@@ -24,7 +24,7 @@ public class SearchNode {
 
 
 	public SearchNode(World current, Country self) {
-		this.action = new ActionResult<>(current, new NullAction(), self, new DefaultRewardComputation(), 0);
+		this.action = new ActionResult<>(current, new NullAction(), self, new DefaultRewardComputation(), 0, null);
 	}
 
 

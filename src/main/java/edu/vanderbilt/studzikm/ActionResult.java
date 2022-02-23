@@ -8,18 +8,21 @@ public class ActionResult<T extends Action> {
 	Double quality;
 	Double reward;
 	int schedulePosition;
+	ResourceDelta delta;
 
 	public ActionResult(World world, 
 			T transform, 
 			Country self, 
 			RewardComputation rewardComputation,
-			int schedulePosition) {
+			int schedulePosition,
+			ResourceDelta delta) {
 		this.world = world;
 		this.action = transform;
 		this.self = self;
 		this.quality = this.self.computeQuality();
 		this.reward = rewardComputation.computeReward(this, this::getSelf);
 		this.schedulePosition = schedulePosition;
+		this.delta = delta;
 	}
 
 	public World getWorld() {
@@ -44,6 +47,10 @@ public class ActionResult<T extends Action> {
 
 	public Country getSelf() {
 		return self;
+	}
+
+	public ResourceDelta getResourceDelta() {
+		return delta;
 	}
 
 	@Override

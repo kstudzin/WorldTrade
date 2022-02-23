@@ -14,24 +14,24 @@ public class Transfer implements Action{
 		this.percent = percent;
 	}
 
-	public boolean trade(Country sender, Country receiver) {
+	public ResourceDelta trade(Country sender, Country receiver) {
 		if (sender.getName() == receiver.getName()) {
 			log.warn("Found countries with same name in transfer:\n"
 					+ "\tSender:   " + sender + "\n"
 					+ "\tReciever: " +receiver);
-			return false;
+			return null;
 		}
 
 		Integer senderAmount = sender.getResource(resource);
 		Integer tradeQuantity = (int) (senderAmount * percent);
 		if (tradeQuantity <= 0) {
-			return false;
+			return null;
 		}
 
 		sender.updateResource(resource, tradeQuantity * -1);
 		receiver.updateResource(resource, tradeQuantity);
 
-		return true;
+		return new ResourceDelta().addInput(resource, tradeQuantity);
 	}
 
 	public Resource getResource() {

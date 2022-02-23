@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class Transform implements Action{
+public class Transform implements Action {
 
 	private String name;
 	private Map<Resource, Integer> input = new HashMap<>();
@@ -16,20 +16,23 @@ public class Transform implements Action{
 		this.output = output;
 	}
 
-	public boolean transform(Country country) {
+	public ResourceDelta transform(Country country) {
 		 if (validateInputs(country) != input.size()) {
-			 return false;
+			 return null;
 		 }
 
+		 ResourceDelta delta = new ResourceDelta();
 		 for (Entry<Resource, Integer> resource : input.entrySet()) {
 			 country.updateResource(resource.getKey(), resource.getValue() * -1);
+			 delta.addInput(resource.getKey(), resource.getValue());
 		 }
 
 		 for (Entry<Resource, Integer> resource : output.entrySet()) {
 			 country.updateResource(resource.getKey(), resource.getValue());
+			 delta.addOutput(resource.getKey(), resource.getValue());
 		 }
 
-		 return true;
+		 return delta;
 	}
 
 	@Override
