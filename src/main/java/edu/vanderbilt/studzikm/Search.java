@@ -1,6 +1,5 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,12 +14,15 @@ public class Search {
 
 	private StateGenerator stateGenerator;
 	private SearchNodeFactory nodeFactory;
+	private ScheduleFactory scheduleFactory;
 	private Deque<SearchNode> frontier = new LinkedList<>();
 
 	public Search(StateGenerator stateGenerator,
-			SearchNodeFactory nodeFactory) {
+			SearchNodeFactory nodeFactory,
+			ScheduleFactory scheduleFactory) {
 		this.stateGenerator = stateGenerator;
 		this.nodeFactory = nodeFactory;
+		this.scheduleFactory = scheduleFactory;
 	}
 
 	public Schedule search(World initState, Country country, int maxDepth) {
@@ -47,7 +49,7 @@ public class Search {
 				continue;
 			} else if (depth >= maxDepth) {
 				SearchNode maxReward = next.get(next.size() - 1);
-				return Schedule.create(maxReward);
+				return scheduleFactory.create(maxReward);
 			}
 
 			next.stream()

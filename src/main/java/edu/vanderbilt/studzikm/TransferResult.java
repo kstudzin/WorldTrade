@@ -32,10 +32,6 @@ public class TransferResult extends ActionResult<Transfer> {
 		return other;
 	}
 
-	public double getSuccessProbability(SuccessProbabilityComputation computation) {
-		return computation.compute(this);
-	}
-
 	public double getOtherReward() {
 		return otherReward;
 	}

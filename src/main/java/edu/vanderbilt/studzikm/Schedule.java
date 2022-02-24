@@ -6,16 +6,18 @@ import java.util.stream.Collectors;
 
 public class Schedule {
 
-	private Deque<ScheduleItem> items;
+	private Deque<ScheduleItem> items = new LinkedList<>();
+
 	private Schedule () {
-		items = new LinkedList<>();
+
 	}
 
-	public static Schedule create(SearchNode result) {
+	public static Schedule create(SearchNode result, 
+			ExpectedUtilityComputation expectedUtilityComputation) {
 		Schedule schedule = new Schedule();
 
 		while (result.getDepth() != 0) {
-			ScheduleItem item = createItem(result);
+			ScheduleItem item = createItem(result, expectedUtilityComputation);
 			schedule.items.addFirst(item);
 			result = result.getParent();
 		}
@@ -23,8 +25,9 @@ public class Schedule {
 		return schedule;
 	}
 
-	private static ScheduleItem createItem(SearchNode result) {
-		return ScheduleItem.create(result);
+	private static ScheduleItem createItem(SearchNode result, 
+			ExpectedUtilityComputation expectedUtilityComputation) {
+		return ScheduleItem.create(result, expectedUtilityComputation);
 	}
 
 	@Override

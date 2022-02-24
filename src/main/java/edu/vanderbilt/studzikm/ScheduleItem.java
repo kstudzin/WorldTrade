@@ -13,20 +13,25 @@ class ScheduleItem {
 	private String secondName;
 	private Map<String, Integer> inputs;
 	private Map<String, Integer> outputs;
+	private double expectedUtility;
 
 	private ScheduleItem() {
 		
 	}
 
-	public static ScheduleItem create(SearchNode node) {
+	public static ScheduleItem create(SearchNode node, 
+			ExpectedUtilityComputation expectedUtilityComputation) {
 		ScheduleItem item = new ScheduleItem();
 
 		item.type = node.getAction() instanceof TransferResult ? Type.TRANSFER : Type.TRANSFORM;
 		if (item.type == Type.TRANSFER) {
-			createFromTransferResult(item, 
-					(TransferResult) node.getAction());
+			TransferResult result = (TransferResult) node.getAction();
+			createFromTransferResult(item, result);
+			item.expectedUtility = expectedUtilityComputation.compute(result);
 		} else {
-			createFromTransformResult(item, (TransformResult) node.getAction());
+			TransformResult result = (TransformResult) node.getAction();
+			createFromTransformResult(item, result);
+			item.expectedUtility = expectedUtilityComputation.compute(result);
 		}
 
 		return item;
@@ -114,7 +119,8 @@ class ScheduleItem {
 		}
 
 		builder.deleteCharAt(builder.length() - 1);
-		return builder.append(')');
+		return builder.append(") EU: ")
+				.append(expectedUtility);
 	}
 
 }

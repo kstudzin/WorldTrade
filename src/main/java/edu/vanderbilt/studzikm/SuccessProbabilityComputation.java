@@ -11,7 +11,7 @@ public class SuccessProbabilityComputation {
 	}
 
 	public Double compute(TransferResult result) {
-		return 1.0 / ( 1 + Math.exp(k * (result.getReward() - x0)));
+		return 1.0 / ( 1 + Math.exp(k * (result.getOtherReward() - x0)));
 	}
 
 	public Double compute(TransformResult result) {

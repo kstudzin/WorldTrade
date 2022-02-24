@@ -11,7 +11,4 @@ public class TransformResult extends ActionResult<Transform> {
 		super(world, transform, self, rewardCompuation, schedulePosition, delta);
 	}
 
-	public double getSuccessProbability(SuccessProbabilityComputation computation) {
-		return computation.compute(this);
-	}
 }

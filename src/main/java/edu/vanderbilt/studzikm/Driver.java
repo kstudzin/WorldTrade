@@ -2,7 +2,6 @@ package edu.vanderbilt.studzikm;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -45,7 +44,12 @@ public class Driver {
 
 			SearchNodeFactory nodeFactory = new SearchNodeFactory();
 
-			Search search = new Search(generator, nodeFactory);
+			SuccessProbabilityComputation successProbabilityComputation = new SuccessProbabilityComputation(1, 0);
+			ExpectedUtilityComputation expectedUtilityComputation = new ExpectedUtilityComputation(-0.2, 
+					successProbabilityComputation);
+			ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
+
+			Search search = new Search(generator, nodeFactory, scheduleFactory);
 			Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 7);
 
 			System.out.println(searchResult);
