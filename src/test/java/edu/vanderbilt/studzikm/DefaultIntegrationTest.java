@@ -2,8 +2,8 @@ package edu.vanderbilt.studzikm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,55 +39,49 @@ public class DefaultIntegrationTest {
 	}
 
 	private World setUpWorld() {
-		World world = new World();
+		Supplier<QualityComputation> qualityComputation = DefaultQualityComputation::new;
 
-		Country atlantis = new Country("Atlantis", new DefaultQualityComputation());
-		atlantis.addResource(resources.get("R1"), 100);
-		atlantis.addResource(resources.get("R2"), 700);
-		atlantis.addResource(resources.get("R3"), 2000);
-		world.addCountry(atlantis);
+		return new WorldBuilder(resources)
 
-		Country brobdingnag = new Country("Brobdingnag", new DefaultQualityComputation());
-		brobdingnag.addResource(resources.get("R1"), 50);
-		brobdingnag.addResource(resources.get("R2"), 300);
-		brobdingnag.addResource(resources.get("R3"), 1200);
-		world.addCountry(brobdingnag);
+				.addCountry("Atlantis", qualityComputation)
+				.addResource("Atlantis", "R1", 100)
+				.addResource("Atlantis", "R2", 700)
+				.addResource("Atlantis", "R3", 2000)
 
-		Country carpania = new Country("Carpania", new DefaultQualityComputation());
-		carpania.addResource(resources.get("R1"), 25);
-		carpania.addResource(resources.get("R2"), 100);
-		carpania.addResource(resources.get("R3"), 300);
-		world.addCountry(carpania);
+				.addCountry("Brobdingnag", qualityComputation)
+				.addResource("Brobdingnag", "R1", 50)
+				.addResource("Brobdingnag", "R2", 300)
+				.addResource("Brobdingnag", "R3", 1200)
 
-		Country dinotopia = new Country("Dinotopia", new DefaultQualityComputation());
-		dinotopia.addResource(resources.get("R1"), 30);
-		dinotopia.addResource(resources.get("R2"), 200);
-		dinotopia.addResource(resources.get("R3"), 200);
-		world.addCountry(dinotopia);
+				.addCountry("Carpania", qualityComputation)
+				.addResource("Carpania", "R1", 25)
+				.addResource("Carpania", "R2",	100)
+				.addResource("Carpania", "R3", 300)
 
-		Country erewhon = new Country("Erewhon", new DefaultQualityComputation());
-		erewhon.addResource(resources.get("R1"), 70);
-		erewhon.addResource(resources.get("R2"), 500);
-		erewhon.addResource(resources.get("R3"), 1700);
-		world.addCountry(erewhon);
+				.addCountry("Dinotopia", qualityComputation)
+				.addResource("Dinotopia", "R1", 30)
+				.addResource("Dinotopia", "R2", 200)
+				.addResource("Dinotopia", "R3", 200)
 
-		return world;
+				.addCountry("Erewhon", qualityComputation)
+				.addResource("Erewhon", "R1", 70)
+				.addResource("Erewhon", "R2", 500)
+				.addResource("Erewhon", "R3", 1700)
+				.build();
 	}
 
 	private Map<String, Resource> setUpResources() {
-		Map<String, Resource> resources = new HashMap<>();
-
-		resources.put("R1", new Resource("R1", 1.0));
-		resources.put("R2", new Resource("R2", 1.0));
-		resources.put("R3", new Resource("R3", 1.0));
-		resources.put("R21", new Resource("R21", 0.2));
-		resources.put("R22", new Resource("R22", 0.5));
-		resources.put("R23", new Resource("R23", 0.8));
-		resources.put("R21'", new Resource("R21'", -0.5));
-		resources.put("R22'", new Resource("R22'", -0.8));
-		resources.put("R23'", new Resource("R23'", -0.4));
-
-		return resources;
+		return new ResourcesBuilder()
+				.addResource("R1", 1.0)
+				.addResource("R2", 1.0)
+				.addResource("R3", 1.0)
+				.addResource("R21", 0.2)
+				.addResource("R22", 0.5)
+				.addResource("R23", 0.8)
+				.addResource("R21'", -0.5)
+				.addResource("R22'", -0.8)
+				.addResource("R23'", -0.4)
+				.build();
 	}
 
 	@Test
@@ -120,6 +114,7 @@ public class DefaultIntegrationTest {
 		assertEquals(Type.TRANSFER, item.getType());
 		// TODO check inputs and expected utility
 		assertEquals("Atlantis", item.getSecondName());
+		assertEquals(0, item.getExpectedUtility());
 	}
 
 	@Test
