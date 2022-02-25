@@ -1,20 +1,39 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 public class DefaultTransforms {
 
-	public final Transform HOUSING_TRANSFORM;
-	public final Transform ALLOYS_TRANSFORM;
-	public final Transform ELECTRONICS_TRANSFORM;
+	public static final String HOUSING = "housing";
+	public static final String ALLOYS = "alloys";
+	public static final String ELECTRONICS = "electronics";
 
-	public final Collection<Transform> ALL_TRANSFORMS;
+	private static final double[] defaultProportions = {0.33, 0.66};
+
+	private final Collection<Transform> transforms;
 
 	public DefaultTransforms(Map<String, Resource> resources) {
-		HOUSING_TRANSFORM = new TransformBuilder()
-				.name("housing")
+		this(resources, defaultProportions);
+	}
+
+	public DefaultTransforms(Map<String, Resource> resources, double[] proportions) {
+		transforms = DoubleStream.of(proportions)
+		.mapToObj(p -> createTransforms(resources, p))
+		.flatMap(s -> s)
+		.collect(Collectors.toSet());
+	}
+
+	private Stream<Transform> createTransforms(Map<String, Resource> resources, double proportion) {
+		return Stream.of(
+
+				new TransformBuilder()
+				.name(HOUSING)
+				.proportion(proportion)
 				.addInput(resources.get("R1"), 5)
 				.addInput(resources.get("R2"), 1)
 				.addInput(resources.get("R3"), 5)
@@ -22,27 +41,37 @@ public class DefaultTransforms {
 				.addOutput(resources.get("R23"), 1)
 				.addOutput(resources.get("R23'"), 1)
 				.addOutput(resources.get("R1"), 5)
-				.build();
+				.build(),
 
-		ALLOYS_TRANSFORM = new TransformBuilder()
-				.name("alloys")
+				new TransformBuilder()
+				.name(ALLOYS)
+				.proportion(proportion)
 				.addInput(resources.get("R1"), 1)
 				.addInput(resources.get("R2"), 2)
 				.addOutput(resources.get("R1"), 1)
 				.addOutput(resources.get("R21"), 1)
 				.addOutput(resources.get("R21'"), 1)
-				.build();
+				.build(),
 
-		ELECTRONICS_TRANSFORM = new TransformBuilder()
-				.name("electronics")
+				new TransformBuilder()
+				.name(ELECTRONICS)
+				.proportion(proportion)
 				.addInput(resources.get("R1"), 1)
 				.addInput(resources.get("R2"), 3)
 				.addInput(resources.get("R21"), 2)
 				.addOutput(resources.get("R1"), 1)
 				.addOutput(resources.get("R22"), 2)
 				.addOutput(resources.get("R22'"), 1)
-				.build();
+				.build()
 
-		ALL_TRANSFORMS = Arrays.asList(HOUSING_TRANSFORM, ALLOYS_TRANSFORM, ELECTRONICS_TRANSFORM);
+				);
+	}
+
+	public Collection<Transform> getTransforms() {
+		return Collections.unmodifiableCollection(transforms);
+	}
+
+	public Stream<Transform> stream() {
+		return transforms.stream();
 	}
 }

@@ -41,8 +41,8 @@ public class Country {
 		resources.put(resource, amount);
 	}
 
-	public void updateResource(Resource resource, Integer delta) {
-		resources.compute(resource, (key, val) -> val == null ? delta : val + delta);
+	public Integer updateResource(Resource resource, Integer delta) {
+		return resources.compute(resource, (key, val) -> val == null ? delta : val + delta);
 	}
 
 	public void updateResource(String resourceName, Integer delta) {

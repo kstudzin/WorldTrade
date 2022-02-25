@@ -123,7 +123,7 @@ public class DefaultStateGenerator implements StateGenerator {
 			Country self, 
 			int depth) {
 
-		return transforms.ALL_TRANSFORMS.stream()
+		return transforms.stream()
 		.map(transform -> performTransformation(
 				transform, 
 				new World(initialState), 

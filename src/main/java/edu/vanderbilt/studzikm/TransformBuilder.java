@@ -6,6 +6,7 @@ import java.util.Map;
 public class TransformBuilder {
 
 	private String name;
+	private double proportion;
 	private Map<Resource, Integer> input = new HashMap<>();
 	private Map<Resource, Integer> output = new HashMap<>();
 
@@ -24,7 +25,12 @@ public class TransformBuilder {
 		return this;
 	}
 
+	public TransformBuilder proportion(double proportion) {
+		this.proportion = proportion;
+		return this;
+	}
+
 	public Transform build() {
-		return new Transform(input, output, name);
+		return new Transform(input, output, name, proportion);
 	}
 }

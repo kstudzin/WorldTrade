@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TransformTest {
@@ -20,6 +21,9 @@ class TransformTest {
 	static Resource r22p = new Resource("R22'", 1.0);
 	static Resource r23p = new Resource("R23'", 1.0);
 	DefaultTransforms transforms = new DefaultTransforms(defaultResources);
+	Transform housing;
+	Transform alloys;
+	Transform electronics;
 
 	static {
 		defaultResources.put("R1", r1);
@@ -33,6 +37,21 @@ class TransformTest {
 		defaultResources.put("R23'", r23p);
 	}
 
+	@BeforeEach
+	void setup() {
+		housing = getTransform(DefaultTransforms.HOUSING);
+		alloys = getTransform(DefaultTransforms.ALLOYS);
+		electronics = getTransform(DefaultTransforms.ELECTRONICS);
+	}
+
+	Transform getTransform(String name) {
+		return transforms.stream()
+			.filter(t -> t.getName() == name && 
+				Double.compare(t.getProportion(), 0.33) == 0)
+			.findFirst()
+			.get();
+	}
+
 	@Test
 	void testHousingTransform() {
 		Country country = new Country("TestCountry", new DefaultQualityComputation());
@@ -41,9 +60,10 @@ class TransformTest {
 		country.addResource(r3, 10);
 		country.addResource(r21, 10);
 
-		boolean result = transforms.HOUSING_TRANSFORM.transform(country);
+		ResourceDelta result = housing.transform(country, 1);
 
-		assertTrue(result);
+		assertNotNull(result);
+		// TODO check ResourceDelta
 		assertEquals(10, country.getResource(r1));
 		assertEquals(4, country.getResource(r2));
 		assertEquals(5, country.getResource(r3));
@@ -59,14 +79,35 @@ class TransformTest {
 		country.addResource(r2, 6);
 		country.addResource(r21, 4);
 
-		boolean result = transforms.ELECTRONICS_TRANSFORM.transform(country);
+		ResourceDelta result = electronics.transform(country, 1);
 
-		assertTrue(result);
+		assertNotNull(result);
+		// TODO check ResourceDelta
 		assertEquals(10, country.getResource(r1));
 		assertEquals(3, country.getResource(r2));
 		assertEquals(2, country.getResource(r21));
 		assertEquals(2, country.getResource(r22));
 		assertEquals(1, country.getResource(r22p));
+	}
+
+	@Test
+	void testHousingTransformDefaultProportion() {
+		Country country = new Country("TestCountry", new DefaultQualityComputation());
+		country.addResource(r1, 200);
+		country.addResource(r2, 40);
+		country.addResource(r3, 200);
+		country.addResource(r21, 120);
+
+		ResourceDelta result = housing.transform(country);
+
+		assertNotNull(result);
+		// TODO check ResourceDelta
+		assertEquals(200, country.getResource(r1));
+		assertEquals(27, country.getResource(r2));
+		assertEquals(135, country.getResource(r3));
+		assertEquals(81, country.getResource(r21));
+		assertEquals(13, country.getResource(r23));
+		assertEquals(13, country.getResource(r23p));
 	}
 
 }
