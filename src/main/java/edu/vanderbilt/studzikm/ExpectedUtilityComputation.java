@@ -1,6 +1,11 @@
 package edu.vanderbilt.studzikm;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ExpectedUtilityComputation {
+
+	Logger log = LogManager.getLogger(ExpectedUtilityComputation.class);
 
 	private double c;
 	private SuccessProbabilityComputation successProbabilityComputation;
@@ -21,7 +26,8 @@ public class ExpectedUtilityComputation {
 		// We may need to multiply the products in the future if we allow transfers between more than 
 		// two countries.
 		double successProbability = successProbabilityComputation.compute(result);
-		return (successProbability * result.getReward()) - ((1 - successProbability) * c);
+		log.trace("Success probability: " + successProbability);
+		return (successProbability * result.getReward()) + ((1 - successProbability) * c);
 	}
 
 	public double compute(TransformResult result) {
