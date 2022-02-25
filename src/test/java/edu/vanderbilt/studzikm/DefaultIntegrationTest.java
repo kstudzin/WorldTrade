@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,54 +14,28 @@ public class DefaultIntegrationTest {
 
 	Map<String, Resource> resources;
 	World world;
-	TransferFactory transfers;
-	StateGenerator stateGenerator;
-	SearchNodeFactory nodeFactory;
-	ScheduleFactory scheduleFactory;
 	Search search;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		resources = setUpResources();
 		world = setUpWorld();
-		transfers = setUpTransfers();
-		stateGenerator = setUpStateGenerator();
-		nodeFactory = setUpNodeFactory();
-		scheduleFactory = setUpScheduleFactory();
 		search = setUpSearch();
 	}
 
-	private ScheduleFactory setUpScheduleFactory() {
-		SuccessProbabilityComputation successProbabilityComputation = new SuccessProbabilityComputation(1, 0);
-		ExpectedUtilityComputation expectedUtilityComputation = new ExpectedUtilityComputation(0, successProbabilityComputation);
-		ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
-		return scheduleFactory;
-	}
-
-	private SearchNodeFactory setUpNodeFactory() {
-		return new SearchNodeFactory();
-	}
-
 	private Search setUpSearch() {
-		return new Search(stateGenerator, nodeFactory, scheduleFactory);
-	}
-
-	private StateGenerator setUpStateGenerator() {
-		Map<String, Double> initialQualities = world.stream()
-				.collect(Collectors.toMap(Country::getName, Country::computeQuality));
-
-		RewardComputation rewardComp = 
-				new DiscountedRewardComputationBuilder()
-				.setGamma(1)
-				.setInitialQualities(initialQualities)
-				.build();
-
-		return new DefaultStateGenerator(resources, transfers, rewardComp);
-	}
-
-	private TransferFactory setUpTransfers() {
-		Double[] allowedTradePercent = {0.5, 1.0};
-		return new DefaultTransfers(resources, allowedTradePercent);
+		SearchBuilder builder = new SearchBuilder()
+				.setTransferProportion(0.5)
+				.setTransferProportion(1.0)
+				.setTransformProportions(0.33)
+				.setTransformProportions(0.66)
+				.setGamma(1.0)
+				.setFailurePenalty(0.0)
+				.setLogisticGrowthRate(1.0)
+				.setSigmoidMidpoint(0.0)
+				.setResources(resources)
+				.setInitialQualities(world);
+		return builder.build();
 	}
 
 	private World setUpWorld() {

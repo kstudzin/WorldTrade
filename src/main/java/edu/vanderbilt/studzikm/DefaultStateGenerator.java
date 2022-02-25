@@ -1,7 +1,6 @@
 package edu.vanderbilt.studzikm;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,14 +10,15 @@ import edu.vanderbilt.studzikm.TransferResult.Role;
 
 public class DefaultStateGenerator implements StateGenerator {
 
-	private DefaultTransforms transforms;
+	private Collection<Transform> transforms;
 	private Collection<Transfer> transfers;
 	private RewardComputation rewardComputation;
 
-	public DefaultStateGenerator(Map<String, Resource> resources, 
+	public DefaultStateGenerator(
 			TransferFactory transferFactory, 
+			TransformFactory transformFactory,
 			RewardComputation rewardComputation) {
-		this.transforms = new DefaultTransforms(resources);
+		this.transforms = transformFactory.getTransforms();
 		this.transfers = transferFactory.getTransfers();
 		this.rewardComputation = rewardComputation;
 	}

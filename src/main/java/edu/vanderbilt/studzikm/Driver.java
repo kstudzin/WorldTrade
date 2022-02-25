@@ -21,35 +21,27 @@ public class Driver {
 			World world = CountryParser.createWorld(countryFile, resources);
 			System.out.printf("\nInitial World State: %s\n", world);
 
-			System.out.printf("\nInitial country utility: \n%s\n", world.stream()
+			System.out.printf("\nInitial country utility: \n%s\n", 
+					world.stream()
 					.map(country -> new StringBuilder("\t")
 							.append(country.getName())
 							.append(" ")
 							.append(country.computeQuality()))
 					.collect(Collectors.joining("\n")));
 
-			Double[] allowedTradePercent = {0.5, 1.0};
-			TransferFactory transferFactory = new DefaultTransfers(resources, allowedTradePercent);
-
-			Map<String, Double> initialQualitites = world.stream()
-					.collect(Collectors.toMap(Country::getName, Country::computeQuality));
-			RewardComputation rewardComputation = 
-					new DiscountedRewardComputationBuilder()
-					.setGamma(1)
-					.setInitialQualities(initialQualitites)
+			Search search = new SearchBuilder()
+					.setTransferProportion(0.5)
+					.setTransferProportion(1.0)
+					.setTransformProportions(0.33)
+					.setTransformProportions(0.66)
+					.setGamma(1.0)
+					.setFailurePenalty(0.0)
+					.setLogisticGrowthRate(1.0)
+					.setSigmoidMidpoint(0.0)
+					.setResources(resources)
+					.setInitialQualities(world)
 					.build();
-			StateGenerator generator = new DefaultStateGenerator(resources, 
-					transferFactory, 
-					rewardComputation);
 
-			SearchNodeFactory nodeFactory = new SearchNodeFactory();
-
-			SuccessProbabilityComputation successProbabilityComputation = new SuccessProbabilityComputation(1, 0);
-			ExpectedUtilityComputation expectedUtilityComputation = new ExpectedUtilityComputation(-0.2, 
-					successProbabilityComputation);
-			ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
-
-			Search search = new Search(generator, nodeFactory, scheduleFactory);
 			Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 7);
 
 			System.out.println(searchResult);

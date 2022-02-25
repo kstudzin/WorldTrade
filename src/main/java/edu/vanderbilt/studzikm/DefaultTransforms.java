@@ -4,16 +4,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
-public class DefaultTransforms {
+public class DefaultTransforms implements TransformFactory {
 
 	public static final String HOUSING = "housing";
 	public static final String ALLOYS = "alloys";
 	public static final String ELECTRONICS = "electronics";
 
-	private static final double[] defaultProportions = {0.33, 0.66};
+	private static final Double[] defaultProportions = {0.33, 0.66};
 
 	private final Collection<Transform> transforms;
 
@@ -21,14 +20,13 @@ public class DefaultTransforms {
 		this(resources, defaultProportions);
 	}
 
-	public DefaultTransforms(Map<String, Resource> resources, double[] proportions) {
-		transforms = DoubleStream.of(proportions)
-		.mapToObj(p -> createTransforms(resources, p))
-		.flatMap(s -> s)
+	public DefaultTransforms(Map<String, Resource> resources, Double[] proportions) {
+		transforms = Stream.of(proportions)
+		.flatMap(p -> createTransforms(resources, p))
 		.collect(Collectors.toSet());
 	}
 
-	private Stream<Transform> createTransforms(Map<String, Resource> resources, double proportion) {
+	private Stream<Transform> createTransforms(Map<String, Resource> resources, Double proportion) {
 		return Stream.of(
 
 				new TransformBuilder()
