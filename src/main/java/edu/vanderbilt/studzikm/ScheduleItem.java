@@ -14,6 +14,10 @@ class ScheduleItem {
 	private Map<String, Integer> inputs;
 	private Map<String, Integer> outputs;
 	private double expectedUtility;
+	private double selfQuality;
+	private double otherQuality;
+	private double selfReward;
+	private double otherReward;
 
 	private ScheduleItem() {
 		
@@ -45,12 +49,58 @@ class ScheduleItem {
 		item.secondName = selfRole == TransferResult.Role.SENDER ? 
 				result.getOther().getName() : result.getSelf().getName();
 		item.inputs = result.getResourceDelta().getInputs();
+		item.selfReward = result.getReward();
+		item.otherReward = result.getOtherReward();
+		item.selfQuality = result.getQuality();
+		item.otherQuality = result.getOther().computeQuality();
 	}
 
 	private static void createFromTransformResult(ScheduleItem item, TransformResult result) {
 		item.firstName = result.getSelf().getName();
 		item.inputs = result.getResourceDelta().getInputs();
 		item.outputs = result.getResourceDelta().getOutputs();
+		item.selfReward = result.getReward();
+		item.selfQuality = result.getQuality();
+	}
+
+	public double getSelfQuality() {
+		return selfQuality;
+	}
+
+	public double getOtherQuality() {
+		return otherQuality;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getSecondName() {
+		return secondName;
+	}
+
+	public Map<String, Integer> getInputs() {
+		return inputs;
+	}
+
+	public Map<String, Integer> getOutputs() {
+		return outputs;
+	}
+
+	public double getExpectedUtility() {
+		return expectedUtility;
+	}
+
+	public double getSelfReward() {
+		return selfReward;
+	}
+
+	public double getOtherReward() {
+		return otherReward;
 	}
 
 	public StringBuilder toStringBuilder() {

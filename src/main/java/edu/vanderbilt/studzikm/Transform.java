@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 public class Transform implements Action {
 
@@ -52,7 +53,7 @@ public class Transform implements Action {
 		return name;
 	}
 
-	public double getProportion() {
+	public Double getProportion() {
 		return proportion;
 	}
 
@@ -76,5 +77,24 @@ public class Transform implements Action {
 				.mapToInt(e -> (int)((country.getResource(e.getKey()) / e.getValue()) * proportion))
 				.min()
 				.orElse(0);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(input, name, output, proportion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transform other = (Transform) obj;
+		return Objects.equals(input, other.input) && Objects.equals(name, other.name)
+				&& Objects.equals(output, other.output)
+				&& Double.doubleToLongBits(proportion) == Double.doubleToLongBits(other.proportion);
 	}
 }

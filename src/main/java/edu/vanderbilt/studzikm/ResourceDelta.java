@@ -3,6 +3,7 @@ package edu.vanderbilt.studzikm;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ResourceDelta {
 
@@ -25,5 +26,22 @@ public class ResourceDelta {
 
 	public Map<String, Integer> getOutputs() {
 		return Collections.unmodifiableMap(outputs);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(inputs, outputs);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ResourceDelta other = (ResourceDelta) obj;
+		return Objects.equals(inputs, other.inputs) && Objects.equals(outputs, other.outputs);
 	}
 }

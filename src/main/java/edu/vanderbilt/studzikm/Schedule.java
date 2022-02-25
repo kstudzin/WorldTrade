@@ -1,12 +1,12 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Schedule {
 
-	private Deque<ScheduleItem> items = new LinkedList<>();
+	private List<ScheduleItem> items = new LinkedList<>();
 
 	private Schedule () {
 
@@ -18,7 +18,7 @@ public class Schedule {
 
 		while (result.getDepth() != 0) {
 			ScheduleItem item = createItem(result, expectedUtilityComputation);
-			schedule.items.addFirst(item);
+			schedule.items.add(item);
 			result = result.getParent();
 		}
 
@@ -37,4 +37,13 @@ public class Schedule {
 		.map(StringBuilder::toString)
 		.collect(Collectors.joining("\n")) + "\n]";
 	}
+
+	public int size() {
+		return items.size();
+	}
+
+	public ScheduleItem get(int index) {
+		return items.get(index);
+	}
+
 }

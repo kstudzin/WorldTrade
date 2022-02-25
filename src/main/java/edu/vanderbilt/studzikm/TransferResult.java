@@ -1,5 +1,7 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Objects;
+
 public class TransferResult extends ActionResult<Transfer> {
 
 	enum Role {
@@ -32,7 +34,7 @@ public class TransferResult extends ActionResult<Transfer> {
 		return other;
 	}
 
-	public double getOtherReward() {
+	public Double getOtherReward() {
 		return otherReward;
 	}
 
@@ -45,6 +47,28 @@ public class TransferResult extends ActionResult<Transfer> {
 				+ "quality=" + quality + ", "
 				+ "reward=" + reward + ", "
 				+ "world=" + world + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(other, otherReward, selfRole);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TransferResult other = (TransferResult) obj;
+		return Objects.equals(this.other, other.other)
+				&& Double.doubleToLongBits(otherReward) == Double.doubleToLongBits(other.otherReward)
+				&& selfRole == other.selfRole;
 	}
 
 }

@@ -3,13 +3,13 @@ package edu.vanderbilt.studzikm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import edu.vanderbilt.studzikm.ScheduleItem.Type;
 
 public class DefaultIntegrationTest {
 
@@ -18,6 +18,7 @@ public class DefaultIntegrationTest {
 	TransferFactory transfers;
 	StateGenerator stateGenerator;
 	SearchNodeFactory nodeFactory;
+	ScheduleFactory scheduleFactory;
 	Search search;
 
 	@BeforeEach
@@ -27,7 +28,15 @@ public class DefaultIntegrationTest {
 		transfers = setUpTransfers();
 		stateGenerator = setUpStateGenerator();
 		nodeFactory = setUpNodeFactory();
+		scheduleFactory = setUpScheduleFactory();
 		search = setUpSearch();
+	}
+
+	private ScheduleFactory setUpScheduleFactory() {
+		SuccessProbabilityComputation successProbabilityComputation = new SuccessProbabilityComputation(1, 0);
+		ExpectedUtilityComputation expectedUtilityComputation = new ExpectedUtilityComputation(0, successProbabilityComputation);
+		ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
+		return scheduleFactory;
 	}
 
 	private SearchNodeFactory setUpNodeFactory() {
@@ -35,7 +44,7 @@ public class DefaultIntegrationTest {
 	}
 
 	private Search setUpSearch() {
-		return new Search(stateGenerator, nodeFactory);
+		return new Search(stateGenerator, nodeFactory, scheduleFactory);
 	}
 
 	private StateGenerator setUpStateGenerator() {
@@ -111,61 +120,63 @@ public class DefaultIntegrationTest {
 	@Test
 	void testBasicSetup() {
 		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
-		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 1);
+		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 1);
 
 		assertEquals(1, searchResult.size());
 
-		ActionResult<?> actionResult = searchResult.get(0);
-		assertEquals("Atlantis", actionResult.self.getName());
-		assertEquals(4500, actionResult.getQuality());
-		assertEquals(1700, actionResult.getReward());
-		assertEquals("Transfer [resource=Resource [name=R3, weight=1.0], percent=1.0]", actionResult.action.toString());
-		assertEquals("Erewhon", ((TransferResult)actionResult).getOther().getName());
+		ScheduleItem item = searchResult.get(0);
+		assertEquals("Erewhon", item.getFirstName());
+		assertEquals(4500, item.getSelfQuality());
+		assertEquals(1700, item.getSelfReward());
+		assertEquals(Type.TRANSFER, item.getType());
+		// TODO check inputs and expected utility
+		assertEquals("Atlantis", item.getSecondName());
 	}
 
 	@Test
 	void testBasicSetupDepth2() {
 		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
-		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 2);
+		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 2);
 
 		assertEquals(2, searchResult.size());
 
-		ActionResult<?> actionResult = searchResult.get(0);
-		assertEquals("Atlantis", actionResult.self.getName());
-		assertEquals(5700, actionResult.getQuality());
-		assertEquals(2900, actionResult.getReward());
-		assertEquals("Transfer [resource=Resource [name=R3, weight=1.0], percent=1.0]", actionResult.action.toString());
-		assertEquals("Brobdingnag", ((TransferResult)actionResult).getOther().getName());
+		ScheduleItem item = searchResult.get(0);
+		assertEquals("Brobdingnag", item.getFirstName());
+		assertEquals(5700, item.getSelfQuality());
+		assertEquals(2900, item.getSelfReward());
+		assertEquals(Type.TRANSFER, item.getType());
+		// TODO check inputs and expected utility
+		assertEquals("Atlantis", item.getSecondName());
 	}
 
 	@Test
 	void testBasicSetupDepth3() {
 		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
-		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 3);
+		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 3);
 
 		assertEquals(3, searchResult.size());
 
-		ActionResult<?> actionResult = searchResult.get(0);
-		assertEquals("Atlantis", actionResult.self.getName());
-		assertEquals(6200, actionResult.getQuality());
-		assertEquals(3400, actionResult.getReward());
-		assertEquals("Transfer [resource=Resource [name=R2, weight=1.0], percent=1.0]", actionResult.action.toString());
-		assertEquals("Erewhon", ((TransferResult)actionResult).getOther().getName());
+		ScheduleItem actionResult = searchResult.get(0);
+		assertEquals("Erewhon", actionResult.getFirstName());
+		assertEquals(6200, actionResult.getSelfQuality());
+		assertEquals(3400, actionResult.getSelfReward());
+		assertEquals(Type.TRANSFER, actionResult.getType());
+		assertEquals("Atlantis", actionResult.getSecondName());
 	}
 
 	@Test
 	void testBasicSetupDepth4() {
 		assertEquals(2800, world.getCountry("Atlantis").computeQuality());
-		List<ActionResult<?>> searchResult = search.search(world, world.getCountry("Atlantis"), 4);
+		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 4);
 
 		assertEquals(4, searchResult.size());
 
-		ActionResult<?> actionResult = searchResult.get(0);
-		assertEquals("Atlantis", actionResult.self.getName());
-		assertEquals(6500, actionResult.getQuality());
-		assertEquals(3700, actionResult.getReward());
-		assertEquals("Transfer [resource=Resource [name=R2, weight=1.0], percent=1.0]", actionResult.action.toString());
-		assertEquals("Brobdingnag", ((TransferResult)actionResult).getOther().getName());
+		ScheduleItem item = searchResult.get(0);
+		assertEquals("Carpania", item.getFirstName());
+		assertEquals(6500, item.getSelfQuality());
+		assertEquals(3700, item.getSelfReward());
+		assertEquals(Type.TRANSFER, item.getType());
+		assertEquals("Atlantis", item.getSecondName());
 	}
 
 }
