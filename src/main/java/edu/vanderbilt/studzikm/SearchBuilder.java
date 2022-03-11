@@ -26,7 +26,7 @@ public class SearchBuilder {
 		return this;
 	}
 
-	public SearchBuilder setTransformProportions(double proportion) {
+	public SearchBuilder setTransformProportion(double proportion) {
 		this.transformProportions.add(proportion);
 		return this;
 	}
