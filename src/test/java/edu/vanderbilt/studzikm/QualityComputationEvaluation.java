@@ -67,6 +67,7 @@ public class QualityComputationEvaluation {
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 1);
@@ -137,6 +138,7 @@ public class QualityComputationEvaluation {
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 1);
@@ -213,6 +215,7 @@ public class QualityComputationEvaluation {
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 30);
@@ -300,6 +303,7 @@ public class QualityComputationEvaluation {
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 30);
@@ -389,6 +393,7 @@ public class QualityComputationEvaluation {
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Self"), 150);
@@ -502,12 +507,13 @@ public class QualityComputationEvaluation {
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Self"), 100);
 
 		for (ScheduleItem item : searchResult) {
-			System.out.println(item.toExpectedUtilityString());
+			System.out.println(item);
 		}
 
 	}

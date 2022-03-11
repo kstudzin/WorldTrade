@@ -34,7 +34,8 @@ public class DefaultIntegrationTest {
 				.setLogisticGrowthRate(1.0)
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
-				.setInitialQualities(world);
+				.setInitialQualities(world)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
 		return builder.build();
 	}
 

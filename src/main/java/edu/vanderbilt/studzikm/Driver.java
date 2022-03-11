@@ -40,12 +40,12 @@ public class Driver {
 					.setSigmoidMidpoint(0.0)
 					.setResources(resources)
 					.setInitialQualities(world)
+					.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
 					.build();
 
 			Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 7);
 
 			System.out.println(searchResult);
-
 
 		} catch (IOException e) {
 			System.out.printf("\nCould not parse resource file %s%n", resourceFile);

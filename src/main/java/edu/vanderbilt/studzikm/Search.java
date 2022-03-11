@@ -16,65 +16,30 @@ public class Search {
 	private StateGenerator stateGenerator;
 	private SearchNodeFactory nodeFactory;
 	private ScheduleFactory scheduleFactory;
-	private Deque<SearchNode> frontier = new LinkedList<>();
-
-	// Comparing only the rewards for self leads to a partial order. Two results that
-	// are mutually unordered may sort differently on different runs. This is
-	// difficult for testing. The method below  enforces a total order, that is
-	// somewhat arbitrary.
-	Comparator<ActionResult<?>> comparator = (x, y) -> {
-		int compareResult = x.getReward().compareTo(y.getReward());
-
-		if (compareResult == 0 && 
-			x instanceof TransferResult &&
-			y instanceof TransferResult) {
-
-			// If self rewards are equal, compare rewards for other 
-			TransferResult xAsTransferResult = (TransferResult) x;
-			TransferResult yAsTransferResult = (TransferResult) y;
-			compareResult = xAsTransferResult.getOtherReward()
-					.compareTo(yAsTransferResult.getOtherReward());
-
-		} else if (compareResult == 0 &&
-				x instanceof TransformResult) {
-			// prefer transforms to transfers
-			return 1;
-		} else if (compareResult == 0 && 
-				y instanceof TransformResult) {
-			// prefer transforms to transfers
-			return -1;
-		}
-
-		// This comparison isn't particularly meaningful. It simply creates a 
-		// deterministic ordering which is useful for tests
-		if (compareResult == 0) {
-			compareResult = x.toString().compareTo(y.toString());
-		}
-
-		return compareResult;
-	};
+	private Frontier frontier;
 
 	public Search(StateGenerator stateGenerator,
 			SearchNodeFactory nodeFactory,
+			Frontier frontier,
 			ScheduleFactory scheduleFactory) {
 		this.stateGenerator = stateGenerator;
 		this.nodeFactory = nodeFactory;
+		this.frontier = frontier;
 		this.scheduleFactory = scheduleFactory;
 	}
 
 	public Schedule search(World initState, Country country, int maxDepth) {
-		frontier.addFirst(nodeFactory.createRoot(initState, country));
+		frontier.add(nodeFactory.createRoot(initState, country));
 
 		int depth = 0;
 
 		while (!frontier.isEmpty()) {
-			SearchNode n = frontier.removeFirst();
+			SearchNode n = frontier.getNext();
 			log.debug("Expanding node: " + n);
 
 			depth++;
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), n.getCountry(), depth)
 					.map(state -> (ActionResult<?>)state)
-					.sorted(comparator)
 					.map(e -> nodeFactory.createNode(n, e))
 					.collect(Collectors.toList());
 
@@ -83,14 +48,14 @@ public class Search {
 
 			if (next.isEmpty()) {
 				continue;
-			} else if (depth >= maxDepth) {
-				SearchNode maxReward = next.get(next.size() - 1);
-				return scheduleFactory.create(maxReward);
+			} else {
+				frontier.add(next);
 			}
 
-			next.stream()
-			.peek(n::addChild)
-			.forEach(frontier::addFirst);
+			if (depth >= maxDepth) {
+					SearchNode maxReward = frontier.getNext();
+					return scheduleFactory.create(maxReward);
+			}
 
 		}
 

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SearchBuilder {
 
+	Supplier<Frontier> frontierSupplier;
 	List<Double> transferProportions = new ArrayList<>();
 	List<Double> transformProportions = new ArrayList<>();
 	Map<String, Double> initialQualities = new HashMap<>();
@@ -19,6 +21,11 @@ public class SearchBuilder {
 
 	public SearchBuilder() {
 		
+	}
+
+	public SearchBuilder setFrontierSupplier(Supplier<Frontier> frontierSupplier) {
+		this.frontierSupplier = frontierSupplier;
+		return this;
 	}
 
 	public SearchBuilder setTransferProportion(double proportion) {
@@ -89,6 +96,6 @@ public class SearchBuilder {
 				successProbabilityComputation);
 		ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
 
-		return new Search(stateGenerator , nodeFactory, scheduleFactory);
+		return new Search(stateGenerator, nodeFactory, frontierSupplier.get(), scheduleFactory);
 	}
 }
