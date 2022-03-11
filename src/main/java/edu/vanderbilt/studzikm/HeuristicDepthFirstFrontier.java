@@ -17,8 +17,9 @@ public class HeuristicDepthFirstFrontier implements Frontier {
     }
 
     @Override
-    public void add(Collection<SearchNode> next) {
+    public void add(Collection<SearchNode> next, Reached reached) {
         next.stream()
+                .filter(node -> !reached.contains(node))
                 .peek(first::addChild)
                 .sorted(comparator)
                 .forEach(frontier::addFirst);

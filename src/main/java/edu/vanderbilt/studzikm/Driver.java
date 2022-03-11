@@ -41,6 +41,7 @@ public class Driver {
 					.setResources(resources)
 					.setInitialQualities(world)
 					.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+					.setReachedSupplier(NullReached::new)
 					.build();
 
 			Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 7);

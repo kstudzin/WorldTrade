@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class SearchBuilder {
 
 	Supplier<Frontier> frontierSupplier;
+	Supplier<Reached> reachedSupplier;
 	List<Double> transferProportions = new ArrayList<>();
 	List<Double> transformProportions = new ArrayList<>();
 	Map<String, Double> initialQualities = new HashMap<>();
@@ -25,6 +26,11 @@ public class SearchBuilder {
 
 	public SearchBuilder setFrontierSupplier(Supplier<Frontier> frontierSupplier) {
 		this.frontierSupplier = frontierSupplier;
+		return this;
+	}
+
+	public SearchBuilder setReachedSupplier(Supplier<Reached> reachedSupplier) {
+		this.reachedSupplier = reachedSupplier;
 		return this;
 	}
 
@@ -96,6 +102,6 @@ public class SearchBuilder {
 				successProbabilityComputation);
 		ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
 
-		return new Search(stateGenerator, nodeFactory, frontierSupplier.get(), scheduleFactory);
+		return new Search(stateGenerator, nodeFactory, frontierSupplier.get(), reachedSupplier.get(), scheduleFactory);
 	}
 }

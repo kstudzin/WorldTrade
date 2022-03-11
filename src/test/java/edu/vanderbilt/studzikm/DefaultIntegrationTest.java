@@ -35,7 +35,8 @@ public class DefaultIntegrationTest {
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+				.setReachedSupplier(NullReached::new);
 		return builder.build();
 	}
 
@@ -108,7 +109,7 @@ public class DefaultIntegrationTest {
 
 		assertEquals(2, searchResult.size());
 
-		ScheduleItem item = searchResult.get(0);
+		ScheduleItem item = searchResult.get(1);
 		assertEquals("Brobdingnag", item.getFirstName());
 		assertEquals(5700, item.getSelfQuality());
 		assertEquals(2900, item.getSelfReward());
@@ -125,7 +126,7 @@ public class DefaultIntegrationTest {
 
 		assertEquals(3, searchResult.size());
 
-		ScheduleItem actionResult = searchResult.get(0);
+		ScheduleItem actionResult = searchResult.get(2);
 		assertEquals("Erewhon", actionResult.getFirstName());
 		assertEquals(6200, actionResult.getSelfQuality());
 		assertEquals(3400, actionResult.getSelfReward());
@@ -140,7 +141,7 @@ public class DefaultIntegrationTest {
 
 		assertEquals(4, searchResult.size());
 
-		ScheduleItem item = searchResult.get(0);
+		ScheduleItem item = searchResult.get(3);
 		assertEquals("Carpania", item.getFirstName());
 		assertEquals(6500, item.getSelfQuality());
 		assertEquals(3700, item.getSelfReward());

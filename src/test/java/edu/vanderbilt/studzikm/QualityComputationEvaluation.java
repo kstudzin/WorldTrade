@@ -68,6 +68,7 @@ public class QualityComputationEvaluation {
 				.setResources(resources)
 				.setInitialQualities(world)
 				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 1);
@@ -139,6 +140,7 @@ public class QualityComputationEvaluation {
 				.setResources(resources)
 				.setInitialQualities(world)
 				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 1);
@@ -216,6 +218,7 @@ public class QualityComputationEvaluation {
 				.setResources(resources)
 				.setInitialQualities(world)
 				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 30);
@@ -304,6 +307,7 @@ public class QualityComputationEvaluation {
 				.setResources(resources)
 				.setInitialQualities(world)
 				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 30);
@@ -394,6 +398,7 @@ public class QualityComputationEvaluation {
 				.setResources(resources)
 				.setInitialQualities(world)
 				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Self"), 150);
@@ -508,6 +513,7 @@ public class QualityComputationEvaluation {
 				.setResources(resources)
 				.setInitialQualities(world)
 				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
+				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Self"), 100);

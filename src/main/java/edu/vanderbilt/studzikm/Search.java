@@ -17,14 +17,17 @@ public class Search {
 	private SearchNodeFactory nodeFactory;
 	private ScheduleFactory scheduleFactory;
 	private Frontier frontier;
+	private Reached reached;
 
 	public Search(StateGenerator stateGenerator,
 			SearchNodeFactory nodeFactory,
 			Frontier frontier,
+			Reached reached,
 			ScheduleFactory scheduleFactory) {
 		this.stateGenerator = stateGenerator;
 		this.nodeFactory = nodeFactory;
 		this.frontier = frontier;
+		this.reached = reached;
 		this.scheduleFactory = scheduleFactory;
 	}
 
@@ -49,7 +52,7 @@ public class Search {
 			if (next.isEmpty()) {
 				continue;
 			} else {
-				frontier.add(next);
+				frontier.add(next, reached);
 			}
 
 			if (depth >= maxDepth) {
