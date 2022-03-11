@@ -173,4 +173,25 @@ class ScheduleItem {
 				.append(expectedUtility);
 	}
 
+	public String toExpectedUtilityString() {
+		return Double.toString(expectedUtility) + "," + type;
+
+	}
+
+	@Override
+	public String toString() {
+		return "ScheduleItem{" +
+				"type=" + type +
+				", firstName='" + firstName + '\'' +
+				", secondName='" + secondName + '\'' +
+				", inputs=" + inputs +
+				", outputs=" + outputs +
+				", expectedUtility=" + expectedUtility +
+				", selfQuality=" + selfQuality +
+				", otherQuality=" + otherQuality +
+				", selfReward=" + selfReward +
+				", otherReward=" + otherReward +
+				'}';
+	}
+
 }
