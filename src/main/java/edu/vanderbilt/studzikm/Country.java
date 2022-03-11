@@ -37,6 +37,15 @@ public class Country {
 		return resources.getOrDefault(resource, 0);
 	}
 
+	public Integer getResource(String resource) {
+		return resources.entrySet()
+				.stream()
+				.filter(curr -> curr.getKey().getName() == resource)
+				.map(curr -> curr.getValue())
+				.findFirst()
+				.orElse(0);
+	}
+
 	public void addResource(Resource resource, Integer amount) {
 		resources.put(resource, amount);
 	}
