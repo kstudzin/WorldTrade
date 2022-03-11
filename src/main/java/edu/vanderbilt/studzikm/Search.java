@@ -73,7 +73,6 @@ public class Search {
 
 			depth++;
 			List<SearchNode> next = stateGenerator.generateStates(n.getState(), n.getCountry(), depth)
-					.stream()
 					.map(state -> (ActionResult<?>)state)
 					.sorted(comparator)
 					.map(e -> nodeFactory.createNode(n, e))

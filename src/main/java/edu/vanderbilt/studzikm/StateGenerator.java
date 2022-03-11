@@ -1,9 +1,9 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface StateGenerator {
 
-	Collection<?> generateStates(World initialState, Country self, int depth);
+	Stream<?> generateStates(World initialState, Country self, int depth);
 
 }

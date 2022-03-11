@@ -3,7 +3,6 @@ package edu.vanderbilt.studzikm;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.vanderbilt.studzikm.TransferResult.Role;
@@ -23,7 +22,7 @@ public class DefaultStateGenerator implements StateGenerator {
 		this.rewardComputation = rewardComputation;
 	}
 
-	public Collection<?> generateStates(World initialState, Country self, int depth) {
+	public Stream<?> generateStates(World initialState, Country self, int depth) {
 
 		return Stream.of(
 				generateTransformations(initialState, self, depth),
@@ -31,8 +30,7 @@ public class DefaultStateGenerator implements StateGenerator {
 				generateTransferAsReciever(initialState, self, depth)
 				)
 				.flatMap(Function.identity())
-				.filter(Objects::nonNull)
-				.collect(Collectors.toSet());
+				.filter(Objects::nonNull);
 	}
 
 	private Stream<? extends ActionResult<?>> generateTransferAsReciever(
