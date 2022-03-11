@@ -48,7 +48,7 @@ public class Search {
 		// This comparison isn't particularly meaningful. It simply creates a 
 		// deterministic ordering which is useful for tests
 		if (compareResult == 0) {
-			compareResult = Integer.compare(x.hashCode(), y.hashCode());
+			compareResult = x.toString().compareTo(y.toString());
 		}
 
 		return compareResult;
