@@ -1,10 +1,12 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Schedule {
+public class Schedule implements Iterable<ScheduleItem> {
 
 	private List<ScheduleItem> items = new LinkedList<>();
 
@@ -22,6 +24,7 @@ public class Schedule {
 			result = result.getParent();
 		}
 
+		Collections.reverse(schedule.items);
 		return schedule;
 	}
 
@@ -46,4 +49,8 @@ public class Schedule {
 		return items.get(index);
 	}
 
+	@Override
+	public Iterator<ScheduleItem> iterator() {
+		return items.iterator();
+	}
 }
