@@ -173,9 +173,12 @@ class ScheduleItem {
 				.append(expectedUtility);
 	}
 
-	public String toExpectedUtilityString() {
+	public String toExpectedUtilityTypeString() {
 		return Double.toString(expectedUtility) + "," + type;
+	}
 
+	public String toExpectedUtilityString() {
+		return Double.toString(expectedUtility);
 	}
 
 	@Override
