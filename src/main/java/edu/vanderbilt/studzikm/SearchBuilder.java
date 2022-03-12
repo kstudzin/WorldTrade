@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class SearchBuilder {
 
 	Supplier<Frontier> frontierSupplier;
-	Supplier<Reached> reachedSupplier;
+	Supplier<Reached> reachedSupplier = NullReached::new;
 	List<Double> transferProportions = new ArrayList<>();
 	List<Double> transformProportions = new ArrayList<>();
 	Map<String, Double> initialQualities = new HashMap<>();
