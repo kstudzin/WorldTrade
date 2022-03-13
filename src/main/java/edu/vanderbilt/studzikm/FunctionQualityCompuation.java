@@ -9,6 +9,12 @@ public class FunctionQualityCompuation implements QualityComputation {
 	private BiFunction<Double, Double, Double> function;
 	private Map<String, Double> targetProportion = new HashMap<>();
 
+	public FunctionQualityCompuation() {
+		this((target, actual) ->
+				(actual / target) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))))
+		);
+	}
+
 	public FunctionQualityCompuation(BiFunction<Double, Double, Double> function) {
 		this.function = function;
 		targetProportion.put("R1", 1.0);
