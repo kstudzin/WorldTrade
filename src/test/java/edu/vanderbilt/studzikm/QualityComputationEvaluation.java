@@ -1,16 +1,27 @@
 package edu.vanderbilt.studzikm;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import edu.vanderbilt.studzikm.ScheduleItem.Type;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import org.junit.jupiter.api.Test;
-
-import edu.vanderbilt.studzikm.ScheduleItem.Type;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QualityComputationEvaluation {
+
+	BiFunction<Double, Double, Double> resourceQuality;
+	Supplier<QualityComputation> qualityComputation;
+
+	@BeforeEach
+	void setup() {
+		resourceQuality = (target, actual) ->
+				(actual / target) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))));
+		qualityComputation = () -> new FunctionQualityCompuation(resourceQuality);
+	}
 
 	Map<String, Resource> setupResources() {
 		return new ResourcesBuilder()
@@ -26,66 +37,9 @@ public class QualityComputationEvaluation {
 				.build();
 	}
 
-	World setupWorldDistributedResources(Map<String, Resource> resources) {
-		BiFunction<Double, Double, Double> resourceQuality = (target, actual) -> {
-			return (actual / target) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))));
-		};
 
-		Supplier<QualityComputation> qualityComputation = () -> new FunctionQualityCompuation(resourceQuality);
+	private World setupEvenlyDistributedResources(Map<String, Resource> resources, Supplier<QualityComputation> qualityComputation) {
 		return new WorldBuilder(resources)
-
-				.addCountry("Atlantis", qualityComputation)
-				.addResource("Atlantis", "R1", 1000)
-				.addResource("Atlantis", "R2", 500000) // More than 240250
-				.addResource("Atlantis", "R3", 1000)
-
-				.addCountry("Brobdingnag", qualityComputation)
-				.addResource("Brobdingnag", "R1", 1000)
-				.addResource("Brobdingnag", "R2", 1000)
-				.addResource("Brobdingnag", "R3", 10000) // More than 1250
-
-				.addCountry("Carpania", qualityComputation)
-				.addResource("Carpania", "R1", 1000)
-				.addResource("Carpania", "R2", 1000)
-				.addResource("Carpania", "R3", 1000)
-				.addResource("Carpania", "R21", 150000) // More than 40750
-
-				.addCountry("Dinotopia", qualityComputation)
-				.addResource("Dinotopia", "R1", 1000)
-				.addResource("Dinotopia", "R2", 1000)
-				.addResource("Dinotopia", "R3", 1000)
-				.addResource("Dinotopia", "R22", 100000) // More than 20000
-
-				.addCountry("Erewhon", qualityComputation)
-				.addResource("Erewhon", "R1", 1000)
-				.addResource("Erewhon", "R2", 1000)
-				.addResource("Erewhon", "R3", 1000)
-				.addResource("Erewhon", "R23", 5000)
-
-				.addCountry("Self", qualityComputation)
-				.addResource("Self", "R1", 100)
-				.addResource("Self", "R2", 100)
-				.addResource("Self", "R3", 100)
-
-				.build();
-	}
-
-	@Test
-	void testEqualResourceWeights() {
-		Map<String, Resource> resources = new ResourcesBuilder()
-				.addResource("R1", .11)
-				.addResource("R2", .11)
-				.addResource("R3", .11)
-				.addResource("R21", .11)
-				.addResource("R22", .11)
-				.addResource("R23", .11)
-				.addResource("R21'", .11)
-				.addResource("R22'", .11)
-				.addResource("R23'", .11)
-				.build();
-
-		Supplier<QualityComputation> qualityComputation = DefaultQualityComputation::new;
-		World world = new WorldBuilder(resources)
 
 				.addCountry("Atlantis", qualityComputation)
 				.addResource("Atlantis", "R1", 1000)
@@ -112,21 +66,41 @@ public class QualityComputationEvaluation {
 				.addResource("Erewhon", "R2", 1000)
 				.addResource("Erewhon", "R3", 1000)
 				.build();
+	}
 
-		Search search = new SearchBuilder()
-				.setTransferProportion(0.05)
-				.setTransferProportion(0.10)
-				.setTransformProportion(0.125)
-				.setTransformProportion(0.250)
-				.setTransformProportion(0.500)
+	private SearchBuilder setupDefaultSearchBuilder(Map<String, Resource> resources, World world) {
+		return new SearchBuilder()
 				.setGamma(1.0)
 				.setFailurePenalty(0.0)
 				.setLogisticGrowthRate(1.0)
 				.setSigmoidMidpoint(0.0)
 				.setResources(resources)
 				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
-				.setReachedSupplier(NullReached::new)
+				.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
+	}
+
+	@Test
+	void testEqualResourceWeights() {
+		Map<String, Resource> resources = new ResourcesBuilder()
+				.addResource("R1", .11)
+				.addResource("R2", .11)
+				.addResource("R3", .11)
+				.addResource("R21", .11)
+				.addResource("R22", .11)
+				.addResource("R23", .11)
+				.addResource("R21'", .11)
+				.addResource("R22'", .11)
+				.addResource("R23'", .11)
+				.build();
+
+		World world = setupEvenlyDistributedResources(resources, DefaultQualityComputation::new);
+
+		Search search = setupDefaultSearchBuilder(resources, world)
+				.setTransferProportion(0.05)
+				.setTransferProportion(0.10)
+				.setTransformProportion(0.125)
+				.setTransformProportion(0.250)
+				.setTransformProportion(0.500)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 1);
@@ -144,46 +118,8 @@ public class QualityComputationEvaluation {
 
 	@Test
 	void testUnweightedWasteResourceWeights() {
-		Map<String, Resource> resources = new ResourcesBuilder()
-				.addResource("R1", .166)
-				.addResource("R2", .166)
-				.addResource("R3", .166)
-				.addResource("R21", .166)
-				.addResource("R22", .166)
-				.addResource("R23", .166)
-				.addResource("R21'", 0.0)
-				.addResource("R22'", 0.0)
-				.addResource("R23'", 0.0)
-				.build();
-
-		Supplier<QualityComputation> qualityComputation = DefaultQualityComputation::new;
-		World world = new WorldBuilder(resources)
-
-				.addCountry("Atlantis", qualityComputation)
-				.addResource("Atlantis", "R1", 1000)
-				.addResource("Atlantis", "R2", 1000)
-				.addResource("Atlantis", "R3", 1000)
-
-				.addCountry("Brobdingnag", qualityComputation)
-				.addResource("Brobdingnag", "R1", 1000)
-				.addResource("Brobdingnag", "R2", 1000)
-				.addResource("Brobdingnag", "R3", 1000)
-
-				.addCountry("Carpania", qualityComputation)
-				.addResource("Carpania", "R1", 1000)
-				.addResource("Carpania", "R2", 1000)
-				.addResource("Carpania", "R3", 1000)
-
-				.addCountry("Dinotopia", qualityComputation)
-				.addResource("Dinotopia", "R1", 1000)
-				.addResource("Dinotopia", "R2", 1000)
-				.addResource("Dinotopia", "R3", 1000)
-
-				.addCountry("Erewhon", qualityComputation)
-				.addResource("Erewhon", "R1", 1000)
-				.addResource("Erewhon", "R2", 1000)
-				.addResource("Erewhon", "R3", 1000)
-				.build();
+		Map<String, Resource> resources = setupResources();
+		World world = setupEvenlyDistributedResources(resources, DefaultQualityComputation::new);
 
 		Search search = new SearchBuilder()
 				.setTransferProportion(0.05)
@@ -216,52 +152,11 @@ public class QualityComputationEvaluation {
 
 	@Test
 	void testFunctionQuality() {
-		Map<String, Resource> resources = new ResourcesBuilder()
-				.addResource("R1", .166)
-				.addResource("R2", .166)
-				.addResource("R3", .166)
-				.addResource("R21", .166)
-				.addResource("R22", .166)
-				.addResource("R23", .166)
-				.addResource("R21'", 0.0)
-				.addResource("R22'", 0.0)
-				.addResource("R23'", 0.0)
-				.build();
+		Map<String, Resource> resources = setupResources();
 
-		BiFunction<Double, Double, Double> resourceQuality = (target, actual) -> {
-			return (actual / target) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))));
-		};
+		World world = setupEvenlyDistributedResources(resources, qualityComputation);
 
-		Supplier<QualityComputation> qualityComputation = () -> new FunctionQualityCompuation(resourceQuality);
-		World world = new WorldBuilder(resources)
-
-				.addCountry("Atlantis", qualityComputation)
-				.addResource("Atlantis", "R1", 1000)
-				.addResource("Atlantis", "R2", 1000)
-				.addResource("Atlantis", "R3", 1000)
-
-				.addCountry("Brobdingnag", qualityComputation)
-				.addResource("Brobdingnag", "R1", 1000)
-				.addResource("Brobdingnag", "R2", 1000)
-				.addResource("Brobdingnag", "R3", 1000)
-
-				.addCountry("Carpania", qualityComputation)
-				.addResource("Carpania", "R1", 1000)
-				.addResource("Carpania", "R2", 1000)
-				.addResource("Carpania", "R3", 1000)
-
-				.addCountry("Dinotopia", qualityComputation)
-				.addResource("Dinotopia", "R1", 1000)
-				.addResource("Dinotopia", "R2", 1000)
-				.addResource("Dinotopia", "R3", 1000)
-
-				.addCountry("Erewhon", qualityComputation)
-				.addResource("Erewhon", "R1", 1000)
-				.addResource("Erewhon", "R2", 1000)
-				.addResource("Erewhon", "R3", 1000)
-				.build();
-
-		Search search = new SearchBuilder()
+		Search search = setupDefaultSearchBuilder(resources, world)
 				.setTransferProportion(0.10)
 				.setTransferProportion(0.20)
 				.setTransferProportion(0.50)
@@ -269,14 +164,6 @@ public class QualityComputationEvaluation {
 				.setTransformProportion(0.250)
 				.setTransformProportion(0.500)
 				.setTransformProportion(0.750)
-				.setGamma(1.0)
-				.setFailurePenalty(0.0)
-				.setLogisticGrowthRate(1.0)
-				.setSigmoidMidpoint(0.0)
-				.setResources(resources)
-				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
-				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 30);
@@ -308,64 +195,14 @@ public class QualityComputationEvaluation {
 
 	@Test
 	void testFunctionQualityOnlyTransforms() {
-		Map<String, Resource> resources = new ResourcesBuilder()
-				.addResource("R1", .166)
-				.addResource("R2", .166)
-				.addResource("R3", .166)
-				.addResource("R21", .166)
-				.addResource("R22", .166)
-				.addResource("R23", .166)
-				.addResource("R21'", 0.0)
-				.addResource("R22'", 0.0)
-				.addResource("R23'", 0.0)
-				.build();
+		Map<String, Resource> resources = setupResources();
+		World world = setupEvenlyDistributedResources(resources, qualityComputation);
 
-		BiFunction<Double, Double, Double> resourceQuality = (target, actual) -> {
-			return (actual / target) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))));
-		};
-
-		Supplier<QualityComputation> qualityComputation = () -> new FunctionQualityCompuation(resourceQuality);
-		World world = new WorldBuilder(resources)
-
-				.addCountry("Atlantis", qualityComputation)
-				.addResource("Atlantis", "R1", 1000)
-				.addResource("Atlantis", "R2", 1000)
-				.addResource("Atlantis", "R3", 1000)
-
-				.addCountry("Brobdingnag", qualityComputation)
-				.addResource("Brobdingnag", "R1", 1000)
-				.addResource("Brobdingnag", "R2", 1000)
-				.addResource("Brobdingnag", "R3", 1000)
-
-				.addCountry("Carpania", qualityComputation)
-				.addResource("Carpania", "R1", 1000)
-				.addResource("Carpania", "R2", 1000)
-				.addResource("Carpania", "R3", 1000)
-
-				.addCountry("Dinotopia", qualityComputation)
-				.addResource("Dinotopia", "R1", 1000)
-				.addResource("Dinotopia", "R2", 1000)
-				.addResource("Dinotopia", "R3", 1000)
-
-				.addCountry("Erewhon", qualityComputation)
-				.addResource("Erewhon", "R1", 1000)
-				.addResource("Erewhon", "R2", 1000)
-				.addResource("Erewhon", "R3", 1000)
-				.build();
-
-		Search search = new SearchBuilder()
+		Search search = setupDefaultSearchBuilder(resources, world)
 				.setTransferProportion(0.00)
 				.setTransformProportion(0.250)
 				.setTransformProportion(0.500)
 				.setTransformProportion(0.750)
-				.setGamma(1.0)
-				.setFailurePenalty(0.0)
-				.setLogisticGrowthRate(1.0)
-				.setSigmoidMidpoint(0.0)
-				.setResources(resources)
-				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
-				.setReachedSupplier(NullReached::new)
 				.build();
 
 		Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 30);
@@ -388,200 +225,4 @@ public class QualityComputationEvaluation {
 
 	}
 
-	@Test
-	void testFunctionQualityDistributeResourcesFewStatesGenerated() {
-		Map<String, Resource> resources = setupResources();
-
-		World world = setupWorldDistributedResources(resources);
-
-		Search search = new SearchBuilder()
-				.setTransferProportion(0.20)
-				.setTransferProportion(0.80)
-				.setTransformProportion(0.25)
-				.setTransformProportion(0.75)
-				.setGamma(1.0)
-				.setFailurePenalty(0.0)
-				.setLogisticGrowthRate(1.0)
-				.setSigmoidMidpoint(0.0)
-				.setResources(resources)
-				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
-				.build();
-
-		Schedule searchResult = search.search(world, world.getCountry("Self"), 100);
-
-		for (ScheduleItem item : searchResult) {
-			System.out.println(item.toExpectedUtilityTypeString());
-		}
-
-	}
-
-	@Test
-	void testFunctionQualityDistributeResourcesManyStatesGenerated() {
-		Map<String, Resource> resources = setupResources();
-
-		World world = setupWorldDistributedResources(resources);
-
-		Search search = new SearchBuilder()
-				.setTransferProportion(0.05)
-				.setTransferProportion(0.10)
-				.setTransferProportion(0.15)
-				.setTransferProportion(0.20)
-				.setTransferProportion(0.25)
-				.setTransferProportion(0.30)
-				.setTransferProportion(0.35)
-				.setTransferProportion(0.40)
-				.setTransferProportion(0.45)
-				.setTransferProportion(0.50)
-				.setTransferProportion(0.55)
-				.setTransferProportion(0.60)
-				.setTransferProportion(0.65)
-				.setTransferProportion(0.70)
-				.setTransferProportion(0.75)
-				.setTransferProportion(0.80)
-				.setTransferProportion(0.85)
-				.setTransferProportion(0.90)
-				.setTransferProportion(0.95)
-				.setTransferProportion(1.00)
-				.setTransformProportion(0.05)
-				.setTransformProportion(0.10)
-				.setTransformProportion(0.15)
-				.setTransformProportion(0.20)
-				.setTransformProportion(0.25)
-				.setTransformProportion(0.30)
-				.setTransformProportion(0.35)
-				.setTransformProportion(0.40)
-				.setTransformProportion(0.45)
-				.setTransformProportion(0.50)
-				.setTransformProportion(0.55)
-				.setTransformProportion(0.60)
-				.setTransformProportion(0.65)
-				.setTransformProportion(0.70)
-				.setTransformProportion(0.75)
-				.setTransformProportion(0.80)
-				.setTransformProportion(0.85)
-				.setTransformProportion(0.90)
-				.setTransformProportion(0.95)
-				.setTransformProportion(1.00)
-				.setGamma(1.0)
-				.setFailurePenalty(0.0)
-				.setLogisticGrowthRate(1.0)
-				.setSigmoidMidpoint(0.0)
-				.setResources(resources)
-				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
-				.build();
-
-		Schedule searchResult = search.search(world, world.getCountry("Self"), 100);
-
-		for (ScheduleItem item : searchResult) {
-			System.out.println(item);
-		}
-
-	}
-
-	@Test
-	void testFunctionQualityDistributeResourcesEvenMoreStatesGenerated() {
-		Map<String, Resource> resources = setupResources();
-
-		World world = setupWorldDistributedResources(resources);
-
-		SearchBuilder builder = new SearchBuilder()
-				.setGamma(1.0)
-				.setFailurePenalty(0.0)
-				.setLogisticGrowthRate(1.0)
-				.setSigmoidMidpoint(0.0)
-				.setResources(resources)
-				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
-
-		double prop = 0.025;
-		double step = 0.025;
-		int count = 0;
-		while (prop <= 1) {
-			builder.setTransferProportion(prop)
-					.setTransformProportion(prop);
-			prop += step;
-			count++;
-		}
-
-		Search search = builder.build();
-		Schedule searchResult = search.search(world, world.getCountry("Self"), 25);
-
-		System.out.println("Total proportions used: " + count);
-		for (ScheduleItem item : searchResult) {
-			System.out.println(item.toExpectedUtilityString());
-		}
-
-	}
-
-	@Test
-	void testFunctionQualityDistributeResourcesEvenMoreStatesGenerated2() {
-		Map<String, Resource> resources = setupResources();
-
-		World world = setupWorldDistributedResources(resources);
-
-		SearchBuilder builder = new SearchBuilder()
-				.setGamma(1.0)
-				.setFailurePenalty(0.0)
-				.setLogisticGrowthRate(1.0)
-				.setSigmoidMidpoint(0.0)
-				.setResources(resources)
-				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
-
-		double prop = 0.0125;
-		double step = 0.0125;
-		int count = 0;
-		while (prop <= 1) {
-			builder.setTransferProportion(prop)
-					.setTransformProportion(prop);
-			prop += step;
-			count++;
-		}
-
-		Search search = builder.build();
-		Schedule searchResult = search.search(world, world.getCountry("Self"), 30);
-
-		System.out.println("Total proportions used: " + count);
-		for (ScheduleItem item : searchResult) {
-			System.out.println(item.toExpectedUtilityString());
-		}
-
-	}
-
-	@Test
-	void testFunctionQualityDistributeResources20Proportions() {
-		Map<String, Resource> resources = setupResources();
-
-		World world = setupWorldDistributedResources(resources);
-
-		SearchBuilder builder = new SearchBuilder()
-				.setGamma(1.0)
-				.setFailurePenalty(0.0)
-				.setLogisticGrowthRate(1.0)
-				.setSigmoidMidpoint(0.0)
-				.setResources(resources)
-				.setInitialQualities(world)
-				.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
-
-		double prop = .05;
-		double step = .1;
-		int count = 0;
-		while (prop <= 1) {
-			builder.setTransferProportion(prop)
-					.setTransformProportion(prop);
-			prop += step;
-			count++;
-		}
-
-		Search search = builder.build();
-		Schedule searchResult = search.search(world, world.getCountry("Self"), 125);
-
-		System.out.println("Total proportions used: " + count);
-		for (ScheduleItem item : searchResult) {
-			System.out.println(item.toExpectedUtilityString());
-		}
-
-	}
 }
