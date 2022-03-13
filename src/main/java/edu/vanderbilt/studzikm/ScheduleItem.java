@@ -18,6 +18,7 @@ class ScheduleItem {
 	private double otherQuality;
 	private double selfReward;
 	private double otherReward;
+	private int schedulePostion;
 
 	private ScheduleItem() {
 		
@@ -37,6 +38,7 @@ class ScheduleItem {
 			createFromTransformResult(item, result);
 			item.expectedUtility = expectedUtilityComputation.compute(result);
 		}
+		item.schedulePostion = node.getAction().getSchedulePosition();
 
 		return item;
 	}
@@ -102,6 +104,8 @@ class ScheduleItem {
 	public double getOtherReward() {
 		return otherReward;
 	}
+
+	public int getSchedulePostion() {return schedulePostion; }
 
 	public StringBuilder toStringBuilder() {
 		StringBuilder builder = new StringBuilder()

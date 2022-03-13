@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Schedule implements Iterable<ScheduleItem> {
 
@@ -52,5 +53,9 @@ public class Schedule implements Iterable<ScheduleItem> {
 	@Override
 	public Iterator<ScheduleItem> iterator() {
 		return items.iterator();
+	}
+
+	public Stream<ScheduleItem> stream() {
+		return items.stream();
 	}
 }

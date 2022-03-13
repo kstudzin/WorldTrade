@@ -1,10 +1,14 @@
 package edu.vanderbilt.studzikm;
 
+import com.google.common.base.Preconditions;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class World implements Iterable<Country> {
 	private Map<String, Country> countries = new HashMap<>();
@@ -22,7 +26,9 @@ public class World implements Iterable<Country> {
 	}
 
 	public Country getCountry(String countryName) {
-		return countries.get(countryName);
+		Country country = countries.get(countryName);
+		checkNotNull(country);
+		return country;
 	}
 
 	public Stream<Country> stream() {
