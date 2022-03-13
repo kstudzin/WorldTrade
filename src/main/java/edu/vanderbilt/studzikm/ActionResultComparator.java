@@ -18,14 +18,17 @@ public class ActionResultComparator implements Comparator<ActionResult<?>> {
             compareResult = xAsTransferResult.getOtherReward()
                     .compareTo(yAsTransferResult.getOtherReward());
 
+
         } else if (compareResult == 0 &&
-                x instanceof TransformResult) {
+                x instanceof TransferResult) {
             // prefer transforms to transfers
-            return 1;
+            compareResult = -1;
+            System.out.println("C: " + compareResult);
+
         } else if (compareResult == 0 &&
-                y instanceof TransformResult) {
+                y instanceof TransferResult) {
             // prefer transforms to transfers
-            return -1;
+            compareResult = 1;
         }
 
         // This comparison isn't particularly meaningful. It simply creates a
