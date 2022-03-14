@@ -25,11 +25,11 @@ public class Driver {
 					world.stream()
 					.map(country -> new StringBuilder("\t")
 							.append(country.getName())
-							.append(" ")
+							.append('\t')
 							.append(country.computeQuality()))
 					.collect(Collectors.joining("\n")));
 
-			Search search = new SearchBuilder()
+			SearchBuilder searchBuilder = new SearchBuilder()
 					.setTransferProportion(0.5)
 					.setTransferProportion(1.0)
 					.setTransformProportion(0.33)
@@ -40,11 +40,18 @@ public class Driver {
 					.setSigmoidMidpoint(0.0)
 					.setResources(resources)
 					.setInitialQualities(world)
-					.setFrontierSupplier(HeuristicDepthFirstFrontier::new)
-					.setReachedSupplier(NullReached::new)
-					.build();
+					.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
 
-			Schedule searchResult = search.search(world, world.getCountry("Atlantis"), 7);
+			double prop = 0.025;
+			double step = 0.025;
+			while (prop <= 1) {
+				searchBuilder.setTransformProportion(prop);
+				searchBuilder.setTransferProportion(prop);
+				prop += step;
+			}
+
+			Search search = searchBuilder.build();
+			Schedule searchResult = search.search(world, world.getCountry("Self"), 50);
 
 			System.out.println(searchResult);
 
