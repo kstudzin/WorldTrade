@@ -13,7 +13,7 @@ public class DefaultTransfers implements TransferFactory {
 	public DefaultTransfers(Map<String, Resource> resources, Double[] allowableTransferPercents) {
 		transfers = resources.entrySet()
 		.stream()
-		.filter(r -> r.getKey() != "R1") // Don't allow trading people
+		.filter(r -> !r.getKey().equals("R1")) // Don't allow trading people
 		.flatMap(r -> createTransfers(r.getValue(), allowableTransferPercents).stream())
 		.collect(Collectors.toSet());
 	}
