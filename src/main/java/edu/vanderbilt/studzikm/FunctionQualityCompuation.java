@@ -19,7 +19,7 @@ public class FunctionQualityCompuation implements QualityComputation {
 		this.function = function;
 		targetProportion.put("R1", 1.0);
 		targetProportion.put("R2", 240.25);
-		targetProportion.put("R3", 5.0/4.0);
+		targetProportion.put("R3", 1.25);
 		targetProportion.put("R21", 40.75);
 		targetProportion.put("R22", 20.0);
 		targetProportion.put("R23", .25);
