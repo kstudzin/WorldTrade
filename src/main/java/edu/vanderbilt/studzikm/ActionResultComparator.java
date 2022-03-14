@@ -23,7 +23,6 @@ public class ActionResultComparator implements Comparator<ActionResult<?>> {
                 x instanceof TransferResult) {
             // prefer transforms to transfers
             compareResult = -1;
-            System.out.println("C: " + compareResult);
 
         } else if (compareResult == 0 &&
                 y instanceof TransferResult) {
