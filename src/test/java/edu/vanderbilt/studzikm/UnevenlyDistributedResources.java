@@ -220,8 +220,8 @@ public class UnevenlyDistributedResources {
                 .max(scheduleItemComparator)
                 .orElse(null);
 
-        assertEquals(0.6663017022589491, item.getExpectedUtility());
-        assertEquals(20, item.getSchedulePostion());
+        assertEquals(0.6697227923111191, item.getExpectedUtility());
+        assertEquals(17, item.getSchedulePostion());
     }
 
     @Test
