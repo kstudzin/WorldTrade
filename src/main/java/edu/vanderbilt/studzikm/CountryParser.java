@@ -5,10 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class CountryParser {
 
-	public static World createWorld(File countryFile, Map<String, Resource> resources) throws IOException {
+	public static World createWorld(File countryFile,
+									Map<String, Resource> resources,
+									Supplier<QualityComputation> qualityComputation) throws IOException {
 		World world = new World();
 		try (BufferedReader reader = new BufferedReader(new FileReader(countryFile))) {
 			String line = reader.readLine(); //  header line
@@ -16,8 +19,8 @@ public class CountryParser {
 			
 			while((line = reader.readLine()) != null) {
 				String[] values = line.split(",");
-				
-				Country country = new Country(values[0], new DefaultQualityComputation());
+
+				Country country = new Country(values[0], qualityComputation.get());
 				world.addCountry(country);
 				
 				for (int i = 1; i < values.length; i++) {
