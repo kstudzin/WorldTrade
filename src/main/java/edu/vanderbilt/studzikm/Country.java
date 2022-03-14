@@ -40,7 +40,7 @@ public class Country {
 	public Integer getResource(String resource) {
 		return resources.entrySet()
 				.stream()
-				.filter(curr -> curr.getKey().getName() == resource)
+				.filter(curr -> curr.getKey().getName().equals(resource))
 				.map(curr -> curr.getValue())
 				.findFirst()
 				.orElse(0);
