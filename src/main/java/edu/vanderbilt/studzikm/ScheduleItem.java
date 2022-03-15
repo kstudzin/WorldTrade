@@ -118,23 +118,23 @@ class ScheduleItem {
 
 		if (type == Type.TRANSFER) {
 			builder.append(secondName)
-			.append(" (");
+					.append(" (");
 
 			inputs.entrySet()
-			.forEach(e -> builder
-					.append('(')
+			.forEach(e -> builder.append('(')
 					.append(e.getKey())
 					.append(' ')
 					.append(e.getValue())
 					.append(')')
 					.append('\n'));
 			builder.deleteCharAt(builder.length() - 1)
-			.append(')')
-			.append('\n');
+					.append(')')
+					.append('\n');
 		} else {
 			builder.append('\n')
-			.append('\t')
-			.append("(INPUTS ");
+					.append('\t')
+					.append('\t')
+					.append("(INPUTS ");
 
 			inputs.entrySet()
 			.forEach(e -> builder
@@ -145,14 +145,17 @@ class ScheduleItem {
 					.append(')')
 					.append('\n')
 					.append('\t')
+					.append('\t')
 					.append('\t'));
 			builder.deleteCharAt(builder.length() - 1)
-			.deleteCharAt(builder.length() - 1)
-			.deleteCharAt(builder.length() - 1)
-			.append(')')
-			.append('\n')
-			.append('\t')
-			.append("(OUTPUTS ");
+					.deleteCharAt(builder.length() - 1)
+					.deleteCharAt(builder.length() - 1)
+					.deleteCharAt(builder.length() - 1)
+					.append(')')
+					.append('\n')
+					.append('\t')
+					.append('\t')
+					.append("(OUTPUTS ");
 
 			outputs.entrySet()
 			.forEach(e -> builder
@@ -163,13 +166,15 @@ class ScheduleItem {
 					.append(')')
 					.append('\n')
 					.append('\t')
+					.append('\t')
 					.append('\t'));
 
 			builder.deleteCharAt(builder.length() - 1)
-			.deleteCharAt(builder.length() - 1)
-			.deleteCharAt(builder.length() - 1)
-			.append(')')
-			.append('\n');
+					.deleteCharAt(builder.length() - 1)
+					.deleteCharAt(builder.length() - 1)
+					.deleteCharAt(builder.length() - 1)
+					.append(')')
+					.append('\n');
 		}
 
 		builder.deleteCharAt(builder.length() - 1);
