@@ -1,15 +1,30 @@
 package edu.vanderbilt.studzikm;
 
+import com.google.common.base.Supplier;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Driver {
 
-	public static void main(String[] args) {
-		File countryFile = new File(args[0]);
-		File resourceFile = new File(args[1]);
+	public static void main(String[] args) throws FileNotFoundException {
+		WorldTradeParser wtp = WorldTradeParser.parse(args);
+		File countryFile = wtp.getCountryFile();
+		File resourceFile = wtp.getResourcesFile();
+
+		OutputStream outputStream = wtp.getOutputFile();
+		int depth = wtp.getDepth();
+		double gamma = wtp.getGamma();
+		double failurePenalty = wtp.getFailurePenalty();
+		double logisticGrowthRate = wtp.getLogisticGrowthRate();
+		double sigmoidMidpoint = wtp.getSigmoidMidpoint();
+		Supplier<Frontier> frontierSupplier = wtp.getFrontierSupplier();
+		double initialProportion = wtp.getInitialProportion();
+		double proportionStep = wtp.getProportionStep();
 
 		System.out.printf("Resource file name: %s\n", resourceFile);
 		System.out.printf("Country file name:  %s\n", countryFile);
@@ -21,7 +36,7 @@ public class Driver {
 			World world = CountryParser.createWorld(countryFile, resources, FunctionQualityCompuation::new);
 			System.out.printf("\nInitial World State: %s\n", world);
 
-			System.out.printf("\nInitial country utility: \n%s\n", 
+			System.out.printf("\nInitial country quality: \n%s\n",
 					world.stream()
 					.map(country -> new StringBuilder("\t")
 							.append(country.getName())
@@ -30,20 +45,16 @@ public class Driver {
 					.collect(Collectors.joining("\n")));
 
 			SearchBuilder searchBuilder = new SearchBuilder()
-					.setTransferProportion(0.5)
-					.setTransferProportion(1.0)
-					.setTransformProportion(0.33)
-					.setTransformProportion(0.66)
-					.setGamma(1.0)
-					.setFailurePenalty(0.0)
-					.setLogisticGrowthRate(1.0)
-					.setSigmoidMidpoint(0.0)
+					.setGamma(gamma)
+					.setFailurePenalty(failurePenalty)
+					.setLogisticGrowthRate(logisticGrowthRate)
+					.setSigmoidMidpoint(sigmoidMidpoint)
 					.setResources(resources)
 					.setInitialQualities(world)
-					.setFrontierSupplier(HeuristicDepthFirstFrontier::new);
+					.setFrontierSupplier(frontierSupplier);
 
-			double prop = 0.025;
-			double step = 0.025;
+			double prop = initialProportion;
+			double step = proportionStep;
 			while (prop <= 1) {
 				searchBuilder.setTransformProportion(prop);
 				searchBuilder.setTransferProportion(prop);
@@ -51,9 +62,16 @@ public class Driver {
 			}
 
 			Search search = searchBuilder.build();
-			Schedule searchResult = search.search(world, world.getCountry("Self"), 50);
+			Schedule searchResult = search.search(world, world.getCountry("Self"), depth);
 
-			System.out.println(searchResult);
+			ScheduleItem item = searchResult.stream()
+					.max((x, y) -> Double.compare(x.getExpectedUtility(), y.getExpectedUtility()))
+					.orElse(null);
+
+			System.out.println("\nMax Expected Utility: " + item.getExpectedUtility() +
+					" at search depth: " +item.getSchedulePostion() + "\n");
+
+			outputStream.write(searchResult.toString().getBytes());
 
 		} catch (IOException e) {
 			System.out.printf("\nCould not parse resource file %s%n", resourceFile);
