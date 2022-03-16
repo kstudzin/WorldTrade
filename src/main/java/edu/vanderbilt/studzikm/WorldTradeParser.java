@@ -11,7 +11,7 @@ public class WorldTradeParser {
 
     public static final int DEFAULT_DEPTH = 25;
     public static final double DEFAULT_GAMMA = .9;
-    public static final double DEFAULT_FAILURE_PENALTY = 0.05;
+    public static final double DEFAULT_FAILURE_PENALTY = -0.5;
     public static final double DEFAULT_LOGISTIC_GROWTH_RATE = 1.0;
     public static final double DEFAULT_SIGMOID_MIDPOINT = 0.0;
     public static final double DEFAULT_INITIAL_PROPORTION = 0.025;
@@ -107,7 +107,7 @@ public class WorldTradeParser {
 
     public double getFailurePenalty() {
         Preconditions.checkArgument(failurePenalty == null ||
-                        failurePenalty >= 0 && failurePenalty <= 1,
+                        failurePenalty <= 0,
                 "Failure penalty must be between 0 and 1.");
         if (failurePenalty == null) {
             return DEFAULT_FAILURE_PENALTY;
