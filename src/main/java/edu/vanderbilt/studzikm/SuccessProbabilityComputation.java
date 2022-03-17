@@ -15,12 +15,7 @@ public class SuccessProbabilityComputation {
 		this.x0 = x0;
 	}
 
-	public Double compute(TransferResult result) {
-		log.trace("Other reward: " + result.getOtherReward());
-		return 1.0 / ( 1 + Math.exp(-k * (result.getOtherReward() - x0)));
-	}
-
-	public Double compute(TransformResult result) {
-		return 1.0;
+	public Double compute(Double reward) {
+		return 1.0 / ( 1 + Math.exp(-k * (reward - x0)));
 	}
 }

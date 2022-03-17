@@ -44,7 +44,7 @@ public class GraphWidthInvestigation {
             for (String country : countryFileNames) {
                 System.out.println(resource + " " + country);
 
-                World world = CountryParser.createWorld(new File("input/" + country + ".csv"), resources, FunctionQualityCompuation::new);
+                World world = CountryParser.createWorld(new File("input/" + country + ".csv"), resources, FunctionQualityCompuation::new, 0.9);
 
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter("investigation4/" + country + "_" + resource + ".csv"));) {
 

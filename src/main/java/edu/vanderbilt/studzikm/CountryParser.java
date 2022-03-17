@@ -11,8 +11,9 @@ public class CountryParser {
 
 	public static World createWorld(File countryFile,
 									Map<String, Resource> resources,
-									Supplier<QualityComputation> qualityComputation) throws IOException {
-		World world = new World();
+									Supplier<QualityComputation> qualityComputation,
+									double gamma) throws IOException {
+		WorldBuilder worldBuilder = new WorldBuilder(resources);
 		try (BufferedReader reader = new BufferedReader(new FileReader(countryFile))) {
 			String line = reader.readLine(); //  header line
 			String[] headers = line.split(",");
@@ -20,16 +21,14 @@ public class CountryParser {
 			while((line = reader.readLine()) != null) {
 				String[] values = line.split(",");
 
-				Country country = new Country(values[0], qualityComputation.get());
-				world.addCountry(country);
+				worldBuilder.addCountry(values[0], qualityComputation);
 				
 				for (int i = 1; i < values.length; i++) {
-					Resource resource = resources.get(headers[i]);
-					country.addResource(resource, Integer.valueOf(values[i]));
+					worldBuilder.addResource(values[0], headers[i], Integer.valueOf(values[i]));
 				}
 			}
 		}
 
-		return world;
+		return worldBuilder.build();
 	}
 }

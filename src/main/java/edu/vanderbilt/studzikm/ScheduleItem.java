@@ -1,6 +1,8 @@
 package edu.vanderbilt.studzikm;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 class ScheduleItem {
 
@@ -24,19 +26,20 @@ class ScheduleItem {
 		
 	}
 
-	public static ScheduleItem create(SearchNode node, 
-			ExpectedUtilityComputation expectedUtilityComputation) {
+	public static ScheduleItem create(SearchNode node,
+									  ExpectedUtilityComputation expectedUtilityComputation,
+									  Set<String> countries) {
 		ScheduleItem item = new ScheduleItem();
+		item.expectedUtility = expectedUtilityComputation.compute(node.getAction(), node.getState(), countries);
+
 
 		item.type = node.getAction() instanceof TransferResult ? Type.TRANSFER : Type.TRANSFORM;
 		if (item.type == Type.TRANSFER) {
 			TransferResult result = (TransferResult) node.getAction();
 			createFromTransferResult(item, result);
-			item.expectedUtility = expectedUtilityComputation.compute(result);
 		} else {
 			TransformResult result = (TransformResult) node.getAction();
 			createFromTransformResult(item, result);
-			item.expectedUtility = expectedUtilityComputation.compute(result);
 		}
 		item.schedulePostion = node.getAction().getSchedulePosition();
 

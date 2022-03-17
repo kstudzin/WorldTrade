@@ -9,6 +9,7 @@ public class Country {
 	private String name;
 	private QualityComputation qualityComputation;
 	private Map<Resource, Integer> resources = new HashMap<>();
+	private RewardComputation rewardComputation;
 
 	public Country(String name, QualityComputation utilityComp) {
 		this.name = name;
@@ -19,6 +20,7 @@ public class Country {
 		this.name = copy.name;
 		this.qualityComputation = copy.qualityComputation;
 		this.resources.putAll(copy.resources);
+		this.rewardComputation = copy.rewardComputation;
 	}
 
 	public String getName() {
@@ -66,6 +68,14 @@ public class Country {
 
 	public double computeQuality() {
 		return qualityComputation.compute(this);
+	}
+
+	public double computeReward(ActionResult<?> result) {
+		return rewardComputation.computeReward(result, () -> this);
+	}
+
+	public void setRewardComputation(RewardComputation computation) {
+		this.rewardComputation = computation;
 	}
 
 	@Override

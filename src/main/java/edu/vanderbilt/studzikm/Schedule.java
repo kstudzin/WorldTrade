@@ -1,9 +1,6 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,8 +19,14 @@ public class Schedule implements Iterable<ScheduleItem> {
 		Schedule schedule = new Schedule();
 		schedule.averageNodesGenerated = averageNodesGenerated;
 
+		Set<String> countries = new HashSet<>();
+
 		while (result.getDepth() != 0) {
-			ScheduleItem item = createItem(result, expectedUtilityComputation);
+			if (result.getAction() instanceof TransferResult) {
+				String involvedParty = ((TransferResult)result.getAction()).getOther().getName();
+				countries.add(involvedParty);
+			}
+			ScheduleItem item = createItem(result, expectedUtilityComputation, countries);
 			schedule.items.add(item);
 			result = result.getParent();
 		}
@@ -33,8 +36,9 @@ public class Schedule implements Iterable<ScheduleItem> {
 	}
 
 	private static ScheduleItem createItem(SearchNode result, 
-			ExpectedUtilityComputation expectedUtilityComputation) {
-		return ScheduleItem.create(result, expectedUtilityComputation);
+			ExpectedUtilityComputation expectedUtilityComputation,
+										   Set<String> countries) {
+		return ScheduleItem.create(result, expectedUtilityComputation, countries);
 	}
 
 	@Override

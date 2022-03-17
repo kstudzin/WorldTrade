@@ -35,7 +35,7 @@ public class Driver {
 			Map<String, Resource> resources = ResourceFactory.importResources(resourceFile);
 			System.out.printf("\nResource list: \n%s\n", resources);
 
-			World world = CountryParser.createWorld(countryFile, resources, FunctionQualityCompuation::new);
+			World world = CountryParser.createWorld(countryFile, resources, FunctionQualityCompuation::new, gamma);
 			System.out.printf("\nInitial World State: %s\n", world);
 
 			System.out.printf("\nInitial country quality: \n%s\n",
