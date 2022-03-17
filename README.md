@@ -25,6 +25,10 @@ I have been running this code in IntelliJ. I open the Driver class, right-click,
 
 ## CLI Options
 
+**--schedules**  
+**-c**  
+Specify the number of schedules to output. Mut be greater than 0. Default is 1.
+
 **--output FILENAME**  
 **-o FILENAME**  
 Specify the name of the file to write the schedule to. Default is STDOUT.  
