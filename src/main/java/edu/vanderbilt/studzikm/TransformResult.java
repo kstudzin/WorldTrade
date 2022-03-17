@@ -5,10 +5,10 @@ public class TransformResult extends ActionResult<Transform> {
 	public TransformResult(World world, 
 			Transform transform, 
 			Country self, 
-			RewardComputation rewardCompuation, 
+			RewardComputation rewardComputation,
 			int schedulePosition,
 			ResourceDelta delta) {
-		super(world, transform, self, rewardCompuation, schedulePosition, delta);
+		super(world, transform, self, rewardComputation, schedulePosition, delta);
 	}
 
 	@Override
