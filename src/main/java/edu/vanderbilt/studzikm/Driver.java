@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ public class Driver {
 		Supplier<Frontier> frontierSupplier = wtp.getFrontierSupplier();
 		double initialProportion = wtp.getInitialProportion();
 		double proportionStep = wtp.getProportionStep();
+		int numSchedules = wtp.getNumberOfSchedules();
 
 		System.out.printf("Resource file name: %s\n", resourceFile);
 		System.out.printf("Country file name:  %s\n", countryFile);
@@ -62,16 +64,27 @@ public class Driver {
 			}
 
 			Search search = searchBuilder.build();
-			Schedule searchResult = search.search(world, world.getCountry("Self"), depth);
+			List<Schedule> searchResult = search.search(world, world.getCountry("Self"), depth, numSchedules);
 
-			ScheduleItem item = searchResult.stream()
-					.max((x, y) -> Double.compare(x.getExpectedUtility(), y.getExpectedUtility()))
-					.orElse(null);
+			List<ScheduleItem> items = searchResult.stream()
+					.map(schedule -> schedule.stream()
+							.max((x, y) -> Double.compare(x.getExpectedUtility(), y.getExpectedUtility()))
+							.orElse(null))
+					.collect(Collectors.toList());
 
-			System.out.println("\nMax Expected Utility: " + item.getExpectedUtility() +
-					" at search depth: " +item.getSchedulePostion() + "\n");
+			items.forEach(item ->
+					System.out.println("\nMax Expected Utility: " + item.getExpectedUtility() +
+							" at search depth: " +item.getSchedulePostion() + "\n")
+			);
 
-			outputStream.write(searchResult.toString().getBytes());
+
+			int i = 1;
+			for (Schedule schedule : searchResult) {
+				outputStream.write(String.format("======  Schedule %d  ======\n", i).getBytes());
+				outputStream.write(schedule.toString().getBytes());
+				outputStream.write('\n');
+				i++;
+			}
 
 		} catch (IOException e) {
 			System.out.printf("\nCould not parse resource file %s%n", resourceFile);

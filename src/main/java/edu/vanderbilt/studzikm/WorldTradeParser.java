@@ -16,6 +16,7 @@ public class WorldTradeParser {
     public static final double DEFAULT_SIGMOID_MIDPOINT = 0.0;
     public static final double DEFAULT_INITIAL_PROPORTION = 0.025;
     public static final double DEFAULT_PROPORTION_STEP = 0.025;
+    public static final int DEFAULT_NUMBER_OF_SCHEDULES = 1;
 
     private Logger log = LogManager.getLogger(WorldTradeParser.class);
 
@@ -30,6 +31,7 @@ public class WorldTradeParser {
     private String frontierType;
     private Double initialProportion;
     private Double proportionStep;
+    private Integer numberOfSchedules;
 
     public static WorldTradeParser parse(String[] args) {
         WorldTradeParser wtp = new WorldTradeParser();
@@ -60,6 +62,8 @@ public class WorldTradeParser {
                 wtp.initialProportion = Double.valueOf(args[++i]);
             } else if (option.equals("--proportion-step") || option.equals("-ps")) {
                 wtp.proportionStep = Double.valueOf(args[++i]);
+            } else if (option.equals("--schedules") || option.equals("-c")) {
+                wtp.numberOfSchedules = Integer.valueOf(args[++i]);
             }
         }
 
@@ -160,5 +164,14 @@ public class WorldTradeParser {
             return DEFAULT_PROPORTION_STEP;
         }
         return proportionStep;
+    }
+
+    public Integer getNumberOfSchedules() {
+        Preconditions.checkArgument(numberOfSchedules == null ||
+                numberOfSchedules > 0);
+        if (numberOfSchedules == null) {
+            return DEFAULT_NUMBER_OF_SCHEDULES;
+        }
+        return numberOfSchedules;
     }
 }

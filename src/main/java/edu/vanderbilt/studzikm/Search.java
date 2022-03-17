@@ -3,9 +3,11 @@ package edu.vanderbilt.studzikm;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.units.qual.A;
 
 public class Search {
 
@@ -30,6 +32,10 @@ public class Search {
 	}
 
 	public Schedule search(World initState, Country country, int maxDepth) {
+		return search(initState, country, maxDepth, 1).get(0);
+	}
+
+	public List<Schedule> search(World initState, Country country, int maxDepth, int numSearchResults) {
 		frontier.add(nodeFactory.createRoot(initState, country));
 
 		int depth = 0;
@@ -56,11 +62,15 @@ public class Search {
 			}
 
 			if (depth >= maxDepth) {
-				SearchNode maxReward = frontier.getNext();
-				return scheduleFactory.create(maxReward,
-						numResults.stream()
-						.mapToInt(Integer::intValue)
-						.average().orElse(0.0));
+				Double averageNodes = numResults.stream()
+								.mapToInt(Integer::intValue)
+								.average()
+								.orElse(0.0);
+
+				return IntStream.range(0, numSearchResults)
+						.mapToObj(i -> frontier.getNext())
+						.map(node -> scheduleFactory.create(node, averageNodes))
+						.collect(Collectors.toList());
 			}
 
 		}
