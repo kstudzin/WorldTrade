@@ -8,7 +8,7 @@ public class ScheduleFactory {
 		this.expectedUtilityComputation = expectedUtilityComputation;
 	}
 
-	public Schedule create(SearchNode node) {
-		return Schedule.create(node, expectedUtilityComputation);
+	public Schedule create(SearchNode node, double averageNodesGenerated) {
+		return Schedule.create(node, expectedUtilityComputation, averageNodesGenerated);
 	}
 }

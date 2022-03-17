@@ -16,7 +16,7 @@ This application can be run several ways:
 This code can be run using Gradle:
 
 ```
-gradle run --args "input/case1_countries.csv input/case1_resources.csv --output test.out"
+gradle run --args "input/case1_countries.csv input/resources.csv --output test.out"
 ```
 
 ### IDE
@@ -139,7 +139,11 @@ _**Schedule 1**_:
 - All defaults
 
 ```
-input/case1_countries.csv input/case1_resources.csv --output output/case1_schedule2.out
+# Parameters
+input/case1_countries.csv input/resources.csv --output output/case1_schedule1.out
+
+# Result
+# Max Expected Utility: 0.18725714268352023 at search depth: 25
 ```
 
 _**Schedule 2**_:  
@@ -150,10 +154,10 @@ _**Schedule 2**_:
 
 ```
 # Parameters
-input/case1_countries.csv input/case1_resources.csv --output output/case1_schedule2.out --depth 50
+input/case1_countries.csv input/resources2.csv --output case1_schedule2.out
 
 # Results
-# Max Expected Utility: 0.18847471512970937 at search depth: 40
+# Max Expected Utility: 0.32874691129472733 at search depth: 25
 ```
 
 _**Schedule 3**_:  
@@ -164,10 +168,10 @@ _**Schedule 3**_:
 
 ```
 # Parameters
-input/case1_countries.csv input/case1_resources.csv --output output/case1_schedule3.out --depth 100
+input/case1_countries.csv input/resources.csv --output case1_schedule3.out --frontier-type bfs
 
-# Result
-# Max Expected Utility: 0.18847471512970937 at search depth: 40
+# Results
+# Max Expected Utility: 0.18725714268352023 at search depth: 25
 ```
 
 _**Schedule 4**_:  
@@ -178,10 +182,10 @@ _**Schedule 4**_:
 
 ```
 # Parameters
-input/case1_countries.csv input/case1_resources2.csv --output output/case1_schedule4.out --depth 100
+input/case1_countries.csv input/resources2.csv --output case1_schedule4.out --frontier-type bfs
 
 # Results
-# Max Expected Utility: 0.3316419746467216 at search depth: 41
+# Max Expected Utility: 0.32874691129472733 at search depth: 25
 ```
 
 ### Case 2
@@ -197,7 +201,7 @@ _**Schedule 1**_:
 
 ```
 # Parameters:
-input/case2_countries.csv input/case1_resources.csv --output output/case2_schedule1.out
+input/case2_countries.csv input/resources.csv --output output/case2_schedule1.out
 
 # Result
 # Max Expected Utility: 0.6698595083403591 at search depth: 14
@@ -210,7 +214,7 @@ _**Schedule 2**_:
 
 ```
 # Parameters
-input/case2_countries.csv input/case1_resources2.csv --output output/case2_schedule2.out
+input/case2_countries.csv input/resources2.csv --output output/case2_schedule2.out
 
 # Result 
 # Max Expected Utility: 0.8035134022390258 at search depth: 10  
@@ -224,7 +228,7 @@ _**Schedule 3**_:
 
 ```
 # Parameters
-input/case2_countries.csv input/case1_resources.csv --output output/case2_schedule3.out --frontier-type bfs
+input/case2_countries.csv input/resources.csv --output output/case2_schedule3.out --frontier-type bfs
 
 # Result
 # Max Expected Utility: 0.6698595083403591 at search depth: 14
@@ -238,7 +242,7 @@ _**Schedule 4**_:
 
 ```
 # Parameters
-input/case2_countries.csv input/case1_resources2.csv --output output/case2_schedule4.out --frontier-type bfs
+input/case2_countries.csv input/resources2.csv --output output/case2_schedule4.out --frontier-type bfs
 
 # Result
 # Max Expected Utility: 0.8035134022390258 at search depth: 10
@@ -255,7 +259,7 @@ _**Schedule 1**_:
 
 ```
 # Parameters
-input/case3_countries.csv input/case1_resources.csv --output output/case3_schedule1.out
+input/case3_countries.csv input/resources.csv --output output/case3_schedule1.out
 
 # Results
 # Max Expected Utility: 0.6697181905009687 at search depth: 6
@@ -268,7 +272,7 @@ _**Schedule 2**_:
 
 ```
 # Parameters
-input/case3_countries.csv input/case1_resources2.csv --output output/case3_schedule2.out
+input/case3_countries.csv input/resources2.csv --output output/case3_schedule2.out
 
 # Results
 # Max Expected Utility: 0.8034661186717644 at search depth: 8
@@ -282,7 +286,7 @@ _**Schedule 3**_:
 
 ```
 # Parameters  
-input/case3_countries.csv input/case1_resources.csv --output output/case3_schedule3.out --frontier-type bfs
+input/case3_countries.csv input/resources.csv --output output/case3_schedule3.out --frontier-type bfs
 
 # Requests
 # Max Expected Utility: 0.6697181905009687 at search depth: 6
@@ -296,7 +300,7 @@ _**Schedule 4**_:
 
 ```
 # Parameters
-input/case3_countries.csv input/case1_resources2.csv --output output/case3_schedule4.out --frontier-type bfs
+input/case3_countries.csv input/resources2.csv --output output/case3_schedule4.out --frontier-type bfs
 
 # Requests
 # Max Expected Utility: 0.8034661186717644 at search depth: 8

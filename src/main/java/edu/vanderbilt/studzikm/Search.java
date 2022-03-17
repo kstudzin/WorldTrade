@@ -1,8 +1,6 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +34,7 @@ public class Search {
 
 		int depth = 0;
 
+		List<Integer> numResults = new ArrayList<>();
 		while (!frontier.isEmpty()) {
 			SearchNode n = frontier.getNext();
 			log.debug("Expanding node: " + n);
@@ -48,6 +47,7 @@ public class Search {
 
 			log.debug("Found " + next.size() + " next states");
 			next.forEach(node -> log.trace(node.getAction()));
+			numResults.add(next.size());
 
 			if (next.isEmpty()) {
 				continue;
@@ -56,8 +56,11 @@ public class Search {
 			}
 
 			if (depth >= maxDepth) {
-					SearchNode maxReward = frontier.getNext();
-					return scheduleFactory.create(maxReward);
+				SearchNode maxReward = frontier.getNext();
+				return scheduleFactory.create(maxReward,
+						numResults.stream()
+						.mapToInt(Integer::intValue)
+						.average().orElse(0.0));
 			}
 
 		}

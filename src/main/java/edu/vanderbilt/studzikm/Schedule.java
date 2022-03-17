@@ -10,14 +10,17 @@ import java.util.stream.Stream;
 public class Schedule implements Iterable<ScheduleItem> {
 
 	private List<ScheduleItem> items = new LinkedList<>();
+	double averageNodesGenerated;
 
 	private Schedule () {
 
 	}
 
-	public static Schedule create(SearchNode result, 
-			ExpectedUtilityComputation expectedUtilityComputation) {
+	public static Schedule create(SearchNode result,
+								  ExpectedUtilityComputation expectedUtilityComputation,
+								  double averageNodesGenerated) {
 		Schedule schedule = new Schedule();
+		schedule.averageNodesGenerated = averageNodesGenerated;
 
 		while (result.getDepth() != 0) {
 			ScheduleItem item = createItem(result, expectedUtilityComputation);

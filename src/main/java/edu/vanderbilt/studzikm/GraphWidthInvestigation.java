@@ -1,10 +1,7 @@
 package edu.vanderbilt.studzikm;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
@@ -12,44 +9,54 @@ import java.util.stream.Stream;
 public class GraphWidthInvestigation {
 
     private String[] countryFileNames = {
-            "input/case1_countries.csv",
-            "input/case2_countries.csv",
-            "input/case3_countries.csv"
+            "case1_countries",
+            "case2_countries",
+            "case3_countries"
     };
     private String[] resourceFileNames = {
-            "input/case1_resources.csv",
-            "input/case1_resources2.csv"
+            "resources",
+            "resources2"
     };
 
     public static void main(String[] args) throws IOException {
+        List<Double> proportions = new ArrayList<>();
+
+        for (Integer width = 25; width > 0.01; width = width / 2) {
+            proportions.add(width.doubleValue());
+        }
+
+        for (double width = 2.75; width > 1; width -= .5) {
+            proportions.add(width);
+        }
+
+        for (double width = 1.20; width > 1; width -= .1) {
+            proportions.add(width);
+        }
+
         GraphWidthInvestigation invest = new GraphWidthInvestigation();
-        invest.runInvestigation();
+        invest.runInvestigation(proportions);
     }
 
-    public void runInvestigation() throws IOException {
+    public void runInvestigation(List<Double> proportions) throws IOException {
         for (String resource : resourceFileNames) {
-            System.out.println(resource);
 
-            Map<String, Resource> resources = ResourceFactory.importResources(new File(resource));
+            Map<String, Resource> resources = ResourceFactory.importResources(new File("input/" + resource + ".csv"));
             for (String country : countryFileNames) {
-                System.out.println(country);
+                System.out.println(resource + " " + country);
 
-                OutputStream out = new FileOutputStream("investigation/resource-country");
-                World world = CountryParser.createWorld(new File(country), resources, FunctionQualityCompuation::new);
+                World world = CountryParser.createWorld(new File("input/" + country + ".csv"), resources, FunctionQualityCompuation::new);
 
-//                for (int width = 25; width > 0.01; width = width / 2) {
-//                for (double width = 2.75; width > 1; width -= .25) {
-                for (double width = 1.20; width > 1; width -= .05) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter("investigation4/" + country + "_" + resource + ".csv"));) {
 
 
-//                    System.out.println("Width: " + width);
-                    double proportionStep = width/100.0;
-                    double proportionInitStep = proportionStep/3;
-                    for (double proportionInit = proportionStep - 2 * proportionInitStep;
-                         proportionInit <= proportionStep + 2 * proportionInitStep;
-                         proportionInit += proportionInitStep) {
-//                        System.out.println(width + " " + proportionInit);
-                        SearchBuilder searchBuilder = new SearchBuilder()
+                    for (Double width : proportions) {
+                        double proportionStep = width/100.0;
+                        double proportionInitStep = proportionStep/3;
+                        for (double proportionInit = proportionStep - 2 * proportionInitStep;
+                             proportionInit <= proportionStep + 2 * proportionInitStep;
+                            proportionInit += proportionInitStep) {
+
+                            SearchBuilder searchBuilder = new SearchBuilder()
                                 .setGamma(0.9)
                                 .setFailurePenalty(0.05)
                                 .setLogisticGrowthRate(1.0)
@@ -58,24 +65,32 @@ public class GraphWidthInvestigation {
                                 .setInitialQualities(world)
                                 .setFrontierSupplier(() -> new BreadthFirstFrontier(100));
 
-                        int count = 0;
-                        for (double proportion = proportionInit; proportion <= 1; proportion += proportionStep) {
-//                            System.out.println(proportion);
-                            searchBuilder.setTransformProportion(proportion);
-                            count++;
-                            searchBuilder.setTransferProportion(proportion);
-                            count++;
-                        }
+                            int count = 0;
+                            for (double proportion = proportionInit; proportion <= 1; proportion += proportionStep) {
+                                searchBuilder.setTransformProportion(proportion);
+                                count++;
+                                searchBuilder.setTransferProportion(proportion);
+                                count++;
+                            }
 
-                        ScheduleItem item = searchBuilder.build()
-                                .search(world, world.getCountry("Self"), 150)
-                                .stream()
+                            long start = System.currentTimeMillis();
+                            Schedule schedule = searchBuilder.build()
+                                .search(world, world.getCountry("Self"), 150);
+                            long end = System.currentTimeMillis();
+                            ScheduleItem item = schedule.stream()
                                 .max((x, y) -> Double.compare(x.getExpectedUtility(), y.getExpectedUtility()))
                                 .orElse(null);
 
-//                        out.write(String.format("%i,%d,%i,%d",width,proportionInit,item.getSchedulePostion(),item.getExpectedUtility()).getBytes());
-//                            System.out.printf("%i,%d,%i,%d\n",width,proportionInit,item.getSchedulePostion(),item.getExpectedUtility());
-                        System.out.println(count + " " + proportionInit + " " + item.getSchedulePostion() + " " + item.getExpectedUtility());
+                            String line = width + "," +
+                                count + "," +
+                                schedule.averageNodesGenerated + "," +
+                                proportionInit + "," +
+                                item.getSchedulePostion() + "," +
+                                item.getExpectedUtility() + "," +
+                                (end - start);
+                            writer.write(line + "\n");
+                            System.out.println(line);
+                        }
                     }
                 }
             }
