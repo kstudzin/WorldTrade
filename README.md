@@ -154,7 +154,7 @@ _**Schedule 2**_:
 
 ```
 # Parameters
-input/case1_countries.csv input/resources2.csv --output case1_schedule2.out
+input/case1_countries.csv input/resources2.csv --output output/case1_schedule2.out
 
 # Results
 # Max Expected Utility: 0.32874691129472733 at search depth: 25
@@ -168,7 +168,7 @@ _**Schedule 3**_:
 
 ```
 # Parameters
-input/case1_countries.csv input/resources.csv --output case1_schedule3.out --frontier-type bfs
+input/case1_countries.csv input/resources.csv --output output/case1_schedule3.out --frontier-type bfs
 
 # Results
 # Max Expected Utility: 0.18725714268352023 at search depth: 25
@@ -182,7 +182,7 @@ _**Schedule 4**_:
 
 ```
 # Parameters
-input/case1_countries.csv input/resources2.csv --output case1_schedule4.out --frontier-type bfs
+input/case1_countries.csv input/resources2.csv --output output/case1_schedule4.out --frontier-type bfs
 
 # Results
 # Max Expected Utility: 0.32874691129472733 at search depth: 25
