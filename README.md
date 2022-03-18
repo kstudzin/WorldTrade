@@ -144,7 +144,7 @@ _**Schedule 1**_:
 
 ```
 # Parameters
-input/case1_countries.csv input/resources.csv --output output/case1_schedule1.out
+input/case1_countries.csv input/resources.csv --output output/case1_schedule1.out -c 3
 
 # Result
 # Max Expected Utility: 0.18725714268352023 at search depth: 25
@@ -205,7 +205,7 @@ _**Schedule 1**_:
 
 ```
 # Parameters:
-input/case2_countries.csv input/resources.csv --output output/case2_schedule1.out
+input/case2_countries.csv input/resources.csv --output output/case2_schedule1.out -c 3
 
 # Result
 # Max Expected Utility: 0.6698595083403591 at search depth: 14
@@ -263,7 +263,7 @@ _**Schedule 1**_:
 
 ```
 # Parameters
-input/case3_countries.csv input/resources.csv --output output/case3_schedule1.out
+input/case3_countries.csv input/resources.csv --output output/case3_schedule1.out -c 3
 
 # Results
 # Max Expected Utility: 0.6697181905009687 at search depth: 6
