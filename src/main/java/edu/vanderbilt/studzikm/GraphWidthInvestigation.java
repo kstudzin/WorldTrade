@@ -46,7 +46,7 @@ public class GraphWidthInvestigation {
 
                 World world = CountryParser.createWorld(new File("input/" + country + ".csv"), resources, FunctionQualityCompuation::new, 0.9);
 
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter("investigation4/" + country + "_" + resource + ".csv"));) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter("graph-width-out/" + country + "_" + resource + ".csv"));) {
 
 
                     for (Double width : proportions) {

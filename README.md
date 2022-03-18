@@ -4,19 +4,22 @@
 
 This application can be run several ways:
 
+Java 8 is required to run this application.
+
 ### Installed Application
 
 1. Unpack the archive  
 1a. unzip world-trade.zip  
 1b. tar xf world-trade.tar  
-2. `./bin/world-trade <countries csv> <resources csv> [OPTIONS]`
+2. `cd world-trade`
+3. `./bin/world-trade <countries csv> <resources csv> [OPTIONS]`
 
 ### Using Gradle Application Plugin
 
-This code can be run using Gradle:
-
+1. Unzip `source.zip`
+2. Run using the command
 ```
-gradle run --args "input/case1_countries.csv input/resources.csv --output test.out"
+./gradlew run --args "input/case1_countries.csv input/resources.csv --output test.out"
 ```
 
 ### IDE
@@ -309,3 +312,14 @@ input/case3_countries.csv input/resources2.csv --output output/case3_schedule4.o
 # Requests
 # Max Expected Utility: 0.8034661186717644 at search depth: 8
 ```
+
+## Running Graph Width Investigation
+
+1. Unpack the archive  
+   1a. unzip graph-width.zip  
+   1b. tar xf graph-width.tar
+2. `cd graph-width`
+3. Create input directory: `mkdir input`
+4. Copy contents `input` from project submission to new directory
+5. Create output directory: `mkdir graph-width-out`
+6. Run `./bin/graph-width`
