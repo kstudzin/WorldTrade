@@ -49,11 +49,14 @@ public class LogicalCountryModel {
         solver.add(ctx.mkEq(sapp2, ctx.mkInt(8)));
 
         solver.add(ctx.mkEq(score_input, ctx.mkInt(2)));
+        solver.add(ctx.mkEq(score.apply(ctx.mkInt(4)), ctx.mkInt(8)));
+
 
         System.out.println(solver.check());
         System.out.println(solver.getModel());
         System.out.println(solver.getModel().getFuncInterp(score));
         System.out.println(solver.getModel().evaluate(sapp, true));
+        System.out.println(score.apply(ctx.mkInt(4)));
 
         // If new action is input to goal,
     }
