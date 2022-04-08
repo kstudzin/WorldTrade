@@ -70,22 +70,50 @@ public class LogicalCountryModel {
                 ctx.mkImplies( ctx.mkNot(ctx.mkLt(extsg_house, house_rqrmt)), ctx.mkEq(ctx.mkApp(goal2, ctx.mkInt(0)), elctr_resrc))));
 
         Sort[] inputInSort = {resourceSort, resourceSort};
-        FuncDecl<IntSort> input = ctx.mkFuncDecl("Input", inputInSort, ctx.getIntSort());
+        FuncDecl<BoolSort> input = ctx.mkFuncDecl("Input", inputInSort, ctx.getBoolSort());
         solver.add(
                 ctx.mkAnd(
-                        ctx.mkEq(ctx.mkApp(input, house_resrc, timbr_resrc), ctx.mkInt(5))),
-                        ctx.mkEq(ctx.mkApp(input, house_resrc, popln_resrc), ctx.mkInt(5)),
-                        ctx.mkEq(ctx.mkApp(input, house_resrc, elmts_resrc), ctx.mkInt(1)),
-                        ctx.mkEq(ctx.mkApp(input, house_resrc, alloy_resrc), ctx.mkInt(3))
-        );
+                        ctx.mkApp(input, house_resrc, timbr_resrc),
+                        ctx.mkApp(input, house_resrc, popln_resrc),
+                        ctx.mkApp(input, house_resrc, elmts_resrc),
+                        ctx.mkApp(input, house_resrc, alloy_resrc)));
+//                        ctx.mkNot(ctx.mkApp(input, house_resrc, elctr_resrc))));
 
+        // for all x, y, z if input(x, y) = a and input(y, z) = b => input(x, z) = a * b
 
+        Expr<UninterpretedSort> x = ctx.mkConst("x", resourceSort);
+        Expr<UninterpretedSort> y = ctx.mkConst("y", resourceSort);
+        Expr<UninterpretedSort> z = ctx.mkConst("z", resourceSort);
+        BoolExpr body = ctx.mkImplies(ctx.mkAnd(ctx.mkApp(input, x, y), ctx.mkApp(input, y, z)), ctx.mkApp(input, z, z));
+        System.out.println("body: " + body);
+        Sort[] sorts = {resourceSort, resourceSort, resourceSort};
+        Symbol[] names = {ctx.mkSymbol("x"), ctx.mkSymbol("y"), ctx.mkSymbol("z")};
+        Quantifier forall = ctx.mkForall(sorts, names, body, 1, null, null, null, null);
+        System.out.println("Forall: " + forall);
+        solver.add(forall);
+
+        //Test implication
+        solver.add(ctx.mkApp(input, alloy_resrc, elmts_resrc));
+        solver.add(ctx.mkApp(input, alloy_resrc, elctr_resrc));
+        solver.add(ctx.mkNot(ctx.mkApp(input, alloy_resrc, timbr_resrc)));
+
+        // unsat? Yes
+        // solver.add(ctx.mkApp(input, house_resrc, elctr_resrc));
 
         System.out.println(solver.check());
-        System.out.println(solver.getModel());
-        System.out.println(solver.getModel().getFuncInterp(score));
-        System.out.println(solver.getModel().evaluate(sapp, true));
-        System.out.println(score.apply(ctx.mkInt(4)));
+        if (solver.check() == Status.SATISFIABLE) {
+            System.out.println("\nPrinting model: ");
+            System.out.println(solver.getModel());
+            System.out.println();
+            System.out.println(solver.getModel().getFuncInterp(score));
+            System.out.println(solver.getModel().evaluate(sapp, true));
+            System.out.println(score.apply(ctx.mkInt(4)));
+            System.out.println(solver.getModel().evaluate(ctx.mkApp(input, house_resrc, elctr_resrc), true));
+            System.out.println(solver.getModel().evaluate(ctx.mkApp(input, house_resrc, alloy_resrc), true));
+            System.out.println(solver.getModel().evaluate(ctx.mkApp(input, alloy_resrc, elctr_resrc), true));
+            System.out.println(solver.getModel().evaluate(body, true));
+            System.out.println(solver.getModel().evaluate(ctx.mkAnd(ctx.mkApp(input, x, y), ctx.mkApp(input, y, z)), true));
+        }
 
         // If new action is input to goal,
     }
