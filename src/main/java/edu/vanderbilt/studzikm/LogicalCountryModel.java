@@ -47,9 +47,38 @@ public class LogicalCountryModel {
         solver.add(ctx.mkImplies(ctx.mkEq(score_input, ctx.mkInt(2)), ctx.mkEq(sapp, ctx.mkInt(6))));
         solver.add(ctx.mkImplies(ctx.mkEq(score_input, ctx.mkInt(3)), ctx.mkEq(sapp, ctx.mkInt(7))));
         solver.add(ctx.mkEq(sapp2, ctx.mkInt(8)));
+        solver.add(ctx.mkEq(ctx.mkApp(score, ctx.mkInt(5)), ctx.mkInt(8)));
+
 
         solver.add(ctx.mkEq(score_input, ctx.mkInt(2)));
         solver.add(ctx.mkEq(score.apply(ctx.mkInt(4)), ctx.mkInt(8)));
+
+
+        UninterpretedSort resourceSort = ctx.mkUninterpretedSort("ResourceSort");
+        Expr<UninterpretedSort> house_resrc = ctx.mkConst("house_resrc", resourceSort);
+        Expr<UninterpretedSort> elctr_resrc = ctx.mkConst("elctr_resrc", resourceSort);
+        Expr<UninterpretedSort> popln_resrc = ctx.mkConst("popln_resrc", resourceSort);
+        Expr<UninterpretedSort> elmts_resrc = ctx.mkConst("elmts_resrc", resourceSort);
+        Expr<UninterpretedSort> alloy_resrc = ctx.mkConst("alloy_resrc", resourceSort);
+        Expr<UninterpretedSort> timbr_resrc = ctx.mkConst("timbr_resrc", resourceSort);
+
+
+        Sort[] goal2Sorts = {ctx.getIntSort()};
+        FuncDecl<UninterpretedSort> goal2 = ctx.mkFuncDecl("Goal2", goal2Sorts, resourceSort);
+        solver.add(ctx.mkAnd(
+                ctx.mkImplies( ctx.mkLt(extsg_house, house_rqrmt), ctx.mkEq(ctx.mkApp(goal2, ctx.mkInt(0)), house_resrc)),
+                ctx.mkImplies( ctx.mkNot(ctx.mkLt(extsg_house, house_rqrmt)), ctx.mkEq(ctx.mkApp(goal2, ctx.mkInt(0)), elctr_resrc))));
+
+        Sort[] inputInSort = {resourceSort, resourceSort};
+        FuncDecl<IntSort> input = ctx.mkFuncDecl("Input", inputInSort, ctx.getIntSort());
+        solver.add(
+                ctx.mkAnd(
+                        ctx.mkEq(ctx.mkApp(input, house_resrc, timbr_resrc), ctx.mkInt(5))),
+                        ctx.mkEq(ctx.mkApp(input, house_resrc, popln_resrc), ctx.mkInt(5)),
+                        ctx.mkEq(ctx.mkApp(input, house_resrc, elmts_resrc), ctx.mkInt(1)),
+                        ctx.mkEq(ctx.mkApp(input, house_resrc, alloy_resrc), ctx.mkInt(3))
+        );
+
 
 
         System.out.println(solver.check());
