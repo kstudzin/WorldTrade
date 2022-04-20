@@ -3,7 +3,13 @@ package edu.vanderbilt.studzikm;
 import com.microsoft.z3.Context;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LogicalCountryModelTest {
 
@@ -21,8 +27,13 @@ public class LogicalCountryModelTest {
                 .build();
     }
 
+    String setupAssertions() throws IOException {
+        List<String> asserts = Files.readAllLines(new File("src/main/resources/PlanningModel.smt2").toPath());
+        return asserts.stream().collect(Collectors.joining());
+    }
+
     @Test
-    void testBasic() {
+    void testBasic() throws IOException {
         Map<String, Resource> resources = setupResources();
         Country country = new Country("Self", null);
         country.addResource(resources.get("R1"), 100);
@@ -35,7 +46,9 @@ public class LogicalCountryModelTest {
         country.addResource(resources.get("R22'"), 0);
         country.addResource(resources.get("R23'"), 0);
 
-        LogicalCountryModel model = new LogicalCountryModel(new Context(), country);
+        String assertions = setupAssertions();
+
+        LogicalCountryModel model = new LogicalCountryModel(new Context(), country, assertions);
 //        model.score(null);
     }
 }
