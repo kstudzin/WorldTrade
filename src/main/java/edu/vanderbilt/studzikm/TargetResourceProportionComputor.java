@@ -1,6 +1,5 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +17,7 @@ public class TargetResourceProportionComputor {
         this.ctx = ctx;
     }
 
-    Map<String, Double> compute(Country country) {
+    Map<String, Integer> compute(Country country) {
         IntNum exstg_house = ctx.mkInt(country.getResource("R23"));
         IntNum exstg_popln = ctx.mkInt(country.getResource("R1"));
         IntNum exstg_elctr = ctx.mkInt(country.getResource("R22"));
@@ -90,22 +89,6 @@ public class TargetResourceProportionComputor {
         solver.add(ctx.mkImplies(ctx.mkGt(total_alloy, zero),
                                  ctx.mkGe(exstg_popln, alloy_popln_rqmt)));
 
-        RealExpr timbr_popln_ratio = ctx.mkRealConst("timbr_popln_ratio");
-        RealExpr elmts_popln_ratio = ctx.mkRealConst("elmts_popln_ratio");
-        RealExpr alloy_popln_ratio = ctx.mkRealConst("alloy_popln_ratio");
-
-        RealExpr house_waste_popln_ratio = ctx.mkRealConst("house_waste_popln_ratio");
-        RealExpr alloy_waste_popln_ratio = ctx.mkRealConst("alloy_waste_popln_ratio");
-        RealExpr elctr_waste_popln_ratio = ctx.mkRealConst("elctr_waste_popln_ratio");
-
-        solver.add(ctx.mkEq(house_timbr, ctx.mkMul(timbr_popln_ratio, exstg_popln)));
-        solver.add(ctx.mkEq(total_alloy, ctx.mkMul(alloy_popln_ratio, exstg_popln)));
-        solver.add(ctx.mkEq(total_elmts, ctx.mkMul(elmts_popln_ratio, exstg_popln)));
-
-        solver.add(ctx.mkEq(house_waste, ctx.mkMul(house_waste_popln_ratio, exstg_popln)));
-        solver.add(ctx.mkEq(alloy_waste, ctx.mkMul(alloy_waste_popln_ratio, exstg_popln)));
-        solver.add(ctx.mkEq(elctr_waste, ctx.mkMul(elctr_waste_popln_ratio, exstg_popln)));
-
         Status status = solver.check();
         if (status != status.SATISFIABLE) {
             throw new RuntimeException("Resource target proportion model was not satisfied");
@@ -113,36 +96,27 @@ public class TargetResourceProportionComputor {
 
         Model model = solver.getModel();
 
-        Expr<RealSort> timbr_ratio_logic = model.evaluate(timbr_popln_ratio, true);
-        Expr<RealSort> alloy_ratio_logic = model.evaluate(alloy_popln_ratio, true);
-        Expr<RealSort> elmts_ratio_logic = model.evaluate(elmts_popln_ratio, true);
-        Expr<RealSort> house_ratio_logic = model.evaluate(house_popln_ratio, true);
-        Expr<IntSort>  elctr_ratio_logic = model.evaluate(elctr_popln_ratio, true);
-        Expr<RealSort> alloy_waste_ratio_logic = model.evaluate(alloy_waste_popln_ratio, true);
-        Expr<RealSort> elctr_waste_ratio_logic = model.evaluate(elctr_waste_popln_ratio, true);
-        Expr<RealSort> house_waste_ratio_logic = model.evaluate(house_waste_popln_ratio, true);
+        Expr<IntSort> elctr_final = model.evaluate(elctr_rqrmt, true);
+        Expr<IntSort> house_final = model.evaluate(house_rqrmt, true);
 
-        Map<String, Double> proportions = new HashMap<>();
-        proportions.put("R1", 1.0);
-        proportions.put("R2", parse(elmts_ratio_logic.toString()));
-        proportions.put("R3", parse(timbr_ratio_logic.toString()));
-        proportions.put("R21", parse(alloy_ratio_logic.toString()));
-        proportions.put("R22", parse(elctr_ratio_logic.toString()));
-        proportions.put("R23", parse(house_ratio_logic.toString()));
-        proportions.put("R21'", parse(alloy_waste_ratio_logic.toString()));
-        proportions.put("R22'", parse(elctr_waste_ratio_logic.toString()));
-        proportions.put("R23'", parse(house_waste_ratio_logic.toString()));
+        Expr<IntSort> timbr_rqrmt = model.evaluate(house_timbr, true);
+        Expr<IntSort> alloy_rgrmt = model.evaluate(total_alloy, true);
+        Expr<IntSort> elmts_rqrmt = model.evaluate(total_elmts, true);
+        Expr<IntSort> alloy_waste_expct = model.evaluate(alloy_waste, true);
+        Expr<IntSort> elctr_waste_expct = model.evaluate(elctr_waste, true);
+        Expr<IntSort> house_waste_expct = model.evaluate(house_waste, true);
+
+        Map<String, Integer> proportions = new HashMap<>();
+        proportions.put("R1", 1);
+        proportions.put("R2", Integer.valueOf(elmts_rqrmt.toString()));
+        proportions.put("R3", Integer.valueOf(timbr_rqrmt.toString()));
+        proportions.put("R21", Integer.valueOf(alloy_rgrmt.toString()));
+        proportions.put("R22", Integer.valueOf(elctr_final.toString()));
+        proportions.put("R23", Integer.valueOf(house_final.toString()));
+        proportions.put("R21'", Integer.valueOf(alloy_waste_expct.toString()));
+        proportions.put("R22'", Integer.valueOf(elctr_waste_expct.toString()));
+        proportions.put("R23'", Integer.valueOf(house_waste_expct.toString()));
         return proportions;
-    }
-
-    // From https://stackoverflow.com/questions/13249858/how-to-convert-from-fraction-formatted-string-to-decimal-or-float-in-java
-    private double parse(String ratio) {
-        if (ratio.contains("/")) {
-            String[] rat = ratio.split("/");
-            return Double.parseDouble(rat[0]) / Double.parseDouble(rat[1]);
-        } else {
-            return Double.parseDouble(ratio);
-        }
     }
 
 }
