@@ -107,7 +107,7 @@ public class TargetResourceProportionComputor {
         Expr<IntSort> house_waste_expct = model.evaluate(house_waste, true);
 
         Map<String, Integer> proportions = new HashMap<>();
-        proportions.put("R1", 1);
+        proportions.put("R1", country.getResource("R1"));
         proportions.put("R2", Integer.valueOf(elmts_rqrmt.toString()));
         proportions.put("R3", Integer.valueOf(timbr_rqrmt.toString()));
         proportions.put("R21", Integer.valueOf(alloy_rgrmt.toString()));
