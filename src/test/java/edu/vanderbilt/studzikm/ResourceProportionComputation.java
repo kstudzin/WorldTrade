@@ -53,17 +53,17 @@ public class ResourceProportionComputation {
         Context context = new Context();
         TargetResourceProportionComputor computor =
                 new TargetResourceProportionComputor(transformFact, context);
-        Map<String, Double> proportions = computor.compute(country);
+        Map<String, Integer> proportions = computor.compute(country);
 
-        assertEquals(1.0, proportions.get("R1"));
-        assertEquals(36.0, proportions.get("R2"));
-        assertEquals(0.0, proportions.get("R3"));
-        assertEquals(24.0, proportions.get("R21"));
-        assertEquals(25.0, proportions.get("R22"));
-        assertEquals(0.25, proportions.get("R23"));
-        assertEquals(24.0, proportions.get("R21'"));
-        assertEquals(12.0, proportions.get("R22'"));
-        assertEquals(0.0, proportions.get("R23'"));
+        assertEquals(100, proportions.get("R1"));
+        assertEquals(3600, proportions.get("R2"));
+        assertEquals(0, proportions.get("R3"));
+        assertEquals(2400, proportions.get("R21"));
+        assertEquals(2400, proportions.get("R22"));
+        assertEquals(0, proportions.get("R23"));
+        assertEquals(2400, proportions.get("R21'"));
+        assertEquals(1200, proportions.get("R22'"));
+        assertEquals(0, proportions.get("R23'"));
     }
 
     @Test
@@ -84,16 +84,16 @@ public class ResourceProportionComputation {
         Context context = new Context();
         TargetResourceProportionComputor computor =
                 new TargetResourceProportionComputor(transformFact, context);
-        Map<String, Double> proportions = computor.compute(country);
+        Map<String, Integer> proportions = computor.compute(country);
 
-        assertEquals(1.0, proportions.get("R1"));
-        assertEquals(0.15, proportions.get("R2"));
-        assertEquals(0.75, proportions.get("R3"));
-        assertEquals(0.45, proportions.get("R21"));
-        assertEquals(25.0, proportions.get("R22"));
-        assertEquals(0.25, proportions.get("R23"));
-        assertEquals(0.45, proportions.get("R21'"));
-        assertEquals(0.0, proportions.get("R22'"));
-        assertEquals(0.15, proportions.get("R23'"));
+        assertEquals(100, proportions.get("R1"));
+        assertEquals(15, proportions.get("R2"));
+        assertEquals(75, proportions.get("R3"));
+        assertEquals(45, proportions.get("R21"));
+        assertEquals(0, proportions.get("R22"));
+        assertEquals(15, proportions.get("R23"));
+        assertEquals(45, proportions.get("R21'"));
+        assertEquals(0, proportions.get("R22'"));
+        assertEquals(15, proportions.get("R23'"));
     }
 }
