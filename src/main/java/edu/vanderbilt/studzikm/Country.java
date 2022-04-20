@@ -10,10 +10,15 @@ public class Country {
 	private QualityComputation qualityComputation;
 	private Map<Resource, Integer> resources = new HashMap<>();
 	private RewardComputation rewardComputation;
+	private TargetResourceAmountComputation targetComputation;
+	private Map<String, Integer> targetAmounts = new HashMap<>();
 
-	public Country(String name, QualityComputation utilityComp) {
+	public Country(String name,
+				   QualityComputation utilityComp,
+				   TargetResourceAmountComputation targetComp) {
 		this.name = name;
 		this.qualityComputation = utilityComp;
+		this.targetComputation = targetComp;
 	}
 
 	public Country(Country copy) {
@@ -76,6 +81,15 @@ public class Country {
 
 	public void setRewardComputation(RewardComputation computation) {
 		this.rewardComputation = computation;
+	}
+
+	public Integer getTargetAmount(String resource) {
+		// Lazy load target amounts
+		if (targetAmounts.isEmpty()) {
+			targetAmounts = targetComputation.compute(this);
+		}
+
+		return targetAmounts.get(resource);
 	}
 
 	@Override
