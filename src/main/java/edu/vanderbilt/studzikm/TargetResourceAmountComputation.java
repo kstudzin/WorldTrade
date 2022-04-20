@@ -6,12 +6,12 @@ import java.util.Map;
 
 import com.microsoft.z3.*;
 
-public class TargetResourceProportionComputor {
+public class TargetResourceAmountComputation {
 
     private Collection<Transform> transforms;
     private Context ctx;
 
-    public TargetResourceProportionComputor(TransformFactory transformFactory, Context ctx) {
+    public TargetResourceAmountComputation(TransformFactory transformFactory, Context ctx) {
         // TODO: Encapsulate transforms as logic
         this.transforms = transformFactory.getTransforms();
         this.ctx = ctx;

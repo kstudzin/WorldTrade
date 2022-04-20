@@ -10,7 +10,7 @@ import java.util.stream.DoubleStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResourceProportionComputation {
+public class TargetResourceAmountComputationTest {
 
     Double[] setupProportions() {
         return DoubleStream.of(.1, .5)
@@ -51,8 +51,8 @@ public class ResourceProportionComputation {
         resources.entrySet()
                 .forEach(r -> country.addResource(r.getValue(), 100));
         Context context = new Context();
-        TargetResourceProportionComputor computor =
-                new TargetResourceProportionComputor(transformFact, context);
+        TargetResourceAmountComputation computor =
+                new TargetResourceAmountComputation(transformFact, context);
         Map<String, Integer> proportions = computor.compute(country);
 
         assertEquals(100, proportions.get("R1"));
@@ -82,8 +82,8 @@ public class ResourceProportionComputation {
         country.addResource(resources.get("R23'"), 0);
 
         Context context = new Context();
-        TargetResourceProportionComputor computor =
-                new TargetResourceProportionComputor(transformFact, context);
+        TargetResourceAmountComputation computor =
+                new TargetResourceAmountComputation(transformFact, context);
         Map<String, Integer> proportions = computor.compute(country);
 
         assertEquals(100, proportions.get("R1"));
