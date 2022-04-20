@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Transfer implements Action{
+public class Transfer implements Action {
 	Logger log = LogManager.getLogger(Transfer.class);
 
 	private Resource resource;
@@ -38,6 +38,14 @@ public class Transfer implements Action{
 
 	public Resource getResource() {
 		return resource;
+	}
+
+	public String getName() {
+		return resource.getName();
+	}
+
+	public Type getType() {
+		return Type.TRANSFER;
 	}
 
 	@Override

@@ -36,23 +36,17 @@ public class TargetResourceAmountComputationTest {
                 .build();
     }
 
-    Country setupCountry(Map<String, Resource> resources, Consumer<Map.Entry<String, Resource>> calculation) {
-        Country country = new Country("Self", null);
-        resources.entrySet()
-                .forEach(calculation::accept);
-        return country;
-    }
-
     @Test
     void testBasic() {
         Map<String, Resource> resources = setupResources();
         TransformFactory transformFact = setupTransforms(resources);
-        Country country = new Country("Self", null);
-        resources.entrySet()
-                .forEach(r -> country.addResource(r.getValue(), 100));
         Context context = new Context();
         TargetResourceAmountComputation computor =
                 new TargetResourceAmountComputation(transformFact, context);
+
+        Country country = new Country("Self", null, computor);
+        resources.entrySet()
+                .forEach(r -> country.addResource(r.getValue(), 100));
         Map<String, Integer> proportions = computor.compute(country);
 
         assertEquals(100, proportions.get("R1"));
@@ -70,7 +64,11 @@ public class TargetResourceAmountComputationTest {
     void testHousingRequired() {
         Map<String, Resource> resources = setupResources();
         TransformFactory transformFact = setupTransforms(resources);
-        Country country = new Country("Self", null);
+        Context context = new Context();
+        TargetResourceAmountComputation computor =
+                new TargetResourceAmountComputation(transformFact, context);
+
+        Country country = new Country("Self", null, computor);
         country.addResource(resources.get("R1"), 100);
         country.addResource(resources.get("R2"), 100);
         country.addResource(resources.get("R3"), 100);
@@ -81,9 +79,6 @@ public class TargetResourceAmountComputationTest {
         country.addResource(resources.get("R22'"), 0);
         country.addResource(resources.get("R23'"), 0);
 
-        Context context = new Context();
-        TargetResourceAmountComputation computor =
-                new TargetResourceAmountComputation(transformFact, context);
         Map<String, Integer> proportions = computor.compute(country);
 
         assertEquals(100, proportions.get("R1"));

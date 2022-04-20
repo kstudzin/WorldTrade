@@ -1,7 +1,8 @@
 
 (assert (distinct house_resrc elctr_resrc popln_resrc
         elmts_resrc alloy_resrc timbr_resrc
-        alloy_waste_resrc elctr_waste_resrc house_waste_resrc))
+        alloy_waste_resrc elctr_waste_resrc house_waste_resrc
+        null_resrc))
 
 (assert (distinct oneOfOne twoOfTwo threeOfThree))
 

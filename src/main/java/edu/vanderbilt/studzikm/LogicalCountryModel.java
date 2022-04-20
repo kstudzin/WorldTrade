@@ -2,11 +2,11 @@ package edu.vanderbilt.studzikm;
 
 import com.microsoft.z3.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LogicalCountryModel {
@@ -16,10 +16,27 @@ public class LogicalCountryModel {
     private Country country;
     private Integer time = 0;
 
+    private UninterpretedSort resourceSort;
+    private UninterpretedSort scoreSort;
+    private UninterpretedSort timeStep;
+
+    private Sort[] sorts;
+    private Symbol[] sortNames;
+    private Symbol[] symbols;
+    private FuncDecl<?>[] decls;
+    private Map<String, String> nameMap = new HashMap<>();
+
     public LogicalCountryModel(Context context, Country country, String assertions) {
         this.ctx = context;
         this.country = country;
         this.solver = context.mkSolver();
+
+        this.nameMap.put("R1", "popln_resrc");
+        this.nameMap.put("R2", "elmts_resrc");
+        this.nameMap.put("R3", "timbr_resrc");
+        this.nameMap.put("R21", "alloy_resrc");
+        this.nameMap.put("R22", "elctr_resrc");
+        this.nameMap.put("R23", "house_resrc");
 
         initialize(assertions);
     }
@@ -28,16 +45,9 @@ public class LogicalCountryModel {
      * Add initial axioms to model
      */
     private void initialize(String asserts) {
-        IntNum exstg_popln = ctx.mkInt(country.getResource("R1"));
-        IntNum extsg_elmts = ctx.mkInt(country.getResource("R2"));
-        IntNum extsg_timbr = ctx.mkInt(country.getResource("R3"));
-        IntNum extsg_alloy = ctx.mkInt(country.getResource("R21"));
-        IntNum extsg_elctr = ctx.mkInt(country.getResource("R22"));
-        IntNum extsg_house = ctx.mkInt(country.getResource("R23"));
-
-        UninterpretedSort resourceSort = ctx.mkUninterpretedSort("ResourceSort");
-        UninterpretedSort scoreSort = ctx.mkUninterpretedSort("ScoreType");
-        UninterpretedSort timeStep = ctx.mkUninterpretedSort("TimeStep");
+        resourceSort = ctx.mkUninterpretedSort("ResourceSort");
+        scoreSort = ctx.mkUninterpretedSort("ScoreType");
+        timeStep = ctx.mkUninterpretedSort("TimeStep");
 
         Expr<UninterpretedSort> house_resrc = ctx.mkConst("house_resrc", resourceSort);
         Expr<UninterpretedSort> elctr_resrc = ctx.mkConst("elctr_resrc", resourceSort);
@@ -48,6 +58,9 @@ public class LogicalCountryModel {
         Expr<UninterpretedSort> house_waste_resrc = ctx.mkConst("house_waste_resrc", resourceSort);
         Expr<UninterpretedSort> alloy_waste_resrc = ctx.mkConst("alloy_waste_resrc", resourceSort);
         Expr<UninterpretedSort> elctr_waste_resrc = ctx.mkConst("elctr_waste_resrc", resourceSort);
+
+        Expr<UninterpretedSort> null_resrc = ctx.mkConst("null_resrc", resourceSort);
+
 
         Sort[] inputInSort = {resourceSort, resourceSort};
         FuncDecl<BoolSort> input = ctx.mkFuncDecl("Input", inputInSort, ctx.getBoolSort());
@@ -66,12 +79,12 @@ public class LogicalCountryModel {
         FuncDecl<UninterpretedSort> twoOfTwo = ctx.mkFuncDecl("twoOfTwo", new Sort[]{}, scoreSort);
         FuncDecl<UninterpretedSort> threeOfThree = ctx.mkFuncDecl("threeOfThree", new Sort[]{}, scoreSort);
 
-        Sort[] sorts = {
+        sorts = new Sort[]{
                 resourceSort,
                 scoreSort,
                 timeStep
         };
-        Symbol[] sortNames = Arrays.stream(sorts)
+        sortNames = Arrays.stream(sorts)
                 .map(Sort::getName)
                 .toArray(Symbol[]::new);
 
@@ -86,7 +99,8 @@ public class LogicalCountryModel {
                                         timbr_resrc,
                                         house_waste_resrc,
                                         alloy_waste_resrc,
-                                        elctr_waste_resrc
+                                        elctr_waste_resrc,
+                                        null_resrc
                                 )
 
                                 // Get function declaration from expression
@@ -103,29 +117,60 @@ public class LogicalCountryModel {
                                 twoOfTwo,
                                 threeOfThree)
                 );
-        Symbol[] symbols = funcDeclSupplier
+        symbols = funcDeclSupplier
                 .get()
                 .map(FuncDecl::getName)
                 .toArray(Symbol[]::new);
-        FuncDecl<?>[] decls = funcDeclSupplier.get()
+        decls = funcDeclSupplier.get()
                 .toArray(FuncDecl[]::new);
 
         BoolExpr[] assertObjects = ctx.parseSMTLIB2String(asserts, sortNames, sorts, symbols, decls);
-        Solver s = ctx.mkSolver();
         Arrays.stream(assertObjects)
-                .forEach(s::add);
-
-        System.out.println(s.check());
+                .forEach(solver::add);
     }
 
     public Double score(ActionResult<?> result){
         Action action = result.getAction();
-        String name = action.getName();
+        String name = nameMap.get(action.getName());
         Action.Type type = action.getType();
+        String timeStr = "t" + time.toString();
 
-        System.out.println(solver.check());
-        System.out.println(solver.getModel());
+        Expr<UninterpretedSort> timeConst = ctx.mkConst(timeStr, timeStep);
+        symbols[symbols.length] = timeConst.getFuncDecl().getName();
+        decls[decls.length] = timeConst.getFuncDecl();
 
+        if (type == Action.Type.TRANSFER) {
+            TransferResult transferResult = (TransferResult) result;
+            if (transferResult.getRole() == TransferResult.Role.SENDER) {
+                name = "null_resrc";
+            }
+        }
+
+        String goal;
+        if (result.getSelf().getTargetAmount("R23") > 0) {
+            goal = "house_resrc";
+        } else if (result.getSelf().getTargetAmount("R22") > 0) {
+            goal = "elctr_resrc";
+        } else {
+            goal = "null_resrc";
+        }
+
+        String[] updateTemplate = {
+                "(assert (Action %s %s))",
+                "(assert (Goal %s %s))",
+                "(assert (= (Time %s) %d))",
+                "(assert (= (InvTime %d) %s))",
+        };
+        String updates = String.format(Arrays.stream(updateTemplate)
+                .collect(Collectors.joining("\n")),
+                name, timeStr,
+                goal, timeStr,
+                timeStr, time,
+                time, timeStr);
+
+        BoolExpr[] updateExpr = ctx.parseSMTLIB2String(updates, sortNames, sorts, symbols, decls);
+
+        time++;
         return null;
     }
 

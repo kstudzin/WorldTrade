@@ -1,5 +1,7 @@
 package edu.vanderbilt.studzikm;
 
+import com.microsoft.z3.Context;
+
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -8,14 +10,18 @@ public class WorldBuilder {
 
 	private World world = new World();
 	private Map<String, Resource> resources;
+	private DefaultTransforms transformFactory;
 	private double gamma;
 
 	public WorldBuilder(Map<String, Resource> resources) {
 		this.resources = resources;
+		this.transformFactory = new DefaultTransforms(resources);
 	}
 
 	public WorldBuilder addCountry(String name, Supplier<QualityComputation> qualityComputationSupplier) {
-		world.addCountry(new Country(name, qualityComputationSupplier.get()));
+		world.addCountry(new Country(name,
+				qualityComputationSupplier.get(),
+				new TargetResourceAmountComputation(transformFactory, new Context())));
 		return this;
 	}
 

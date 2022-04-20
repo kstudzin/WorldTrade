@@ -7,4 +7,13 @@ public class NullAction implements Action {
 		return "NullAction";
 	}
 
+	@Override
+	public String getName() {
+		return "Null Action";
+	}
+
+	@Override
+	public Type getType() {
+		return null;
+	}
 }

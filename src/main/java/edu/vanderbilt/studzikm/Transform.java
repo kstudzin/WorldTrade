@@ -65,6 +65,10 @@ public class Transform implements Action {
 		return Collections.unmodifiableMap(output);
 	}
 
+	public Type getType() {
+		return Type.TRANSFORM;
+	}
+
 	@Override
 	public String toString() {
 		return "Transform [name=" + name + "]";

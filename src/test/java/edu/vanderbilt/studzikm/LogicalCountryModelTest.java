@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,10 +31,20 @@ public class LogicalCountryModelTest {
         return asserts.stream().collect(Collectors.joining());
     }
 
+    private TargetResourceAmountComputation setupComp(TransformFactory factory, Context ctx) {
+        return new TargetResourceAmountComputation(factory, ctx);
+    }
+
+    TransformFactory setupTransformFactory(Map<String, Resource> resources) {
+        return new DefaultTransforms(resources);
+    }
+
     @Test
     void testBasic() throws IOException {
         Map<String, Resource> resources = setupResources();
-        Country country = new Country("Self", null);
+        TransformFactory factory = setupTransformFactory(resources);
+        TargetResourceAmountComputation comp = setupComp(factory, new Context());
+        Country country = new Country("Self", null, comp);
         country.addResource(resources.get("R1"), 100);
         country.addResource(resources.get("R2"), 100);
         country.addResource(resources.get("R3"), 100);
