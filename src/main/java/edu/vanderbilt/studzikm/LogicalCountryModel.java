@@ -130,6 +130,22 @@ public class LogicalCountryModel {
         BoolExpr[] assertObjects = ctx.parseSMTLIB2String(assertions, sortNames, sorts, symbols, decls);
         Arrays.stream(assertObjects)
                 .forEach(solver::add);
+
+        solver.add(mkInput(input, house_resrc, popln_resrc));
+        solver.add(mkInput(input, house_resrc, elmts_resrc));
+        solver.add(mkInput(input, house_resrc, alloy_resrc));
+        solver.add(mkInput(input, house_resrc, timbr_resrc));
+        solver.add(mkInput(input, elctr_resrc, popln_resrc));
+        solver.add(mkInput(input, elctr_resrc, elmts_resrc));
+        solver.add(mkInput(input, elctr_resrc, alloy_resrc));
+        solver.add(mkInput(input, alloy_resrc, popln_resrc));
+        solver.add(mkInput(input, alloy_resrc, elmts_resrc));
+    }
+
+    private Expr<BoolSort> mkInput(FuncDecl<BoolSort> input,
+                                   Expr<UninterpretedSort> output_resrc,
+                                   Expr<UninterpretedSort> input_resrc) {
+        return ctx.mkEq(ctx.mkApp(input, output_resrc, input_resrc), ctx.mkTrue());
     }
 
     public Double score(ActionResult<?> result){
@@ -184,7 +200,7 @@ public class LogicalCountryModel {
         }
         Expr<RealSort> finalScore = solver.getModel().evaluate(ctx.mkApp(score, oneOfOne, timeConst), true);
 
-        System.out.println( solver.getModel().evaluate(ctx.mkApp(score, twoOfTwo, timeConst), true));
+        System.out.println( solver.getModel());
         return parse(finalScore.toString());
     }
 

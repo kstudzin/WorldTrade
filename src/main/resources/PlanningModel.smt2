@@ -11,18 +11,6 @@
 
 (assert (forall ((t TimeStep)) (exists ((x Int)) (and (= (Time t) x) (= (InvTime x) t)))))
 
-(assert (Input house_resrc popln_resrc))
-(assert (Input house_resrc elmts_resrc))
-(assert (Input house_resrc alloy_resrc))
-(assert (Input house_resrc timbr_resrc))
-
-(assert (Input elctr_resrc popln_resrc))
-(assert (Input elctr_resrc elmts_resrc))
-(assert (Input elctr_resrc alloy_resrc))
-
-(assert (Input alloy_resrc popln_resrc))
-(assert (Input alloy_resrc elmts_resrc))
-
 (assert (forall ((x ResourceSort) (y ResourceSort) (z ResourceSort) (t TimeStep))
   (and (ite (and (Action y t) (Goal x t) (Input x y)) (= (Score oneOfOne t) 0.85) (= (Score oneOfOne t) 0.15))
        (ite (and (= (Score oneOfOne t) 0.85) (Action z (InvTime (- (Time t) 1))) (Goal x (InvTime (- (Time t) 1))) (Input x z))
