@@ -42,6 +42,7 @@ dependencies {
 	implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
 
 	implementation name: 'com.microsoft.z3'
+	implementation 'org.mockito:mockito-core:4.5.0'
 }
 
 application {

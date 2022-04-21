@@ -1,6 +1,8 @@
 package edu.vanderbilt.studzikm;
 
 import com.microsoft.z3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +12,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LogicalCountryModel {
+
+    private Logger log = LogManager.getLogger(LogicalCountryModel.class);
 
     private Context ctx;
     private Solver solver;
@@ -26,6 +30,12 @@ public class LogicalCountryModel {
     private FuncDecl<?>[] decls;
     private Map<String, String> nameMap = new HashMap<>();
 
+    private FuncDecl<RealSort> score;
+
+    public final Expr<UninterpretedSort> oneOfOne;
+    public final Expr<UninterpretedSort> twoOfTwo;
+    public final Expr<UninterpretedSort> threeOfThree;
+
     public LogicalCountryModel(Context context, Country country, String assertions) {
         this.ctx = context;
         this.country = country;
@@ -38,13 +48,6 @@ public class LogicalCountryModel {
         this.nameMap.put("R22", "elctr_resrc");
         this.nameMap.put("R23", "house_resrc");
 
-        initialize(assertions);
-    }
-
-    /**
-     * Add initial axioms to model
-     */
-    private void initialize(String asserts) {
         resourceSort = ctx.mkUninterpretedSort("ResourceSort");
         scoreSort = ctx.mkUninterpretedSort("ScoreType");
         timeStep = ctx.mkUninterpretedSort("TimeStep");
@@ -65,7 +68,7 @@ public class LogicalCountryModel {
         Sort[] inputInSort = {resourceSort, resourceSort};
         FuncDecl<BoolSort> input = ctx.mkFuncDecl("Input", inputInSort, ctx.getBoolSort());
 
-        Sort[] resourceSortArr = {resourceSort};
+        Sort[] resourceSortArr = {resourceSort, timeStep};
         FuncDecl<BoolSort> action = ctx.mkFuncDecl("Action", resourceSortArr, ctx.getBoolSort());
         FuncDecl<BoolSort> goal = ctx.mkFuncDecl("Goal", resourceSortArr, ctx.getBoolSort());
 
@@ -73,11 +76,11 @@ public class LogicalCountryModel {
         FuncDecl<UninterpretedSort> invTime = ctx.mkFuncDecl("InvTime", ctx.getIntSort(), timeStep);
 
         Sort[] scoreInSort = {scoreSort, timeStep};
-        FuncDecl<RealSort> score = ctx.mkFuncDecl("Score", scoreInSort, ctx.getRealSort());
+        score = ctx.mkFuncDecl("Score", scoreInSort, ctx.getRealSort());
 
-        FuncDecl<UninterpretedSort> oneOfOne = ctx.mkFuncDecl("oneOfOne", new Sort[]{}, scoreSort);
-        FuncDecl<UninterpretedSort> twoOfTwo = ctx.mkFuncDecl("twoOfTwo", new Sort[]{}, scoreSort);
-        FuncDecl<UninterpretedSort> threeOfThree = ctx.mkFuncDecl("threeOfThree", new Sort[]{}, scoreSort);
+        oneOfOne = ctx.mkConst("oneOfOne", scoreSort);
+        twoOfTwo = ctx.mkConst("twoOfTwo", scoreSort);
+        threeOfThree = ctx.mkConst("threeOfThree", scoreSort);
 
         sorts = new Sort[]{
                 resourceSort,
@@ -100,7 +103,10 @@ public class LogicalCountryModel {
                                         house_waste_resrc,
                                         alloy_waste_resrc,
                                         elctr_waste_resrc,
-                                        null_resrc
+                                        null_resrc,
+                                        oneOfOne,
+                                        twoOfTwo,
+                                        threeOfThree
                                 )
 
                                 // Get function declaration from expression
@@ -112,10 +118,7 @@ public class LogicalCountryModel {
                                 goal,
                                 time,
                                 invTime,
-                                score,
-                                oneOfOne,
-                                twoOfTwo,
-                                threeOfThree)
+                                score)
                 );
         symbols = funcDeclSupplier
                 .get()
@@ -124,20 +127,20 @@ public class LogicalCountryModel {
         decls = funcDeclSupplier.get()
                 .toArray(FuncDecl[]::new);
 
-        BoolExpr[] assertObjects = ctx.parseSMTLIB2String(asserts, sortNames, sorts, symbols, decls);
+        BoolExpr[] assertObjects = ctx.parseSMTLIB2String(assertions, sortNames, sorts, symbols, decls);
         Arrays.stream(assertObjects)
                 .forEach(solver::add);
     }
 
     public Double score(ActionResult<?> result){
         Action action = result.getAction();
-        String name = nameMap.get(action.getName());
+        String name = action.getName();
         Action.Type type = action.getType();
         String timeStr = "t" + time.toString();
 
         Expr<UninterpretedSort> timeConst = ctx.mkConst(timeStr, timeStep);
-        symbols[symbols.length] = timeConst.getFuncDecl().getName();
-        decls[decls.length] = timeConst.getFuncDecl();
+        symbols[symbols.length - 1] = timeConst.getFuncDecl().getName();
+        decls[decls.length - 1] = timeConst.getFuncDecl();
 
         if (type == Action.Type.TRANSFER) {
             TransferResult transferResult = (TransferResult) result;
@@ -168,10 +171,29 @@ public class LogicalCountryModel {
                 timeStr, time,
                 time, timeStr);
 
+        log.info(updates);
+
         BoolExpr[] updateExpr = ctx.parseSMTLIB2String(updates, sortNames, sorts, symbols, decls);
+        Arrays.stream(updateExpr)
+                .forEach(solver::add);
 
         time++;
-        return null;
+
+        if (solver.check() != Status.SATISFIABLE) {
+            throw new RuntimeException("Model not satisfiable");
+        }
+        Expr<RealSort> finalScore = solver.getModel().evaluate(ctx.mkApp(score, oneOfOne, timeConst), true);
+
+        System.out.println( solver.getModel().evaluate(ctx.mkApp(score, twoOfTwo, timeConst), true));
+        return parse(finalScore.toString());
     }
 
+    double parse(String ratio) {
+        if (ratio.contains("/")) {
+            String[] rat = ratio.split("/");
+            return Double.parseDouble(rat[0]) / Double.parseDouble(rat[1]);
+        } else {
+            return Double.parseDouble(ratio);
+        }
+    }
 }
