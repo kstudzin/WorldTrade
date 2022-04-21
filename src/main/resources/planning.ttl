@@ -2,6 +2,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ai:Resource a rdfs:Class .
 ai:Action a rdfs:Class .
@@ -26,11 +27,8 @@ ai:hasInput a rdf:Property ;
 ai:hasOutput a rdf:Property ;
   rdfs:range ai:Resource .
 
-ai:occuredAt a rdf:Property .
+ai:atTime a rdf:Property .
+ai:obtain a rdf:Property .
+ai:requires a rdf:Property .
 
-ai:TimberTransfer rdfs:subClassOf ai:Transfer ;
-  rdfs:subClassOf [
-    rdf:type        owl:Restriction ;
-    owl:onProperty  ai:hasOutput ;
-    owl:hasValue    ai:Timber ;
-] .
+ai:House ai:requires ai:Timber .
