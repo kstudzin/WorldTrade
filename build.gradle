@@ -13,6 +13,9 @@ plugins {
 	id 'eclipse'
 }
 
+sourceCompatibility = '1.11'
+targetCompatibility = '1.11'
+
 repositories {
 	// Use JCenter for resolving dependencies.
 	jcenter()
@@ -43,6 +46,8 @@ dependencies {
 
 	implementation name: 'com.microsoft.z3'
 	implementation 'org.mockito:mockito-core:4.5.0'
+
+	implementation 'org.apache.jena:apache-jena-libs:4.4.0'
 }
 
 application {
