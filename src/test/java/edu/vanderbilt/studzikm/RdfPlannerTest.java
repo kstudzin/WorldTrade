@@ -25,7 +25,7 @@ public class RdfPlannerTest {
         when(transferResult.getSelf()).thenReturn(country);
         when(country.getTargetAmount("R23")).thenReturn(5);
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER); 
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
 
         planner.score(transferResult);
     }

@@ -42,14 +42,25 @@ public class RdfPlanner {
     }
 
     public  Double score(ActionResult<?> result) {
-        Resource resultResource = resourceMap.get(result.getAction().getName());
-        Resource goalResource = selectGoal(result.getSelf());
         Action.Type type = result.getAction().getType();
-        Resource actionType = type == Action.Type.TRANSFER ? transfer : transform;
         if (type == Action.Type.TRANSFER &&
                 ((TransferResult) result).getRole() == TransferResult.Role.SENDER) {
             return 0.5;
         }
+
+        updateKnowledgeBase(result, type);
+
+
+        printStatements();
+
+        time++;
+        return null;
+    }
+
+    private void updateKnowledgeBase(ActionResult<?> result, Action.Type type) {
+        Resource resultResource = resourceMap.get(result.getAction().getName());
+        Resource goalResource = selectGoal(result.getSelf());
+        Resource actionType = type == Action.Type.TRANSFER ? transfer : transform;
 
         Literal timeLiteral = model.createLiteral(String.format("\"%d\"^^xsd:int", time));
         Resource action = model.getResource("ai:action" + time);
@@ -61,11 +72,6 @@ public class RdfPlanner {
         currGoal.addProperty(RDF.type, goal)
                 .addProperty(obtain, goalResource)
                 .addLiteral(atTime, timeLiteral);
-
-        printStatements();
-
-        time++;
-        return null;
     }
 
     private Resource selectGoal(Country self) {
