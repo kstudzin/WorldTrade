@@ -14,6 +14,9 @@ import org.apache.jena.vocabulary.RDF;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
+import java.util.stream.IntStream;
 
 public class RdfPlanner {
 
@@ -25,11 +28,15 @@ public class RdfPlanner {
     private final Property hasOutput;
     private final Resource transform;
     private final InfModel infModel;
+    private final Querior querior;
     private Integer time = 0;
 
     private final Map<String, Resource> resourceMap = new HashMap<>();
     private String aiPrefix;
     private Double[] scores = new Double[]{ 0.80, 0.85, 0.90, 0.95};
+
+    private static final IntPredicate hasNext = i -> i >= 0;
+    private static final IntUnaryOperator next = i -> i - 1;
 
     public RdfPlanner(String rdfInputFilename) {
         this.model = ModelFactory.createDefaultModel();
@@ -39,7 +46,8 @@ public class RdfPlanner {
                 this.model
         );
 
-        aiPrefix = this.infModel.getNsPrefixURI("ai");
+        this.aiPrefix = this.infModel.getNsPrefixURI("ai");
+        this.querior = new Querior(this.infModel);
 
         goal = this.model.getResource(aiPrefix +"Goal");
         transfer = this.model.getResource(aiPrefix + "Transfer");
@@ -67,57 +75,21 @@ public class RdfPlanner {
         }
 
         updateKnowledgeBase(result, type);
-        printStatements();
 
-        String queryTemplate = String.format(
-                "PREFIX ai: <%s> " +
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
-                "ASK { " +
-                "    ?a a ai:Action ; " +
-                "        ai:atTime \"%d\"^^xsd:int ; " +
-                "        ai:hasOutput ?ar . " +
-                "    ?g a ai:Goal ; " +
-                "        ai:obtain ?gr ; " +
-                "        ai:atTime \"%d\"^^xsd:int . " +
-                "    ?gr a ai:Resource ; " +
-                "        ai:requires ?ar . " +
-                "}", aiPrefix, time, time);
-        System.out.println(queryTemplate);
-        Query qry = QueryFactory.create(queryTemplate);
-        QueryExecution qe = QueryExecutionFactory.create(qry, infModel);
-        boolean queryResult = qe.execAsk();
-        Double score = queryResult ? 0.85 : 0.15;
-
-        if (time > 0) {
-            queryTemplate = String.format(
-                    "PREFIX ai: <%s> " +
-                            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
-                            "ASK { " +
-                            "    ?a1 a ai:Action ; " +
-                            "        ai:atTime \"%d\"^^xsd:int ; " +
-                            "        ai:hasOutput ?ar1 . " +
-                            "    ?g1 a ai:Goal ; " +
-                            "        ai:obtain ?gr ; " +
-                            "        ai:atTime \"%d\"^^xsd:int . " +
-                            "    ?a2 a ai:Action ; " +
-                            "        ai:atTime \"%d\"^^xsd:int ; " +
-                            "        ai:hasOutput ?ar2 . " +
-                            "    ?g2 a ai:Goal ; " +
-                            "        ai:obtain ?gr ; " +
-                            "        ai:atTime \"%d\"^^xsd:int . " +
-                            "    ?gr a ai:Resource ; " +
-                            "        ai:requires ?ar1 ; " +
-                            "        ai:requires ?ar2 . " +
-                            "}", aiPrefix, time, time, time - 1, time - 1);
-            System.out.println(queryTemplate);
-            qry = QueryFactory.create(queryTemplate);
-            qe = QueryExecutionFactory.create(qry, infModel);
-            queryResult = qe.execAsk();
-            score = queryResult ? 0.9 : 0.1;
-        }
+        double score = IntStream.iterate(Math.min(4, time), hasNext, next)
+                .peek(System.out::println)
+                .mapToObj(this::findScore)
+                .findFirst()
+                .orElse(0.01);
 
         time++;
         return score;
+    }
+
+    private Double findScore(int depth) {
+        boolean match = querior.historyAlignsWithGoal(depth, time);
+        System.out.println(depth + " " + time);
+        return match ? scores[depth] : 1 - scores[depth];
     }
 
     private void updateKnowledgeBase(ActionResult<?> result, Action.Type type) {

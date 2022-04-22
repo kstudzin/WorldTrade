@@ -1,17 +1,15 @@
 package edu.vanderbilt.studzikm.planning.rdf;
 
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 
-import java.util.function.IntPredicate;
-import java.util.function.IntUnaryOperator;
 import java.util.stream.IntStream;
 
 public class Querior {
 
     private final Model model;
     private final String aiPrefix;
-    private static final IntPredicate hasNext = i -> i > 0;
-    private static final IntUnaryOperator next = i -> i - 1;
     private static final String ASK_QUERY_OPEN =
             "PREFIX ai: <%s> " +
                     "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
@@ -29,6 +27,8 @@ public class Querior {
     private static final String ASK_BODY_RESOURCE_TYPE =
             "    ?gr a ai:Resource . ";
 
+    private static final String ASK_QUERY_CLOSE = "}";
+
     public Querior(Model model) {
         this.model = model;
         this.aiPrefix = this.model.getNsPrefixURI("ai");
@@ -38,11 +38,21 @@ public class Querior {
         StringBuilder sb = new StringBuilder()
                 .append(String.format(ASK_QUERY_OPEN, aiPrefix));
         IntStream.rangeClosed(0, depth)
+
+                // Filter times less 0
+                .filter(i -> time - i >= 0)
                 .forEach(i -> sb.append(String.format(ASK_BODY_ACTION_GOAL, i, time - i)));
         sb.append(ASK_BODY_RESOURCE_TYPE);
+        sb.append(ASK_QUERY_CLOSE);
 
-        System.out.println(sb);
+        System.out.println("Query: " + sb);
 
-        return false;
+        return executeQuery(sb.toString());
+    }
+
+    private boolean executeQuery(String query) {
+        return QueryExecutionFactory.create(
+                QueryFactory.create(query),
+                model).execAsk();
     }
 }
