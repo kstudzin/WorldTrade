@@ -17,16 +17,19 @@ ai:Timber a ai:Resource .
 ai:MetallicElement a ai:Resource .
 ai:MetallicAlloy a ai:Resource ;
   ai:requires ai:Population ;
-  ai:requires ai:MetallicElement .
+  ai:requires ai:MetallicElement ;
+  ai:requires ai:MetallicAlloy .
 ai:Electronics a ai:Resource ;
   ai:requires ai:Population ;
   ai:requires ai:MetallicElement ;
-  ai:requires ai:MetallicAlloy .
+  ai:requires ai:MetallicAlloy ;
+  ai:requires ai:Electronics .
 ai:House a ai:Resource ;
   ai:requires ai:Population ;
   ai:requires ai:MetallicElement ;
   ai:requires ai:MetallicAlloy ;
-  ai:requires ai:Timber .
+  ai:requires ai:Timber ;
+  ai:requires ai:House .
 ai:AlloyWaste a ai:Waste .
 ai:HouseWaste a ai:Waste .
 ai:ElectronicsWaste a ai:Waste .
@@ -40,4 +43,5 @@ ai:hasOutput a rdf:Property ;
 ai:atTime a rdf:Property .
 ai:obtain a rdf:Property .
 ai:requires a rdf:Property ;
-  a owl:TransitiveProperty .
+  a owl:TransitiveProperty ;
+  a owl:ReflexiveProperty .

@@ -83,7 +83,6 @@ public class RdfPlanner {
         updateKnowledgeBase(result, type);
 
         double score = IntStream.iterate(Math.min(maxDepth, time), hasNext, next)
-                .peek(System.out::println)
                 .mapToObj(this::findScore)
                 .findFirst()
                 .orElse(0.01);
@@ -94,7 +93,6 @@ public class RdfPlanner {
 
     private Double findScore(int depth) {
         boolean match = querior.historyAlignsWithGoal(depth, time);
-        System.out.println(depth + " " + time);
         return match ? scores[depth] : 1 - scores[depth];
     }
 

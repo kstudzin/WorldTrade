@@ -2,7 +2,7 @@ package edu.vanderbilt.studzikm.planning.rdf;
 
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.InfModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +12,7 @@ public class Querior {
 
     private Logger log = LogManager.getLogger(Querior.class);
 
-    private final Model model;
+    private final InfModel model;
     private final String aiPrefix;
     private static final String ASK_QUERY_OPEN =
             "PREFIX ai: <%s> " +
@@ -33,7 +33,7 @@ public class Querior {
 
     private static final String ASK_QUERY_CLOSE = "}";
 
-    public Querior(Model model) {
+    public Querior(InfModel model) {
         this.model = model;
         this.aiPrefix = this.model.getNsPrefixURI("ai");
     }
