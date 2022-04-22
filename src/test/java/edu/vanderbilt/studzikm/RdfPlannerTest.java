@@ -51,7 +51,7 @@ public class RdfPlannerTest {
         when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
 
         Double score = planner.score(transferResult);
-        assertEquals(0.15, score);
+        assertEquals(0.2, score, 0.0001);
     }
 
     @Test
