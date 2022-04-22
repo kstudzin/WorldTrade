@@ -83,9 +83,38 @@ public class RdfPlanner {
         Query qry = QueryFactory.create(queryTemplate);
         QueryExecution qe = QueryExecutionFactory.create(qry, infModel);
         boolean queryResult = qe.execAsk();
+        Double score = queryResult ? 0.85 : 0.15;
+
+        if (time > 0) {
+            queryTemplate = String.format(
+                    "PREFIX ai: <%s> " +
+                            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
+                            "ASK { " +
+                            "    ?a1 a ai:Action ; " +
+                            "        ai:atTime \"%d\"^^xsd:int ; " +
+                            "        ai:hasOutput ?ar1 . " +
+                            "    ?g1 a ai:Goal ; " +
+                            "        ai:obtain ?gr ; " +
+                            "        ai:atTime \"%d\"^^xsd:int . " +
+                            "    ?a2 a ai:Action ; " +
+                            "        ai:atTime \"%d\"^^xsd:int ; " +
+                            "        ai:hasOutput ?ar2 . " +
+                            "    ?g2 a ai:Goal ; " +
+                            "        ai:obtain ?gr ; " +
+                            "        ai:atTime \"%d\"^^xsd:int . " +
+                            "    ?gr a ai:Resource ; " +
+                            "        ai:requires ?ar1 ; " +
+                            "        ai:requires ?ar2 . " +
+                            "}", aiPrefix, time, time, time - 1, time - 1);
+            System.out.println(queryTemplate);
+            qry = QueryFactory.create(queryTemplate);
+            qe = QueryExecutionFactory.create(qry, infModel);
+            queryResult = qe.execAsk();
+            score = queryResult ? 0.9 : 0.1;
+        }
 
         time++;
-        return queryResult ? 0.85 : 0.15;
+        return score;
     }
 
     private void updateKnowledgeBase(ActionResult<?> result, Action.Type type) {
