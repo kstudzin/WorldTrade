@@ -56,13 +56,14 @@ public class GraphWidthInvestigation {
                             proportionInit += proportionInitStep) {
 
                             SearchBuilder searchBuilder = new SearchBuilder()
-                                .setGamma(0.9)
-                                .setFailurePenalty(0.05)
-                                .setLogisticGrowthRate(1.0)
-                                .setSigmoidMidpoint(0.0)
-                                .setResources(resources)
-                                .setInitialQualities(world)
-                                .setFrontierSupplier(() -> new BreadthFirstFrontier(100));
+                                    .setGamma(0.9)
+                                    .setFailurePenalty(0.05)
+                                    .setLogisticGrowthRate(1.0)
+                                    .setSigmoidMidpoint(0.0)
+                                    .setResources(resources)
+                                    .setInitialQualities(world)
+                                    .setFrontierSupplier(() -> new BreadthFirstFrontier(100))
+                                    .setRdfPlannerOntology("src/main/resources/planning.ttl");
 
                             int count = 0;
                             for (double proportion = proportionInit; proportion <= 1; proportion += proportionStep) {
