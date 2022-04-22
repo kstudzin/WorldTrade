@@ -48,7 +48,7 @@ public class Querior {
         IntStream.rangeClosed(0, depth)
 
                 // Filter times less 0
-                .filter(i -> time - i >= 0)
+                .takeWhile(i -> time - i >= 0)
                 .forEach(i -> sb.append(String.format(ASK_BODY_ACTION_GOAL, i, time - i)));
         sb.append(ASK_BODY_RESOURCE_TYPE);
         sb.append(ASK_QUERY_CLOSE);
