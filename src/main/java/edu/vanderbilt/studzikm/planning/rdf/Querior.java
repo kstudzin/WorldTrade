@@ -3,10 +3,14 @@ package edu.vanderbilt.studzikm.planning.rdf;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.stream.IntStream;
 
 public class Querior {
+
+    private Logger log = LogManager.getLogger(Querior.class);
 
     private final Model model;
     private final String aiPrefix;
@@ -35,6 +39,10 @@ public class Querior {
     }
 
     public boolean historyAlignsWithGoal(int depth, int time) {
+        return executeQuery(buildAskQuery(depth, time));
+    }
+
+    private String buildAskQuery(int depth, int time) {
         StringBuilder sb = new StringBuilder()
                 .append(String.format(ASK_QUERY_OPEN, aiPrefix));
         IntStream.rangeClosed(0, depth)
@@ -45,9 +53,9 @@ public class Querior {
         sb.append(ASK_BODY_RESOURCE_TYPE);
         sb.append(ASK_QUERY_CLOSE);
 
-        System.out.println("Query: " + sb);
-
-        return executeQuery(sb.toString());
+        String query = sb.toString();
+        log.info("Query: " + query);
+        return query;
     }
 
     private boolean executeQuery(String query) {
