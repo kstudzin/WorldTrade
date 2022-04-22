@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 public class Schedule implements Iterable<ScheduleItem> {
 
 	private List<ScheduleItem> items = new LinkedList<>();
-	double averageNodesGenerated;
+	private double averageNodesGenerated;
 
 	private Schedule () {
 
@@ -64,5 +64,9 @@ public class Schedule implements Iterable<ScheduleItem> {
 
 	public Stream<ScheduleItem> stream() {
 		return items.stream();
+	}
+
+	public double getAverageNodesGenerated() {
+		return averageNodesGenerated;
 	}
 }

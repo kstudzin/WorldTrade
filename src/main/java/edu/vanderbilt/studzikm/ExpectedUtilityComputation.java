@@ -1,5 +1,6 @@
 package edu.vanderbilt.studzikm;
 
+import edu.vanderbilt.studzikm.planning.Planner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,11 +12,14 @@ public class ExpectedUtilityComputation {
 
 	private double c;
 	private SuccessProbabilityComputation successProbabilityComputation;
+	private Planner planner;
 
 	public ExpectedUtilityComputation(double c,
-			SuccessProbabilityComputation successProbabilityComputation) {
+									  SuccessProbabilityComputation successProbabilityComputation,
+									  Planner planner) {
 		this.c = c;
 		this.successProbabilityComputation = successProbabilityComputation;
+		this.planner = planner;
 	}
 
 	public double compute(ActionResult<?> result, World world, Set<String> involvedParties) {
@@ -33,7 +37,8 @@ public class ExpectedUtilityComputation {
 				.map(successProbabilityComputation::compute)
 				.reduce(1, (x, y) -> x * y);
 		log.trace("Success probability: " + scheduleProbability);
-		return (scheduleProbability * result.getReward()) + ((1 - scheduleProbability) * c);
+		return ((scheduleProbability * result.getReward()) + ((1 - scheduleProbability) * c))
+				* planner.score(result);
 	}
 
 }

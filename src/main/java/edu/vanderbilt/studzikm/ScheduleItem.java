@@ -1,10 +1,9 @@
 package edu.vanderbilt.studzikm;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class ScheduleItem {
+public class ScheduleItem {
 
 	enum Type {
 		TRANSFER, TRANSFORM

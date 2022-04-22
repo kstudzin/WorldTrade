@@ -1,5 +1,8 @@
 package edu.vanderbilt.studzikm;
 
+import edu.vanderbilt.studzikm.planning.Planner;
+import edu.vanderbilt.studzikm.planning.rdf.RdfPlanner;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ public class SearchBuilder {
 	Double failurePenalty;
 	Double logisticGrowthRate;
 	Double sigmoidMidpoint;
+	Planner planner;
 
 	public SearchBuilder() {
 		
@@ -80,6 +84,11 @@ public class SearchBuilder {
 		return this;
 	}
 
+	public SearchBuilder setRdfPlannerOntology(String ontologyFilename) {
+		this.planner = new RdfPlanner(ontologyFilename);
+		return this;
+	}
+
 	public Search build() {
 
 		Double[] transferProportions = new Double[this.transferProportions.size()];
@@ -99,7 +108,8 @@ public class SearchBuilder {
 				sigmoidMidpoint);
 		ExpectedUtilityComputation expectedUtilityComputation = new ExpectedUtilityComputation(
 				failurePenalty, 
-				successProbabilityComputation);
+				successProbabilityComputation,
+				planner);
 		ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
 
 		return new Search(stateGenerator, nodeFactory, frontierSupplier.get(), reachedSupplier.get(), scheduleFactory);

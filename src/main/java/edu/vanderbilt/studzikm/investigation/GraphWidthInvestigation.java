@@ -1,10 +1,9 @@
-package edu.vanderbilt.studzikm;
+package edu.vanderbilt.studzikm.investigation;
+
+import edu.vanderbilt.studzikm.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 public class GraphWidthInvestigation {
 
@@ -82,12 +81,12 @@ public class GraphWidthInvestigation {
                                 .orElse(null);
 
                             String line = width + "," +
-                                count + "," +
-                                schedule.averageNodesGenerated + "," +
-                                proportionInit + "," +
-                                item.getSchedulePostion() + "," +
-                                item.getExpectedUtility() + "," +
-                                (end - start);
+                                    count + "," +
+                                    schedule.getAverageNodesGenerated() + "," +
+                                    proportionInit + "," +
+                                    item.getSchedulePostion() + "," +
+                                    item.getExpectedUtility() + "," +
+                                    (end - start);
                             writer.write(line + "\n");
                             System.out.println(line);
                         }
