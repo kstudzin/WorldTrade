@@ -34,6 +34,7 @@ public class RdfPlanner {
     private final Map<String, Resource> resourceMap = new HashMap<>();
     private String aiPrefix;
     private Double[] scores = new Double[]{ 0.80, 0.85, 0.90, 0.95};
+    private int maxDepth = 3;
 
     private static final IntPredicate hasNext = i -> i >= 0;
     private static final IntUnaryOperator next = i -> i - 1;
@@ -67,6 +68,12 @@ public class RdfPlanner {
         resourceMap.put("R23'", model.getResource(aiPrefix + "HouseWaste"));
     }
 
+    public RdfPlanner(String rdfInputFilename, Double[] scores) {
+        this(rdfInputFilename);
+        this.scores = scores;
+        this.maxDepth = scores.length - 1;
+    }
+
     public  Double score(ActionResult<?> result) {
         Action.Type type = result.getAction().getType();
         if (type == Action.Type.TRANSFER &&
@@ -76,7 +83,7 @@ public class RdfPlanner {
 
         updateKnowledgeBase(result, type);
 
-        double score = IntStream.iterate(Math.min(3, time), hasNext, next)
+        double score = IntStream.iterate(Math.min(maxDepth, time), hasNext, next)
                 .peek(System.out::println)
                 .mapToObj(this::findScore)
                 .findFirst()
