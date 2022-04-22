@@ -1,5 +1,9 @@
-package edu.vanderbilt.studzikm;
+package edu.vanderbilt.studzikm.planning.rdf;
 
+import edu.vanderbilt.studzikm.Action;
+import edu.vanderbilt.studzikm.ActionResult;
+import edu.vanderbilt.studzikm.Country;
+import edu.vanderbilt.studzikm.TransferResult;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.Resource;
@@ -8,9 +12,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RdfPlanner {
@@ -27,6 +29,7 @@ public class RdfPlanner {
 
     private final Map<String, Resource> resourceMap = new HashMap<>();
     private String aiPrefix;
+    private Double[] scores = new Double[]{ 0.80, 0.85, 0.90, 0.95};
 
     public RdfPlanner(String rdfInputFilename) {
         this.model = ModelFactory.createDefaultModel();

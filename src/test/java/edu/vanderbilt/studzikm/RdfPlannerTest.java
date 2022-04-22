@@ -1,5 +1,9 @@
 package edu.vanderbilt.studzikm;
 
+import edu.vanderbilt.studzikm.planning.rdf.Querior;
+import edu.vanderbilt.studzikm.planning.rdf.RdfPlanner;
+import org.apache.jena.base.Sys;
+import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -90,5 +94,19 @@ public class RdfPlannerTest {
 
         score = planner.score(transferResult);
         assertEquals(0.9, score);
+    }
+
+    @Test
+    void testQuerior() {
+        Model model = Mockito.mock(Model.class);
+        when(model.getNsPrefixURI("ai")).thenReturn("urn:edu:vanderbilt:studzikm:");
+
+        Querior q = new Querior(model);
+        q.historyAlignsWithGoal(5, 10);
+    }
+
+    @Test
+    void testFormat() {
+        System.out.println(String.format("a%2$d a%1$d", 1, 2));
     }
 }

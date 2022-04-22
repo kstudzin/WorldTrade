@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class TransferResult extends ActionResult<Transfer> {
 
-	enum Role {
+	public enum Role {
 		SENDER, RECIEVER
 	}
 
