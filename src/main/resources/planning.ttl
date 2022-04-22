@@ -15,9 +15,18 @@ ai:Transform rdfs:subClassOf ai:Action .
 ai:Population a ai:Resource .
 ai:Timber a ai:Resource .
 ai:MetallicElement a ai:Resource .
-ai:MetallicAlloy a ai:Resource .
-ai:Electronics a ai:Resource .
-ai:House a ai:Resource .
+ai:MetallicAlloy a ai:Resource ;
+  ai:requires ai:Population ;
+  ai:requires ai:MetallicElement .
+ai:Electronics a ai:Resource ;
+  ai:requires ai:Population ;
+  ai:requires ai:MetallicElement ;
+  ai:requires ai:MetallicAlloy .
+ai:House a ai:Resource ;
+  ai:requires ai:Population ;
+  ai:requires ai:MetallicElement ;
+  ai:requires ai:MetallicAlloy ;
+  ai:requires ai:Timber .
 ai:AlloyWaste a ai:Waste .
 ai:HouseWaste a ai:Waste .
 ai:ElectronicsWaste a ai:Waste .
@@ -29,6 +38,5 @@ ai:hasOutput a rdf:Property ;
 
 ai:atTime a rdf:Property .
 ai:obtain a rdf:Property .
-ai:requires a rdf:Property .
-
-ai:House ai:requires ai:Timber .
+ai:requires a rdf:Property ;
+  a owl:TransitiveProperty .
