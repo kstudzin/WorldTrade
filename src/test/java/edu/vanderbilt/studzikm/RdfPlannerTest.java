@@ -5,6 +5,7 @@ import org.mockito.Mockito;
 
 import java.io.FileNotFoundException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class RdfPlannerTest {
@@ -27,6 +28,7 @@ public class RdfPlannerTest {
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
         when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
 
-        planner.score(transferResult);
+        Double score = planner.score(transferResult);
+        assertEquals(0.85, score);
     }
 }

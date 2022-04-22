@@ -30,6 +30,7 @@ ai:House a ai:Resource ;
 ai:AlloyWaste a ai:Waste .
 ai:HouseWaste a ai:Waste .
 ai:ElectronicsWaste a ai:Waste .
+ai:NullResource a ai:Resource .
 
 ai:hasInput a rdf:Property ;
   rdfs:range ai:Resource .
