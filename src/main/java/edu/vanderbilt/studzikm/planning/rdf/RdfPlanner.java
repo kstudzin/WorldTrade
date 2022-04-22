@@ -76,7 +76,7 @@ public class RdfPlanner {
 
         updateKnowledgeBase(result, type);
 
-        double score = IntStream.iterate(Math.min(4, time), hasNext, next)
+        double score = IntStream.iterate(Math.min(3, time), hasNext, next)
                 .peek(System.out::println)
                 .mapToObj(this::findScore)
                 .findFirst()
