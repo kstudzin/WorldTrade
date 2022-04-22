@@ -1,6 +1,7 @@
 package edu.vanderbilt.studzikm;
 
 import com.microsoft.z3.Context;
+import edu.vanderbilt.studzikm.planning.z3.Z3Planner;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class LogicalCountryModelTest {
+public class Z3PlannerTest {
 
     Map<String, Resource> setupResources() {
         return new ResourcesBuilder()
@@ -61,7 +62,7 @@ public class LogicalCountryModelTest {
 
         String assertions = setupAssertions();
 
-        LogicalCountryModel model = new LogicalCountryModel(new Context(), country, assertions);
+        Z3Planner model = new Z3Planner(new Context(), country, assertions);
 
         TransferResult result = Mockito.mock(TransferResult.class);
         Transfer transform = Mockito.mock(Transfer.class);
@@ -93,7 +94,7 @@ public class LogicalCountryModelTest {
 
         String assertions = setupAssertions();
 
-        LogicalCountryModel model = new LogicalCountryModel(new Context(), country, assertions);
+        Z3Planner model = new Z3Planner(new Context(), country, assertions);
 
         TransferResult result = Mockito.mock(TransferResult.class);
         Transfer transfer = Mockito.mock(Transfer.class);

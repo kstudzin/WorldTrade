@@ -1,6 +1,11 @@
-package edu.vanderbilt.studzikm;
+package edu.vanderbilt.studzikm.planning.z3;
 
 import com.microsoft.z3.*;
+import edu.vanderbilt.studzikm.Action;
+import edu.vanderbilt.studzikm.ActionResult;
+import edu.vanderbilt.studzikm.Country;
+import edu.vanderbilt.studzikm.TransferResult;
+import edu.vanderbilt.studzikm.planning.Planner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,9 +16,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class LogicalCountryModel {
+public class Z3Planner implements Planner {
 
-    private Logger log = LogManager.getLogger(LogicalCountryModel.class);
+    private Logger log = LogManager.getLogger(Z3Planner.class);
 
     private Context ctx;
     private Solver solver;
@@ -38,7 +43,7 @@ public class LogicalCountryModel {
     private FuncDecl<BoolSort> action;
     private FuncDecl<BoolSort> goal;
 
-    public LogicalCountryModel(Context context, Country country, String assertions) {
+    public Z3Planner(Context context, Country country, String assertions) {
         this.ctx = context;
         this.country = country;
         this.solver = context.mkSolver();

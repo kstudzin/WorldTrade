@@ -4,6 +4,7 @@ import edu.vanderbilt.studzikm.Action;
 import edu.vanderbilt.studzikm.ActionResult;
 import edu.vanderbilt.studzikm.Country;
 import edu.vanderbilt.studzikm.TransferResult;
+import edu.vanderbilt.studzikm.planning.Planner;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.ReasonerRegistry;
@@ -17,7 +18,7 @@ import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.IntStream;
 
-public class RdfPlanner {
+public class RdfPlanner implements Planner {
 
     private final Model model;
     private final Resource transfer;
@@ -73,6 +74,7 @@ public class RdfPlanner {
         this.maxDepth = scores.length - 1;
     }
 
+    @Override
     public  Double score(ActionResult<?> result) {
         Action.Type type = result.getAction().getType();
         if (type == Action.Type.TRANSFER &&
