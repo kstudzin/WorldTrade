@@ -70,4 +70,25 @@ public class RdfPlannerTest {
         score = planner.score(transferResult);
         assertEquals(0.1, score);
     }
+
+    @Test
+    void testTwoActionsHighScore() throws FileNotFoundException {
+        RdfPlanner planner = setupPlanner();
+
+        TransferResult transferResult = Mockito.mock(TransferResult.class);
+        Transfer transfer = Mockito.mock(Transfer.class);
+        Country country = Mockito.mock(Country.class);
+        when(transferResult.getAction()).thenReturn(transfer);
+        when(transfer.getName()).thenReturn("R3");
+        when(transferResult.getSelf()).thenReturn(country);
+        when(country.getTargetAmount("R23")).thenReturn(5);
+        when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+
+        Double score = planner.score(transferResult);
+        assertEquals(0.85, score);
+
+        score = planner.score(transferResult);
+        assertEquals(0.9, score);
+    }
 }
