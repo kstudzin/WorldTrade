@@ -4,7 +4,6 @@ import edu.vanderbilt.studzikm.Action;
 import edu.vanderbilt.studzikm.ActionResult;
 import edu.vanderbilt.studzikm.Country;
 import edu.vanderbilt.studzikm.TransferResult;
-import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.ReasonerRegistry;

@@ -1,9 +1,6 @@
 package edu.vanderbilt.studzikm;
 
-import edu.vanderbilt.studzikm.planning.rdf.Querior;
 import edu.vanderbilt.studzikm.planning.rdf.RdfPlanner;
-import org.apache.jena.base.Sys;
-import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -14,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 public class RdfPlannerTest {
 
-    RdfPlanner setupPlanner() throws FileNotFoundException {
+    RdfPlanner setupPlanner() {
         return new RdfPlanner("src/main/resources/planning.ttl");
     }
 
@@ -33,7 +30,7 @@ public class RdfPlannerTest {
         when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
 
         Double score = planner.score(transferResult);
-        assertEquals(0.85, score);
+        assertEquals(0.80, score);
     }
 
     @Test
@@ -126,17 +123,4 @@ public class RdfPlannerTest {
         assertEquals(0.95, score);
     }
 
-    @Test
-    void testQuerior() {
-        Model model = Mockito.mock(Model.class);
-        when(model.getNsPrefixURI("ai")).thenReturn("urn:edu:vanderbilt:studzikm:");
-
-        Querior q = new Querior(model);
-        q.historyAlignsWithGoal(5, 10);
-    }
-
-    @Test
-    void testFormat() {
-        System.out.println(String.format("a%2$d a%1$d", 1, 2));
-    }
 }
