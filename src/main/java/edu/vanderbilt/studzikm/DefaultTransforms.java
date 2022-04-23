@@ -8,9 +8,9 @@ import java.util.stream.Stream;
 
 public class DefaultTransforms implements TransformFactory {
 
-	public static final String HOUSING = "housing";
-	public static final String ALLOYS = "alloys";
-	public static final String ELECTRONICS = "electronics";
+	public static final String HOUSING = "R23";
+	public static final String ALLOYS = "R21";
+	public static final String ELECTRONICS = "R22";
 
 	private static final Double[] defaultProportions = {0.33, 0.66};
 
