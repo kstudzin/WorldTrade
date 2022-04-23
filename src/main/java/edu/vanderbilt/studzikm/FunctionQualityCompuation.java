@@ -10,7 +10,7 @@ public class FunctionQualityCompuation implements QualityComputation {
 
 	public FunctionQualityCompuation() {
 		this((target, actual) ->
-				(actual / target) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))))
+				(actual / Math.max(target, 0.000001)) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))))
 		);
 	}
 
