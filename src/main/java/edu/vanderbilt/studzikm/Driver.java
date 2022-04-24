@@ -53,7 +53,8 @@ public class Driver {
 					.setSigmoidMidpoint(sigmoidMidpoint)
 					.setResources(resources)
 					.setInitialQualities(world)
-					.setFrontierSupplier(frontierSupplier);
+					.setFrontierSupplier(frontierSupplier)
+					.setRdfPlannerOntology("src/main/resources/planning.ttl");
 
 			double prop = initialProportion;
 			double step = proportionStep;

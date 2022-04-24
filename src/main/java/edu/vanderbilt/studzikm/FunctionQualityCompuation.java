@@ -10,7 +10,7 @@ public class FunctionQualityCompuation implements QualityComputation {
 
 	public FunctionQualityCompuation() {
 		this((target, actual) ->
-				(actual / Math.max(target, 0.000001)) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))))
+				(actual / target) * Math.exp(-((Math.pow(actual, 2) - Math.pow(target, 2)) / (2 * Math.pow(target, 2))))
 		);
 	}
 
@@ -24,10 +24,16 @@ public class FunctionQualityCompuation implements QualityComputation {
 		return country.getResources()
 				.entrySet()
 				.stream()
-				.mapToDouble(e -> function.apply(country.getTargetAmount(e.getKey().getName()) * 1.0,
-						e.getValue() * 1.0) *
-						e.getKey().getWeight())
+				.mapToDouble(e -> compute(country, e) * e.getKey().getWeight())
 				.sum();
 	}
 
+	private double compute(Country country, Map.Entry<Resource, Integer> resourceAmount) {
+		String resourceName = resourceAmount.getKey().getName();
+		Integer targetAmount = country.getTargetAmount(resourceName);
+		if (targetAmount == 0) {
+			return 1.0;
+		}
+		return function.apply(targetAmount * 1.0, resourceAmount.getValue() * 1.0);
+	}
 }
