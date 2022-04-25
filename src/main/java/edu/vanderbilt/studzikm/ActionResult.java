@@ -55,6 +55,10 @@ public class ActionResult<T extends Action> {
 		return delta;
 	}
 
+	public Action.Type getType() {
+		return action.getType();
+	}
+
 	@Override
 	public String toString() {
 		return "ActionResult [action=" + action + ", "
