@@ -116,10 +116,11 @@ public class RdfPlanner implements Planner {
 
         updateKnowledgeBase(result, type);
 
-        double score = IntStream.iterate(Math.min(maxDepth, time), hasNext, next)
-                .mapToObj(this::findScore)
-                .findFirst()
-                .orElse(0.01);
+        double score = findScore(0);
+//                IntStream.iterate(Math.min(maxDepth, time), hasNext, next)
+//                .mapToObj(this::findScore)
+//                .findFirst()
+//                .orElse(0.01);
 
         time++;
 
@@ -134,8 +135,8 @@ public class RdfPlanner implements Planner {
     }
 
     private Double findScore(int depth) {
-        boolean match = querior.historyAlignsWithGoal(depth, time);
-        return match ? scores[depth] : 1 - scores[depth];
+        return querior.historyAlignsWithGoal(depth, time);
+//        return match ? scores[depth] : 1 - scores[depth];
     }
 
     private void updateKnowledgeBase(ActionResult<?> result, Action.Type type) {
