@@ -26,6 +26,7 @@ public class Country {
 		this.qualityComputation = copy.qualityComputation;
 		this.resources.putAll(copy.resources);
 		this.rewardComputation = copy.rewardComputation;
+		this.targetComputation =  copy.targetComputation;
 	}
 
 	public String getName() {
