@@ -54,7 +54,7 @@ public class Querior {
         sb.append(ASK_QUERY_CLOSE);
 
         String query = sb.toString();
-        log.info("Query: " + query);
+        log.trace("Query: " + query);
         return query;
     }
 

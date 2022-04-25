@@ -12,25 +12,18 @@ public class ExpectedUtilityComputation {
 
 	private double c;
 	private SuccessProbabilityComputation successProbabilityComputation;
-	private Planner planner;
 
 	public ExpectedUtilityComputation(double c,
-									  SuccessProbabilityComputation successProbabilityComputation,
-									  Planner planner) {
+									  SuccessProbabilityComputation successProbabilityComputation) {
 		this.c = c;
 		this.successProbabilityComputation = successProbabilityComputation;
-		this.planner = planner;
 	}
 
-	public double compute(ActionResult<?> result, World world, Set<String> involvedParties) {
-		// Success probability is the product of success probability of each participating country
-		// This only involves one other country so we don't actually need to compute any product.
-		// Since we are proposing the schedule exactly because it is best for our country, we will
-		// naturally accept it. Therefore we don't need to compute a probability we will accept our 
-		// own schedule.
-		// 
-		// We may need to multiply the products in the future if we allow transfers between more than 
-		// two countries.
+	public double compute(ActionResult<?> result,
+						  World world,
+						  Set<String> involvedParties,
+						  Planner planner) {
+
 		double scheduleProbability = involvedParties.stream()
 				.map(world::getCountry)
 				.mapToDouble(c -> c.computeReward(result))

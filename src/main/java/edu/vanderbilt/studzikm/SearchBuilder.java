@@ -101,16 +101,15 @@ public class SearchBuilder {
 
 		RewardComputation rewardComputation = new DiscountedRewardComputation(gamma, initialQualities);
 		StateGenerator stateGenerator = new DefaultStateGenerator(transferFactory, transformFactory, rewardComputation);
-		SearchNodeFactory nodeFactory = new SearchNodeFactory();
 
 		SuccessProbabilityComputation successProbabilityComputation = new SuccessProbabilityComputation(
 				logisticGrowthRate, 
 				sigmoidMidpoint);
 		ExpectedUtilityComputation expectedUtilityComputation = new ExpectedUtilityComputation(
 				failurePenalty, 
-				successProbabilityComputation,
-				planner);
-		ScheduleFactory scheduleFactory = new ScheduleFactory(expectedUtilityComputation);
+				successProbabilityComputation);
+		SearchNodeFactory nodeFactory = new SearchNodeFactory(expectedUtilityComputation, planner);
+		ScheduleFactory scheduleFactory = new ScheduleFactory();
 
 		return new Search(stateGenerator, nodeFactory, frontierSupplier.get(), reachedSupplier.get(), scheduleFactory);
 	}

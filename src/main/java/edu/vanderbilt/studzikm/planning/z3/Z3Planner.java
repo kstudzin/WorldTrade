@@ -229,6 +229,11 @@ public class Z3Planner implements Planner {
         return parse(finalScore.toString());
     }
 
+    @Override
+    public Planner copy() {
+        return null;
+    }
+
     double parse(String ratio) {
         if (ratio.contains("/")) {
             String[] rat = ratio.split("/");

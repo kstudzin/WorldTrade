@@ -11,6 +11,8 @@ import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,8 @@ import java.util.function.IntUnaryOperator;
 import java.util.stream.IntStream;
 
 public class RdfPlanner implements Planner {
+
+    private Logger log = LogManager.getLogger(RdfPlanner.class);
 
     private final Model model;
     private final Resource transfer;
@@ -29,7 +33,7 @@ public class RdfPlanner implements Planner {
     private final Resource transform;
     private final InfModel infModel;
     private final Querior querior;
-    private Integer time = 0;
+    private Integer time;
 
     private final Map<String, Resource> resourceMap = new HashMap<>();
     private String aiPrefix;
@@ -39,7 +43,34 @@ public class RdfPlanner implements Planner {
     private static final IntPredicate hasNext = i -> i >= 0;
     private static final IntUnaryOperator next = i -> i - 1;
 
+    private RdfPlanner(RdfPlanner original) {
+        this.model = ModelFactory.createDefaultModel().add(original.model);
+        this.transfer = this.model.getResource(original.transfer.getURI());
+        this.atTime = this.model.getProperty(original.atTime.getURI());
+        this.goal = this.model.getResource(original.goal.getURI());
+        this.obtain = this.model.getProperty(original.obtain.getURI());
+        this.hasOutput = this.model.getProperty(original.hasOutput.getURI());
+        this.transform = this.model.getProperty(original.transform.getURI());
+        this.infModel = ModelFactory.createInfModel(ReasonerRegistry.getOWLReasoner(), original.infModel);
+        this.querior = new Querior(this.infModel);
+        this.resourceMap.putAll(original.resourceMap);
+        this.aiPrefix = original.aiPrefix;
+        this.scores = original.scores;
+        this.maxDepth = original.maxDepth;
+        this.time = original.time;
+
+        int deleteTime = time - maxDepth - 1;
+        Literal deleteTimeRdf = this.model.createTypedLiteral(deleteTime);
+        ResIterator subjects = this.model.listSubjectsWithProperty(atTime, deleteTimeRdf);
+        while (subjects.hasNext()) {
+            Resource s = subjects.next();
+            this.model.remove(s, atTime, deleteTimeRdf);
+        }
+    }
+
     public RdfPlanner(String rdfInputFilename) {
+        this.time = 0;
+
         this.model = ModelFactory.createDefaultModel();
         this.model.read(rdfInputFilename, "N3");
         this.infModel = ModelFactory.createInfModel(
@@ -76,7 +107,8 @@ public class RdfPlanner implements Planner {
 
     @Override
     public  Double score(ActionResult<?> result) {
-        Action.Type type = result.getAction().getType();
+        long start = System.currentTimeMillis();
+        Action.Type type = result.getType();
         if (type == Action.Type.TRANSFER &&
                 ((TransferResult) result).getRole() == TransferResult.Role.SENDER) {
             return 0.5;
@@ -90,7 +122,15 @@ public class RdfPlanner implements Planner {
                 .orElse(0.01);
 
         time++;
+
+        long end = System.currentTimeMillis();
+        log.trace("Planner scoring time: " + (end - start) + " (" + time + ")");
         return score;
+    }
+
+    @Override
+    public Planner copy() {
+        return new RdfPlanner(this);
     }
 
     private Double findScore(int depth) {
@@ -105,9 +145,10 @@ public class RdfPlanner implements Planner {
 
         Literal timeLiteral = infModel.createTypedLiteral(time);
         Resource action = infModel.getResource(aiPrefix + "action" + time);
-        action.addProperty(RDF.type, actionType)
-                .addProperty(hasOutput, resultResource)
-                .addLiteral(atTime, timeLiteral);
+
+        infModel.add(action, RDF.type, actionType);
+        infModel.add(action, hasOutput, resultResource);
+        infModel.add(action, atTime, timeLiteral);
 
         Resource currGoal = infModel.createResource(aiPrefix + "goal" + time);
         currGoal.addProperty(RDF.type, goal)
@@ -129,4 +170,5 @@ public class RdfPlanner implements Planner {
     private void printStatements() {
         RDFDataMgr.write(System.out, infModel, Lang.N3);
     }
+
 }

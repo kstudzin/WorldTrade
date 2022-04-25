@@ -14,19 +14,12 @@ public class Schedule implements Iterable<ScheduleItem> {
 	}
 
 	public static Schedule create(SearchNode result,
-								  ExpectedUtilityComputation expectedUtilityComputation,
 								  double averageNodesGenerated) {
 		Schedule schedule = new Schedule();
 		schedule.averageNodesGenerated = averageNodesGenerated;
 
-		Set<String> countries = new HashSet<>();
-
 		while (result.getDepth() != 0) {
-			if (result.getAction() instanceof TransferResult) {
-				String involvedParty = ((TransferResult)result.getAction()).getOther().getName();
-				countries.add(involvedParty);
-			}
-			ScheduleItem item = createItem(result, expectedUtilityComputation, countries);
+			ScheduleItem item = createItem(result);
 			schedule.items.add(item);
 			result = result.getParent();
 		}
@@ -35,10 +28,8 @@ public class Schedule implements Iterable<ScheduleItem> {
 		return schedule;
 	}
 
-	private static ScheduleItem createItem(SearchNode result, 
-			ExpectedUtilityComputation expectedUtilityComputation,
-										   Set<String> countries) {
-		return ScheduleItem.create(result, expectedUtilityComputation, countries);
+	private static ScheduleItem createItem(SearchNode result) {
+		return ScheduleItem.create(result);
 	}
 
 	@Override

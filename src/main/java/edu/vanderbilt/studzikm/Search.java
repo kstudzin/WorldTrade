@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.units.qual.A;
 
 public class Search {
 
@@ -52,7 +51,7 @@ public class Search {
 					.collect(Collectors.toList());
 
 			log.debug("Found " + next.size() + " next states");
-			next.forEach(node -> log.trace(node.getAction()));
+			next.forEach(node -> log.trace(node.getActionResult()));
 			numResults.add(next.size());
 
 			if (next.isEmpty()) {

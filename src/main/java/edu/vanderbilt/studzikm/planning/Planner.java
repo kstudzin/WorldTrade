@@ -4,4 +4,6 @@ import edu.vanderbilt.studzikm.ActionResult;
 
 public interface Planner {
     Double score(ActionResult<?> result);
+
+    Planner copy();
 }
