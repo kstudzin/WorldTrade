@@ -12,6 +12,11 @@ public class TransformResult extends ActionResult<Transform> {
 	}
 
 	@Override
+	public Role getRole() {
+		return Role.UNARY;
+	}
+
+	@Override
 	public int hashCode() {
 		return super.hashCode();
 	}

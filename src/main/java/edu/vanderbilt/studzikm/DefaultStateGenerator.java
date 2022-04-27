@@ -5,8 +5,6 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import edu.vanderbilt.studzikm.TransferResult.Role;
-
 public class DefaultStateGenerator implements StateGenerator {
 
 	private Collection<Transform> transforms;
@@ -59,7 +57,7 @@ public class DefaultStateGenerator implements StateGenerator {
 				new Country(self), 
 				new Country(sender), 
 				depth, 
-				Role.RECIEVER));
+				ActionResult.Role.RECIEVER));
 	}
 
 	private Stream<? extends ActionResult<?>> generateTransferAsSender(
@@ -73,7 +71,7 @@ public class DefaultStateGenerator implements StateGenerator {
 				initialState, 
 				self, 
 				depth, 
-				Role.SENDER));
+				ActionResult.Role.SENDER));
 	}
 
 	private Stream<? extends ActionResult<?>> performTransferAsSender(
@@ -81,7 +79,7 @@ public class DefaultStateGenerator implements StateGenerator {
 			World world, 
 			Country sender, 
 			int depth, 
-			Role selfRole) {
+			ActionResult.Role selfRole) {
 
 		return world.stream()
 		.filter(reciever -> reciever != sender)
@@ -100,7 +98,7 @@ public class DefaultStateGenerator implements StateGenerator {
 			Country reciever, 
 			Country sender, 
 			int depth, 
-			Role selfRole) {
+			ActionResult.Role selfRole) {
 
 		ResourceDelta delta = transfer.trade(sender, reciever);
 		if (delta == null) {
@@ -110,8 +108,8 @@ public class DefaultStateGenerator implements StateGenerator {
 		world.addCountry(sender);
 		world.addCountry(reciever);
 
-		Country self = selfRole == Role.RECIEVER ? reciever : sender;
-		Country other = selfRole == Role.RECIEVER ? sender : reciever;
+		Country self = selfRole == ActionResult.Role.RECIEVER ? reciever : sender;
+		Country other = selfRole == ActionResult.Role.RECIEVER ? sender : reciever;
 
 		return new TransferResult(world, transfer, self, other, rewardComputation, depth, selfRole, delta);
 	}

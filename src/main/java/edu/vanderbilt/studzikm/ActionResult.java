@@ -2,7 +2,12 @@ package edu.vanderbilt.studzikm;
 
 import java.util.Objects;
 
-public class ActionResult<T extends Action> {
+public abstract class ActionResult<T extends Action> {
+
+	// TODO Fix typo
+	public enum Role {
+		SENDER, RECIEVER, UNARY, NULL
+	}
 
 	World world;
 	T action;
@@ -58,6 +63,12 @@ public class ActionResult<T extends Action> {
 	public Action.Type getType() {
 		return action.getType();
 	}
+
+	public String getName() {
+		return action.getName();
+	}
+
+	public abstract Role getRole();
 
 	@Override
 	public String toString() {

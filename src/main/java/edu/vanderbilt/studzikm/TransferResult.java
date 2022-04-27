@@ -4,10 +4,6 @@ import java.util.Objects;
 
 public class TransferResult extends ActionResult<Transfer> {
 
-	public enum Role {
-		SENDER, RECIEVER
-	}
-
 	private Country other;
 	private double otherReward;
 	private Role selfRole;
