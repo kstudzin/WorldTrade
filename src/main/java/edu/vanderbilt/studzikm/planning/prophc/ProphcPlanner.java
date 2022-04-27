@@ -1,6 +1,5 @@
 package edu.vanderbilt.studzikm.planning.prophc;
 
-import edu.vanderbilt.studzikm.Action;
 import edu.vanderbilt.studzikm.ActionResult;
 import edu.vanderbilt.studzikm.Country;
 import edu.vanderbilt.studzikm.planning.Planner;
@@ -15,12 +14,12 @@ public class ProphcPlanner implements Planner {
 
     private static final Task<Country> finalTask =
             new Task<>(c -> false);
-    private static final SubTask<Action> finalSubTask =
+    private static final SubTask<ActionResult<?>> finalSubTask =
             new SubTask<>(a -> true);
 
-    private PartialOrderPlanner<Country, Action> planner;
+    private PartialOrderPlanner<Country, ActionResult<?>> planner;
 
-    public ProphcPlanner(PartialOrderPlanner<Country, Action> planner) {
+    public ProphcPlanner(PartialOrderPlanner<Country, ActionResult<?>> planner) {
         this.planner = planner;
         this.planner.registerFinal(finalTask,
                 Collections.singletonList(finalSubTask));
@@ -29,14 +28,16 @@ public class ProphcPlanner implements Planner {
     @Override
     public Double score(ActionResult<?> result) {
         log.trace(String.format("Required electronics: %d, " +
-                        "Required housing: %d," +
-                        "Current action: %s",
+                        "Required housing: %d, " +
+                        "Current action: %s %s %s",
                 result.getSelf().getTargetAmount("R22"),
                 result.getSelf().getTargetAmount("R23"),
-                result.getAction().getName()));
+                result.getType(),
+                result.getName(),
+                result.getRole()));
 
         planner.updateState(result.getSelf());
-        planner.addAction(result.getAction());
+        planner.addAction(result);
         return planner.computeScore();
     }
 

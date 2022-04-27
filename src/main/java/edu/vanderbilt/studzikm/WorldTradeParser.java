@@ -1,6 +1,7 @@
 package edu.vanderbilt.studzikm;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import edu.vanderbilt.studzikm.planning.Planner;
 import edu.vanderbilt.studzikm.planning.prophc.*;
@@ -27,16 +28,24 @@ public class WorldTradeParser {
     public static final Task<Country> electronicsTask =
             new Task<>(country -> country.getTargetAmount("R22") <= 0);
 
-    public static final SubTask<Action> elementAction =
-            new SubTask<>(action -> action.getName().equals("R2"));
-    public static final SubTask<Action> timberAction =
-            new SubTask<>(action -> action.getName().equals("R3"));
-    public static final SubTask<Action> alloyAction =
-            new SubTask<>(action -> action.getName().equals("R21"));
-    public static final SubTask<Action> electronicsAction =
-            new SubTask<>(action -> action.getName().equals("R22"));
-    public static final SubTask<Action> houseAction =
-            new SubTask<>(action -> action.getName().equals("R23"));
+    private static final Predicate<ActionResult> onlyRecieverTransfers =
+            actionResult ->  (actionResult.getType() != Action.Type.TRANSFER ||
+                    ((TransferResult) actionResult).getRole() == TransferResult.Role.RECIEVER);
+    public static final SubTask<ActionResult<?>> elementAction =
+            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
+                    && actionResult.getName().equals("R2"));
+    public static final SubTask<ActionResult<?>> timberAction =
+            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
+                    && actionResult.getName().equals("R3"));
+    public static final SubTask<ActionResult<?>> alloyAction =
+            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
+                    && actionResult.getName().equals("R21"));
+    public static final SubTask<ActionResult<?>> electronicsAction =
+            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
+                    && actionResult.getName().equals("R22"));
+    public static final SubTask<ActionResult<?>> houseAction =
+            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
+                    && actionResult.getName().equals("R23"));
 
     private Logger log = LogManager.getLogger(WorldTradeParser.class);
 
@@ -54,14 +63,14 @@ public class WorldTradeParser {
     private Integer numberOfSchedules;
     private String plannerType;
 
-    private List<SubTask<Action>> housingSubTasks = Arrays.asList(new SubTask[]{
+    private List<SubTask<ActionResult<?>>> housingSubTasks = Arrays.asList(new SubTask[]{
             elementAction,
             timberAction,
             alloyAction,
             houseAction
     });
 
-    private List<SubTask<Action>> electronicsSubTasks = Arrays.asList(new SubTask[]{
+    private List<SubTask<ActionResult<?>>> electronicsSubTasks = Arrays.asList(new SubTask[]{
             elementAction,
             alloyAction,
             electronicsAction
