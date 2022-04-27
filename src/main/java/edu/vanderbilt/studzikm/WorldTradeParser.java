@@ -57,12 +57,14 @@ public class WorldTradeParser {
     private List<SubTask<Action>> housingSubTasks = Arrays.asList(new SubTask[]{
             elementAction,
             timberAction,
-            alloyAction
+            alloyAction,
+            houseAction
     });
 
     private List<SubTask<Action>> electronicsSubTasks = Arrays.asList(new SubTask[]{
             elementAction,
-            alloyAction
+            alloyAction,
+            electronicsAction
     });
 
     public static WorldTradeParser parse(String[] args) {
