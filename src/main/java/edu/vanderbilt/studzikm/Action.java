@@ -2,7 +2,7 @@ package edu.vanderbilt.studzikm;
 
 public interface Action {
 
-	public enum Type {
+	enum Type {
 		TRANSFER, TRANSFORM;
 	}
 
