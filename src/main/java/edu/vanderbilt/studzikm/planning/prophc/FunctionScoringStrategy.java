@@ -15,18 +15,21 @@ public class FunctionScoringStrategy implements ScoringStrategy {
             (i * (i + 1) * ((2 * i) + 1)) / 6;
 
     @Override
-    public double compute(CircularFifoQueue<Boolean> history) {
+    public double compute(CircularFifoQueue<SubTaskStatus> history) {
         Double sum = 0.0;
         Integer max = sumOfSquares.apply(history.size());
         for (int i = 0; i < history.size(); i++) {
-            if (history.get(i)) {
-                sum += func.apply(i);
-            }
+                sum += history.get(i).score(i + 1, this);
         }
 
-        Double score = Math.max(0.05, sum / max);
+        // Don't return 0. It may lead to utilities of 0 that will score
+        // higher than negative scores.
+        Double score = Math.max(1/(max * 8), sum / max);
         log.trace(String.format("History: %s (Score: %f)", history, score));
         return score;
     }
 
+    public double compute(Integer position) {
+        return func.apply(position);
+    }
 }

@@ -4,12 +4,11 @@ import org.apache.commons.collections4.OrderedMap;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-import java.util.List;
 
 public class PartialOrderPlanner<T, R> {
 
-    private OrderedMap<Task<T>, List<SubTask<R>>> subTaskMp = new LinkedMap<>();
-    private CircularFifoQueue<Boolean> history;
+    private OrderedMap<Task<T>, SubTask<R>> subTaskMp = new LinkedMap<>();
+    private CircularFifoQueue<SubTaskStatus> history;
     private Task<T> currentTask;
     private ScoringStrategy scoringStrategy;
     private int historyLength;
@@ -31,14 +30,14 @@ public class PartialOrderPlanner<T, R> {
         this.currentTask = original.currentTask;
     }
 
-    public void register(Task<T> task, List<SubTask<R>> subTasks) {
+    public void register(Task<T> task, SubTask<R> subTasks) {
         subTaskMp.put(task, subTasks);
         if (currentTask == null) {
             currentTask = subTaskMp.firstKey();
         }
     }
 
-    public void registerFinal(Task<T> finalTask, List<SubTask<R>> finalSubTask) {
+    public void registerFinal(Task<T> finalTask, SubTask<R> finalSubTask) {
         register(finalTask, finalSubTask);
     }
 
@@ -49,14 +48,9 @@ public class PartialOrderPlanner<T, R> {
     }
 
     public void addAction(R action) {
-        for (SubTask<R> subtask : subTaskMp.get(currentTask)) {
-            if (subtask.isSubTask(action)) {
-                history.add(true);
-                return;
-            }
-        }
-
-        history.add(false);
+        history.add(
+                subTaskMp.get(currentTask)
+                        .getStatus(action));
     }
 
     public Double computeScore() {

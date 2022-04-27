@@ -1,16 +1,24 @@
 package edu.vanderbilt.studzikm.planning.prophc;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class SubTask<T> {
 
-    private Predicate<T> isSubTask;
+    private Set<Map.Entry<Predicate<T>, SubTaskStatus>> getStatus;
 
-    public SubTask(Predicate<T> isSubTask) {
-        this.isSubTask = isSubTask;
+    public SubTask(Map<Predicate<T>, SubTaskStatus> getStatus) {
+        this.getStatus = getStatus.entrySet();
     }
 
-    public boolean isSubTask(T action) {
-        return isSubTask.test(action);
+    public SubTaskStatus getStatus(T action) {
+        for (Map.Entry<Predicate<T>, SubTaskStatus> entry : getStatus) {
+            if (entry.getKey().test(action)) {
+                return entry.getValue();
+            }
+        }
+
+        return FalseStatus.getInstance();
     }
 }

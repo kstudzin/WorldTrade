@@ -1,18 +1,23 @@
 package edu.vanderbilt.studzikm;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import edu.vanderbilt.studzikm.planning.Planner;
 import edu.vanderbilt.studzikm.planning.prophc.*;
+import org.apache.commons.collections4.OrderedMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.function.Predicate;
 
 public class WorldTradeParser {
+
+    private Logger log = LogManager.getLogger(WorldTradeParser.class);
 
     public static final int DEFAULT_DEPTH = 25;
     public static final double DEFAULT_GAMMA = .9;
@@ -23,31 +28,35 @@ public class WorldTradeParser {
     public static final double DEFAULT_PROPORTION_STEP = 0.025;
     public static final int DEFAULT_NUMBER_OF_SCHEDULES = 1;
 
-    public static final Task<Country> houseTask =
-            new Task<>(country -> country.getTargetAmount("R23") <= 0);
-    public static final Task<Country> electronicsTask =
-            new Task<>(country -> country.getTargetAmount("R22") <= 0);
-
     private static final Predicate<ActionResult> onlyRecieverTransfers =
-            actionResult ->  (actionResult.getType() != Action.Type.TRANSFER ||
-                    ((TransferResult) actionResult).getRole() == TransferResult.Role.RECIEVER);
-    public static final SubTask<ActionResult<?>> elementAction =
-            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
-                    && actionResult.getName().equals("R2"));
-    public static final SubTask<ActionResult<?>> timberAction =
-            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
-                    && actionResult.getName().equals("R3"));
-    public static final SubTask<ActionResult<?>> alloyAction =
-            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
-                    && actionResult.getName().equals("R21"));
-    public static final SubTask<ActionResult<?>> electronicsAction =
-            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
-                    && actionResult.getName().equals("R22"));
-    public static final SubTask<ActionResult<?>> houseAction =
-            new SubTask<>(actionResult -> onlyRecieverTransfers.test(actionResult)
-                    && actionResult.getName().equals("R23"));
+            actionResult ->  (actionResult.getType() != Action.Type.TRANSFER
+                    || actionResult.getRole() == TransferResult.Role.RECIEVER);
+    private static final Predicate<ActionResult> requiredHousingResources =
+            actionResult -> actionResult.getName().equals("R2")
+                    || actionResult.getName().equals("R3")
+                    || actionResult.getName().equals("R22");
+    private static final Predicate<ActionResult> requiredElectronicsResources =
+            actionResult -> actionResult.getName().equals("R2")
+                    || actionResult.getName().equals("R22");
 
-    private Logger log = LogManager.getLogger(WorldTradeParser.class);
+    private static final OrderedMap<Predicate<ActionResult>, SubTaskStatus> housingSubTaskPredicates = new ListOrderedMap<>();
+    private static final OrderedMap<Predicate<ActionResult>, SubTaskStatus> electronicsSubTaskPredicates = new ListOrderedMap<>();
+
+    private static final Task<Country> houseTask =
+            new Task<>(country -> country.getTargetAmount("R23") <= 0);
+    private static final Task<Country> electronicsTask =
+            new Task<>(country -> country.getTargetAmount("R22") <= 0);
+    private static final SubTask<ActionResult> housingSubtask =
+            new SubTask<>(housingSubTaskPredicates);
+    private static final SubTask<ActionResult> electronicsSubtask =
+            new SubTask<>(electronicsSubTaskPredicates);
+
+    static {
+        housingSubTaskPredicates.put(onlyRecieverTransfers, ReducedScore.getInstance());
+        housingSubTaskPredicates.put(requiredHousingResources, TrueStatus.getInstance());
+        electronicsSubTaskPredicates.put(onlyRecieverTransfers, ReducedScore.getInstance());
+        electronicsSubTaskPredicates.put(requiredElectronicsResources, TrueStatus.getInstance());
+    }
 
     private String countryFileName;
     private String resourceFileName;
@@ -62,19 +71,6 @@ public class WorldTradeParser {
     private Double proportionStep;
     private Integer numberOfSchedules;
     private String plannerType;
-
-    private List<SubTask<ActionResult<?>>> housingSubTasks = Arrays.asList(new SubTask[]{
-            elementAction,
-            timberAction,
-            alloyAction,
-            houseAction
-    });
-
-    private List<SubTask<ActionResult<?>>> electronicsSubTasks = Arrays.asList(new SubTask[]{
-            elementAction,
-            alloyAction,
-            electronicsAction
-    });
 
     public static WorldTradeParser parse(String[] args) {
         WorldTradeParser wtp = new WorldTradeParser();
@@ -201,8 +197,8 @@ public class WorldTradeParser {
             plannerSupplier = () -> {
                 // TODO Make history length configurable
                 PartialOrderPlanner pop = new PartialOrderPlanner(5, scoringStrategy);
-                pop.register(houseTask, housingSubTasks);
-                pop.register(electronicsTask, electronicsSubTasks);
+                pop.register(houseTask, housingSubtask);
+                pop.register(electronicsTask, electronicsSubtask);
                 return new ProphcPlanner(pop);
             };
         } else if (plannerType.equals("rdf")) {
