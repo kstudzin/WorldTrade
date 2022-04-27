@@ -1,5 +1,8 @@
 package edu.vanderbilt.studzikm.planning.prophc;
 
+import edu.vanderbilt.studzikm.planning.prophc.lib.ScoringStrategy;
+import edu.vanderbilt.studzikm.planning.prophc.lib.SubTaskStatus;
+
 public class FalseStatus implements SubTaskStatus {
 
     private static final FalseStatus singleton = new FalseStatus();

@@ -1,4 +1,4 @@
-package edu.vanderbilt.studzikm.planning.prophc;
+package edu.vanderbilt.studzikm.planning.prophc.lib;
 
 import java.util.function.Predicate;
 

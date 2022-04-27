@@ -1,5 +1,7 @@
 package edu.vanderbilt.studzikm.planning.prophc;
 
+import edu.vanderbilt.studzikm.planning.prophc.lib.ScoringStrategy;
+import edu.vanderbilt.studzikm.planning.prophc.lib.SubTaskStatus;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

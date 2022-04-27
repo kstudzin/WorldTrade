@@ -1,4 +1,6 @@
-package edu.vanderbilt.studzikm.planning.prophc;
+package edu.vanderbilt.studzikm.planning.prophc.lib;
+
+import edu.vanderbilt.studzikm.planning.prophc.FalseStatus;
 
 import java.util.Map;
 import java.util.Set;

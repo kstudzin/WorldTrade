@@ -1,4 +1,4 @@
-package edu.vanderbilt.studzikm.planning.prophc;
+package edu.vanderbilt.studzikm.planning.prophc.lib;
 
 import org.apache.commons.collections4.OrderedMap;
 import org.apache.commons.collections4.map.LinkedMap;
