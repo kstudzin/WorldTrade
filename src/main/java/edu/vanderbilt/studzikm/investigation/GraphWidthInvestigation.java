@@ -63,7 +63,8 @@ public class GraphWidthInvestigation {
                                     .setResources(resources)
                                     .setInitialQualities(world)
                                     .setFrontierSupplier(() -> new BreadthFirstFrontier(100))
-                                    .setRdfPlannerOntology("src/main/resources/planning.ttl");
+                                    // TODO add planner supplier
+                                    .setPlannerSupplier(null);
 
                             int count = 0;
                             for (double proportion = proportionInit; proportion <= 1; proportion += proportionStep) {

@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class FunctionScoringStrategy implements ScoringStrategy {
 
-    private static final double c = 0.6079;
+    private static final double c = 0.60793;
     private Function<Integer, Double> func = i -> c / Math.pow(i, 2);
 
     @Override

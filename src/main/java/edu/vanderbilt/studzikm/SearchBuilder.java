@@ -22,7 +22,7 @@ public class SearchBuilder {
 	Double failurePenalty;
 	Double logisticGrowthRate;
 	Double sigmoidMidpoint;
-	Planner planner;
+	Supplier<Planner> plannerSupplier;
 
 	public SearchBuilder() {
 		
@@ -84,8 +84,8 @@ public class SearchBuilder {
 		return this;
 	}
 
-	public SearchBuilder setRdfPlannerOntology(String ontologyFilename) {
-		this.planner = new RdfPlanner(ontologyFilename);
+	public SearchBuilder setPlannerSupplier(Supplier<Planner> plannerSupplier) {
+		this.plannerSupplier = plannerSupplier;
 		return this;
 	}
 
@@ -108,7 +108,7 @@ public class SearchBuilder {
 		ExpectedUtilityComputation expectedUtilityComputation = new ExpectedUtilityComputation(
 				failurePenalty, 
 				successProbabilityComputation);
-		SearchNodeFactory nodeFactory = new SearchNodeFactory(expectedUtilityComputation, planner);
+		SearchNodeFactory nodeFactory = new SearchNodeFactory(expectedUtilityComputation, plannerSupplier.get());
 		ScheduleFactory scheduleFactory = new ScheduleFactory();
 
 		return new Search(stateGenerator, nodeFactory, frontierSupplier.get(), reachedSupplier.get(), scheduleFactory);

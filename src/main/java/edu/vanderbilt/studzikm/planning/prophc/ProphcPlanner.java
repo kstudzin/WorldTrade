@@ -5,11 +5,21 @@ import edu.vanderbilt.studzikm.ActionResult;
 import edu.vanderbilt.studzikm.Country;
 import edu.vanderbilt.studzikm.planning.Planner;
 
+import java.util.Collections;
+
 public class ProphcPlanner implements Planner {
 
+    private static final Task<Country> finalTask =
+            new Task<>(c -> false);
+    private static final SubTask<Action> finalSubTask =
+            new SubTask<>(a -> true);
+
     private PartialOrderPlanner<Country, Action> planner;
+
     public ProphcPlanner(PartialOrderPlanner<Country, Action> planner) {
         this.planner = planner;
+        this.planner.registerFinal(finalTask,
+                Collections.singletonList(finalSubTask));
     }
 
     @Override

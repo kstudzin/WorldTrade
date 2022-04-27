@@ -2,10 +2,14 @@ package edu.vanderbilt.studzikm;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
+import edu.vanderbilt.studzikm.planning.Planner;
+import edu.vanderbilt.studzikm.planning.prophc.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class WorldTradeParser {
 
@@ -17,6 +21,22 @@ public class WorldTradeParser {
     public static final double DEFAULT_INITIAL_PROPORTION = 0.025;
     public static final double DEFAULT_PROPORTION_STEP = 0.025;
     public static final int DEFAULT_NUMBER_OF_SCHEDULES = 1;
+
+    public static final Task<Country> houseTask =
+            new Task<>(country -> country.getTargetAmount("R23") <= 0);
+    public static final Task<Country> electronicsTask =
+            new Task<>(country -> country.getTargetAmount("R22") <= 0);
+
+    public static final SubTask<Action> elementAction =
+            new SubTask<>(action -> action.getName().equals("R2"));
+    public static final SubTask<Action> timberAction =
+            new SubTask<>(action -> action.getName().equals("R3"));
+    public static final SubTask<Action> alloyAction =
+            new SubTask<>(action -> action.getName().equals("R21"));
+    public static final SubTask<Action> electronicsAction =
+            new SubTask<>(action -> action.getName().equals("R22"));
+    public static final SubTask<Action> houseAction =
+            new SubTask<>(action -> action.getName().equals("R23"));
 
     private Logger log = LogManager.getLogger(WorldTradeParser.class);
 
@@ -32,6 +52,18 @@ public class WorldTradeParser {
     private Double initialProportion;
     private Double proportionStep;
     private Integer numberOfSchedules;
+    private String plannerType;
+
+    private List<SubTask<Action>> housingSubTasks = Arrays.asList(new SubTask[]{
+            elementAction,
+            timberAction,
+            alloyAction
+    });
+
+    private List<SubTask<Action>> electronicsSubTasks = Arrays.asList(new SubTask[]{
+            elementAction,
+            alloyAction
+    });
 
     public static WorldTradeParser parse(String[] args) {
         WorldTradeParser wtp = new WorldTradeParser();
@@ -64,6 +96,8 @@ public class WorldTradeParser {
                 wtp.proportionStep = Double.valueOf(args[++i]);
             } else if (option.equals("--schedules") || option.equals("-c")) {
                 wtp.numberOfSchedules = Integer.valueOf(args[++i]);
+            } else if (option.equals("--planner") || option.equals("-a")) {
+                wtp.plannerType = args[++i];
             }
         }
 
@@ -146,6 +180,28 @@ public class WorldTradeParser {
             return HeuristicDepthFirstFrontier::new;
         }
         return () -> new BreadthFirstFrontier(100);
+    }
+
+    public Supplier<Planner> getPlannerSupplier() {
+        // TODO Make scoring strategy an option
+        ScoringStrategy scoringStrategy = new FunctionScoringStrategy();
+        Supplier<Planner> plannerSupplier;
+        if (plannerType == null || plannerType.equals("prophc")) {
+            plannerSupplier = () -> {
+                // TODO Make history length configurable
+                PartialOrderPlanner pop = new PartialOrderPlanner(5, scoringStrategy);
+                pop.register(houseTask, housingSubTasks);
+                pop.register(electronicsTask, electronicsSubTasks);
+                return new ProphcPlanner(pop);
+            };
+        } else if (plannerType.equals("rdf")) {
+            plannerSupplier = null;
+        } else {
+            throw new RuntimeException(
+                    String.format("Planner type %s not valid", plannerType));
+        }
+
+        return plannerSupplier;
     }
 
     public Double getInitialProportion() {

@@ -26,6 +26,10 @@ public class PartialOrderPlanner<T, R> {
         }
     }
 
+    public void registerFinal(Task<T> finalTask, List<SubTask<R>> finalSubTask) {
+        register(finalTask, finalSubTask);
+    }
+
     public void updateState(T state) {
         if (currentTask.isComplete(state)) {
             currentTask = subTaskMp.nextKey(currentTask);

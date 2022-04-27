@@ -1,6 +1,7 @@
 package edu.vanderbilt.studzikm;
 
 import com.google.common.base.Supplier;
+import edu.vanderbilt.studzikm.planning.Planner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ public class Driver {
 		double initialProportion = wtp.getInitialProportion();
 		double proportionStep = wtp.getProportionStep();
 		int numSchedules = wtp.getNumberOfSchedules();
+		Supplier<Planner> plannerSupplier = wtp.getPlannerSupplier();
 
 		System.out.printf("Resource file name: %s\n", resourceFile);
 		System.out.printf("Country file name:  %s\n", countryFile);
@@ -54,7 +56,7 @@ public class Driver {
 					.setResources(resources)
 					.setInitialQualities(world)
 					.setFrontierSupplier(frontierSupplier)
-					.setRdfPlannerOntology("src/main/resources/planning.ttl");
+					.setPlannerSupplier(plannerSupplier);
 
 			double prop = initialProportion;
 			double step = proportionStep;
