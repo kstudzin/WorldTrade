@@ -25,6 +25,10 @@ public class ProphcPlanner implements Planner {
                 Collections.singletonList(finalSubTask));
     }
 
+    public ProphcPlanner(ProphcPlanner prophcPlanner) {
+        this.planner = new PartialOrderPlanner<>(prophcPlanner.planner);
+    }
+
     @Override
     public Double score(ActionResult<?> result) {
         log.trace(String.format("Required electronics: %d, " +
@@ -43,6 +47,6 @@ public class ProphcPlanner implements Planner {
 
     @Override
     public Planner copy() {
-        return this;
+        return new ProphcPlanner(this);
     }
 }

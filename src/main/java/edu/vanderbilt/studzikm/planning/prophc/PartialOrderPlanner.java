@@ -12,11 +12,23 @@ public class PartialOrderPlanner<T, R> {
     private CircularFifoQueue<Boolean> history;
     private Task<T> currentTask;
     private ScoringStrategy scoringStrategy;
+    private int historyLength;
 
     public PartialOrderPlanner(int historyLength,
                                ScoringStrategy scoringStrategy) {
+        this.historyLength = historyLength;
         this.history = new CircularFifoQueue<>(historyLength);
         this.scoringStrategy = scoringStrategy;
+    }
+
+    public PartialOrderPlanner(PartialOrderPlanner original) {
+        this.historyLength = original.historyLength;
+        this.history = new CircularFifoQueue<>(historyLength);
+        this.history.addAll(original.history);
+        this.scoringStrategy = original.scoringStrategy;
+        this.subTaskMp = new LinkedMap<>();
+        this.subTaskMp.putAll(original.subTaskMp);
+        this.currentTask = original.currentTask;
     }
 
     public void register(Task<T> task, List<SubTask<R>> subTasks) {
