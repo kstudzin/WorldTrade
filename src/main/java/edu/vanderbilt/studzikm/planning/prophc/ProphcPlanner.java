@@ -4,10 +4,14 @@ import edu.vanderbilt.studzikm.Action;
 import edu.vanderbilt.studzikm.ActionResult;
 import edu.vanderbilt.studzikm.Country;
 import edu.vanderbilt.studzikm.planning.Planner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 
 public class ProphcPlanner implements Planner {
+
+    private static Logger log = LogManager.getLogger(ProphcPlanner.class);
 
     private static final Task<Country> finalTask =
             new Task<>(c -> false);
@@ -24,6 +28,13 @@ public class ProphcPlanner implements Planner {
 
     @Override
     public Double score(ActionResult<?> result) {
+        log.trace(String.format("Required electronics: %d, " +
+                        "Required housing: %d," +
+                        "Current action: %s",
+                result.getSelf().getTargetAmount("R22"),
+                result.getSelf().getTargetAmount("R23"),
+                result.getAction().getName()));
+
         planner.updateState(result.getSelf());
         planner.addAction(result.getAction());
         return planner.computeScore();
