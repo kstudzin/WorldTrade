@@ -14,7 +14,7 @@ public class FunctionScoringStrategy implements ScoringStrategy {
         Double sum = 0.0;
         for (int i = 0; i < history.size(); i++) {
             if (history.get(i)) {
-                sum += func.apply(i);
+                sum += func.apply(history.size() - i);
             }
         }
         return sum;
