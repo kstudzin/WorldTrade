@@ -14,6 +14,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.function.Predicate;
 
+/**
+ * Implementation of the Planner interface. Functions to connect the World
+ * Trade application to the prophc library.
+ */
 public class ProphcPlanner implements Planner {
 
     private static Logger log = LogManager.getLogger(ProphcPlanner.class);
@@ -32,15 +36,31 @@ public class ProphcPlanner implements Planner {
 
     private PartialOrderPlanner<Country, ActionResult<?>> planner;
 
+    /**
+     * Creates a PROHC Planner using a Partial Order Planner
+     *
+     * @param planner the partial order planner to use
+     */
     public ProphcPlanner(PartialOrderPlanner<Country, ActionResult<?>> planner) {
         this.planner = planner;
         this.planner.registerFinal(finalTask, finalSubTask);
     }
 
+    /**
+     * Copy constructor
+     *
+     * @param prophcPlanner original planner
+     */
     public ProphcPlanner(ProphcPlanner prophcPlanner) {
         this.planner = new PartialOrderPlanner<>(prophcPlanner.planner);
     }
 
+    /**
+     * Score the action based on the current state
+     *
+     * @param result action to score
+     * @return score the action
+     */
     @Override
     public Double score(ActionResult<?> result) {
         log.trace(String.format("Required electronics: %d, " +
@@ -57,6 +77,11 @@ public class ProphcPlanner implements Planner {
         return planner.computeScore();
     }
 
+    /**
+     * Copies the current object for use in search tree
+     *
+     * @return an identical copy of this planner
+     */
     @Override
     public Planner copy() {
         return new ProphcPlanner(this);

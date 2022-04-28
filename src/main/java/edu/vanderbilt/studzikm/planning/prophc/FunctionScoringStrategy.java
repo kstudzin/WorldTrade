@@ -8,6 +8,15 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.function.Function;
 
+/**
+ * Strategy for scoring histories of actions.
+ *
+ * Scores are powers of 2 so that the newest action is worth exponentially
+ * more than older actions. This weights recent actions more heavily. The
+ * sum of the scores is divided by the max sum of scores to get a normalized
+ * score between 0 and 1.
+ *
+ */
 public class FunctionScoringStrategy implements ScoringStrategy {
 
     private Logger log = LogManager.getLogger(FunctionScoringStrategy.class);
@@ -16,6 +25,12 @@ public class FunctionScoringStrategy implements ScoringStrategy {
     private Function<Integer, Integer> sumOfSquares = i ->
             (i * (i + 1) * ((2 * i) + 1)) / 6;
 
+    /**
+     * Computes the score of the given history
+     *
+     * @param history the history of actions in the current plan
+     * @return normalized sum of scores for individual actions
+     */
     @Override
     public double compute(CircularFifoQueue<SubTaskStatus> history) {
         Double sum = 0.0;
@@ -31,6 +46,13 @@ public class FunctionScoringStrategy implements ScoringStrategy {
         return score;
     }
 
+    /**
+     * Apply the scoring function to a position value
+     *
+     * @param position position in the history
+     * @return the value of the scoring function for given input
+     */
+    @Override
     public double compute(Integer position) {
         return func.apply(position);
     }

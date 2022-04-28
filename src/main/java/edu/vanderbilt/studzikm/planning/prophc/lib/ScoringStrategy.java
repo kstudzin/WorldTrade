@@ -19,9 +19,11 @@ public interface ScoringStrategy {
     double compute(CircularFifoQueue<SubTaskStatus> history);
 
     /**
-     * Provides a strategy for how to
-     * @param position
-     * @return
+     * Provides a strategy for how to score a value at a particular
+     * position in the history.
+     *
+     * @param position position in the history
+     * @return a score
      */
     double compute(Integer position);
 
