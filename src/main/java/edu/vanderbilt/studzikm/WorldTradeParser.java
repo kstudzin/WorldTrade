@@ -31,7 +31,7 @@ public class WorldTradeParser {
 
     private static final Predicate<ActionResult> onlyRecieverTransfers =
             actionResult ->  (actionResult.getType() != Action.Type.TRANSFER
-                    || actionResult.getRole() == TransferResult.Role.RECIEVER);
+                    || actionResult.getRole() == TransferResult.Role.RECEIVER);
     private static final Predicate<ActionResult> requiredHousingResources =
             actionResult -> actionResult.getName().equals("R2")
                     || actionResult.getName().equals("R3")

@@ -92,7 +92,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18478548621168678, item.getExpectedUtility());
-        assertEquals(20, item.getSchedulePostion());
+        assertEquals(20, item.getSchedulePosition());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18849417081074527, item.getExpectedUtility());
-        assertEquals(52, item.getSchedulePostion());
+        assertEquals(52, item.getSchedulePosition());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18846424196685008, item.getExpectedUtility());
-        assertEquals(52, item.getSchedulePostion());
+        assertEquals(52, item.getSchedulePosition());
     }
 
     @Test
@@ -156,7 +156,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18847449570487929, item.getExpectedUtility());
-        assertEquals(55, item.getSchedulePostion());
+        assertEquals(55, item.getSchedulePosition());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18847653535490638, item.getExpectedUtility());
-        assertEquals(51, item.getSchedulePostion());
+        assertEquals(51, item.getSchedulePosition());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.1884924419481553, item.getExpectedUtility());
-        assertEquals(43, item.getSchedulePostion());
+        assertEquals(43, item.getSchedulePosition());
     }
 
     @Test
@@ -216,7 +216,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18846209543688652, item.getExpectedUtility());
-        assertEquals(43, item.getSchedulePostion());
+        assertEquals(43, item.getSchedulePosition());
     }
 
     @Test
@@ -236,7 +236,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18848906164257517, item.getExpectedUtility());
-        assertEquals(52, item.getSchedulePostion());
+        assertEquals(52, item.getSchedulePosition());
     }
 
     @Test
@@ -257,7 +257,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.18847471512970937, item.getExpectedUtility());
-        assertEquals(40, item.getSchedulePostion());
+        assertEquals(40, item.getSchedulePosition());
     }
 
     @Test
@@ -278,7 +278,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.1884606003257404, item.getExpectedUtility());
-        assertEquals(44, item.getSchedulePostion());
+        assertEquals(44, item.getSchedulePosition());
     }
 
     @Test
@@ -299,7 +299,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.1884775986359174, item.getExpectedUtility());
-        assertEquals(42, item.getSchedulePostion());
+        assertEquals(42, item.getSchedulePosition());
     }
 
     @Test
@@ -320,7 +320,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.1875151374757017, item.getExpectedUtility());
-        assertEquals(22, item.getSchedulePostion());
+        assertEquals(22, item.getSchedulePosition());
     }
 
     @Test
@@ -341,7 +341,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.1882940671106511, item.getExpectedUtility());
-        assertEquals(39, item.getSchedulePostion());
+        assertEquals(39, item.getSchedulePosition());
     }
 
     @Test
@@ -362,7 +362,7 @@ public class EvenlyDistributedResourcesTest {
                 .orElse(null);
 
         assertEquals(0.1884606003257404, item.getExpectedUtility());
-        assertEquals(45, item.getSchedulePostion());
+        assertEquals(45, item.getSchedulePosition());
     }
 
     private Schedule executeTest(World world,

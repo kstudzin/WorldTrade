@@ -112,7 +112,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.4229296918121439, item.getExpectedUtility());
-        assertEquals(10, item.getSchedulePostion());
+        assertEquals(10, item.getSchedulePosition());
     }
 
     @Test
@@ -132,7 +132,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6628343776477429, item.getExpectedUtility());
-        assertEquals(20, item.getSchedulePostion());
+        assertEquals(20, item.getSchedulePosition());
     }
 
     @Test
@@ -152,7 +152,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.09064185469673969, item.getExpectedUtility());
-        assertEquals(5, item.getSchedulePostion());
+        assertEquals(5, item.getSchedulePosition());
 
     }
 
@@ -173,7 +173,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.04302715541572055, item.getExpectedUtility());
-        assertEquals(4, item.getSchedulePostion());
+        assertEquals(4, item.getSchedulePosition());
     }
 
     @Test
@@ -193,7 +193,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6506685257246263, item.getExpectedUtility());
-        assertEquals(25, item.getSchedulePostion());
+        assertEquals(25, item.getSchedulePosition());
     }
 
     @Test
@@ -214,7 +214,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6456245934002134, item.getExpectedUtility());
-        assertEquals(10, item.getSchedulePostion());
+        assertEquals(10, item.getSchedulePosition());
     }
 
     // Different from Heuristic depth first
@@ -235,7 +235,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6698697974875831, item.getExpectedUtility());
-        assertEquals(18, item.getSchedulePostion());
+        assertEquals(18, item.getSchedulePosition());
     }
 
     @Test
@@ -256,7 +256,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6456245934002134, item.getExpectedUtility());
-        assertEquals(9, item.getSchedulePostion());
+        assertEquals(9, item.getSchedulePosition());
     }
 
     @Test
@@ -277,7 +277,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6696360219475668, item.getExpectedUtility());
-        assertEquals(14, item.getSchedulePostion());
+        assertEquals(14, item.getSchedulePosition());
     }
 
     @Test
@@ -298,7 +298,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.335497343614354, item.getExpectedUtility());
-        assertEquals(33, item.getSchedulePostion());
+        assertEquals(33, item.getSchedulePosition());
     }
 
     @Test
@@ -319,7 +319,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6693703305219072, item.getExpectedUtility());
-        assertEquals(13, item.getSchedulePostion());
+        assertEquals(13, item.getSchedulePosition());
     }
 
     @Test
@@ -340,7 +340,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6696433370333517, item.getExpectedUtility());
-        assertEquals(18, item.getSchedulePostion());
+        assertEquals(18, item.getSchedulePosition());
     }
 
     @Test
@@ -361,7 +361,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6698634127386845, item.getExpectedUtility());
-        assertEquals(15, item.getSchedulePostion());
+        assertEquals(15, item.getSchedulePosition());
     }
 
     @Test
@@ -381,7 +381,7 @@ public class UnevenlyDistributedResourcesBreadthFirst2 {
                 .orElse(null);
 
         assertEquals(0.6626074522351263, item.getExpectedUtility());
-        assertEquals(8, item.getSchedulePostion());
+        assertEquals(8, item.getSchedulePosition());
     }
 
     private Schedule executeTest(World world,

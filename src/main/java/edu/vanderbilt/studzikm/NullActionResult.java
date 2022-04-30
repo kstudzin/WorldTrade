@@ -4,13 +4,13 @@ public class NullActionResult extends ActionResult<NullAction> {
     public NullActionResult(World current,
                             NullAction nullAction,
                             Country self,
-                            DefaultRewardComputation defaultRewardComputation,
+                            ZeroRewardComputation zeroRewardComputation,
                             int i,
                             ResourceDelta delta) {
         super(current,
                 nullAction,
                 self,
-                defaultRewardComputation,
+                zeroRewardComputation,
                 i,
                 delta);
     }

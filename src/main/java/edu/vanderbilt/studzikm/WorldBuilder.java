@@ -10,12 +10,12 @@ public class WorldBuilder {
 
 	private World world = new World();
 	private Map<String, Resource> resources;
-	private DefaultTransforms transformFactory;
+	private DefaultTransformFactory transformFactory;
 	private double gamma;
 
 	public WorldBuilder(Map<String, Resource> resources) {
 		this.resources = resources;
-		this.transformFactory = new DefaultTransforms(resources);
+		this.transformFactory = new DefaultTransformFactory(resources);
 	}
 
 	public WorldBuilder addCountry(String name, Supplier<QualityComputation> qualityComputationSupplier) {

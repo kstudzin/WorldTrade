@@ -37,7 +37,7 @@ public class RdfPlannerTest {
         when(transferResult.getSelf()).thenReturn(country);
         when(country.getTargetAmount("R23")).thenReturn(5);
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECEIVER);
 
         Double score = planner.score(transferResult);
         assertEquals(0.80, score);
@@ -55,7 +55,7 @@ public class RdfPlannerTest {
         when(transferResult.getSelf()).thenReturn(country);
         when(country.getTargetAmount("R22")).thenReturn(5);
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECEIVER);
 
         Double score = planner.score(transferResult);
         assertEquals(0.2, score, 0.0001);
@@ -73,7 +73,7 @@ public class RdfPlannerTest {
         when(transferResult.getSelf()).thenReturn(country);
         when(country.getTargetAmount("R22")).thenReturn(5);
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECEIVER);
 
         Double score = planner.score(transferResult);
         assertEquals(0.2, score, .0001);
@@ -94,7 +94,7 @@ public class RdfPlannerTest {
         when(transferResult.getSelf()).thenReturn(country);
         when(country.getTargetAmount("R23")).thenReturn(5);
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECEIVER);
 
         Double score = planner.score(transferResult);
         assertEquals(0.80, score);
@@ -115,7 +115,7 @@ public class RdfPlannerTest {
         when(transferResult.getSelf()).thenReturn(country);
         when(country.getTargetAmount("R23")).thenReturn(5);
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECEIVER);
 
         Double score = planner.score(transferResult);
         assertEquals(0.80, score);
@@ -145,7 +145,7 @@ public class RdfPlannerTest {
         when(transferResult.getSelf()).thenReturn(country);
         when(country.getTargetAmount("R23")).thenReturn(5);
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(transferResult.getRole()).thenReturn(TransferResult.Role.RECEIVER);
 
         Double score = planner.score(transferResult);
         assertEquals(0.80, score);

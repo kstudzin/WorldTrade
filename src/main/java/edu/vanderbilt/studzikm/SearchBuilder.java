@@ -1,7 +1,6 @@
 package edu.vanderbilt.studzikm;
 
 import edu.vanderbilt.studzikm.planning.Planner;
-import edu.vanderbilt.studzikm.planning.rdf.RdfPlanner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,11 +92,11 @@ public class SearchBuilder {
 
 		Double[] transferProportions = new Double[this.transferProportions.size()];
 		this.transferProportions.toArray(transferProportions);
-		TransferFactory transferFactory = new DefaultTransfers(resources, transferProportions);
+		TransferFactory transferFactory = new DefaultTransferFactory(resources, transferProportions);
 
 		Double[] transformProportions = new Double[this.transformProportions.size()];
 		this.transformProportions.toArray(transformProportions);
-		TransformFactory transformFactory = new DefaultTransforms(resources, transformProportions);
+		TransformFactory transformFactory = new DefaultTransformFactory(resources, transformProportions);
 
 		RewardComputation rewardComputation = new DiscountedRewardComputation(gamma, initialQualities);
 		StateGenerator stateGenerator = new DefaultStateGenerator(transferFactory, transformFactory, rewardComputation);

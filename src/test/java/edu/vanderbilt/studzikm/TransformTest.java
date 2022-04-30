@@ -20,7 +20,7 @@ class TransformTest {
 	static Resource r21p = new Resource("R21'", 1.0);
 	static Resource r22p = new Resource("R22'", 1.0);
 	static Resource r23p = new Resource("R23'", 1.0);
-	DefaultTransforms transforms = new DefaultTransforms(defaultResources);
+	DefaultTransformFactory transforms = new DefaultTransformFactory(defaultResources);
 	Transform housing;
 	Transform alloys;
 	Transform electronics;
@@ -39,9 +39,9 @@ class TransformTest {
 
 	@BeforeEach
 	void setup() {
-		housing = getTransform(DefaultTransforms.HOUSING);
-		alloys = getTransform(DefaultTransforms.ALLOYS);
-		electronics = getTransform(DefaultTransforms.ELECTRONICS);
+		housing = getTransform(DefaultTransformFactory.HOUSING);
+		alloys = getTransform(DefaultTransformFactory.ALLOYS);
+		electronics = getTransform(DefaultTransformFactory.ELECTRONICS);
 	}
 
 	Transform getTransform(String name) {
@@ -54,7 +54,7 @@ class TransformTest {
 
 	@Test
 	void testHousingTransform() {
-		Country country = new Country("TestCountry", new DefaultQualityComputation(), null);
+		Country country = new Country("TestCountry", new LinearQualityComputation(), null);
 		country.addResource(r1, 10);
 		country.addResource(r2, 5);
 		country.addResource(r3, 10);
@@ -74,7 +74,7 @@ class TransformTest {
 
 	@Test
 	void testElectronicsTransform() {
-		Country country = new Country("TestCountry", new DefaultQualityComputation(), null);
+		Country country = new Country("TestCountry", new LinearQualityComputation(), null);
 		country.addResource(r1, 10);
 		country.addResource(r2, 6);
 		country.addResource(r21, 4);
@@ -92,7 +92,7 @@ class TransformTest {
 
 	@Test
 	void testHousingTransformDefaultProportion() {
-		Country country = new Country("TestCountry", new DefaultQualityComputation(), null);
+		Country country = new Country("TestCountry", new LinearQualityComputation(), null);
 		country.addResource(r1, 200);
 		country.addResource(r2, 40);
 		country.addResource(r3, 200);

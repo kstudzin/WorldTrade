@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Creates a world object containing country object from an input CSV
+ */
 public class CountryParser {
 
 	public static World createWorld(File countryFile,

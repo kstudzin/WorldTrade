@@ -6,6 +6,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Set;
 
+/**
+ * Strategy for computing expected utility
+ */
 public class ExpectedUtilityComputation {
 
 	Logger log = LogManager.getLogger(ExpectedUtilityComputation.class);
@@ -13,14 +16,27 @@ public class ExpectedUtilityComputation {
 	private double c;
 	private SuccessProbabilityComputation successProbabilityComputation;
 
+	/**
+	 * Creates exepected utility computation
+	 * @param c failure pentalty
+	 * @param successProbabilityComputation strategy for computing success probability
+	 */
 	public ExpectedUtilityComputation(double c,
 									  SuccessProbabilityComputation successProbabilityComputation) {
 		this.c = c;
 		this.successProbabilityComputation = successProbabilityComputation;
 	}
 
+	/**
+	 * Computes the expected utility a country after performing an action
+	 * @param result the action performed
+	 * @param world the world after the action has been performed
+	 * @param involvedParties the countries involved in the trade so far
+	 * @param planner planner to determine how desirable the action is within the schedule
+	 * @return a numeric expected utility
+	 */
 	public double compute(ActionResult<?> result,
-						  World world,
+						  World world,							// TODO Why not use world in result?
 						  Set<String> involvedParties,
 						  Planner planner) {
 

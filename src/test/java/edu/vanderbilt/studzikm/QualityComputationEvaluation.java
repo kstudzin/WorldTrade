@@ -1,7 +1,6 @@
 package edu.vanderbilt.studzikm;
 
 import edu.vanderbilt.studzikm.ScheduleItem.Type;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -93,7 +92,7 @@ public class QualityComputationEvaluation {
 				.addResource("R23'", .11)
 				.build();
 
-		World world = setupEvenlyDistributedResources(resources, DefaultQualityComputation::new);
+		World world = setupEvenlyDistributedResources(resources, LinearQualityComputation::new);
 
 		Search search = setupDefaultSearchBuilder(resources, world)
 				.setTransferProportion(0.05)
@@ -119,7 +118,7 @@ public class QualityComputationEvaluation {
 	@Test
 	void testUnweightedWasteResourceWeights() {
 		Map<String, Resource> resources = setupResources();
-		World world = setupEvenlyDistributedResources(resources, DefaultQualityComputation::new);
+		World world = setupEvenlyDistributedResources(resources, LinearQualityComputation::new);
 
 		Search search = new SearchBuilder()
 				.setTransferProportion(0.05)

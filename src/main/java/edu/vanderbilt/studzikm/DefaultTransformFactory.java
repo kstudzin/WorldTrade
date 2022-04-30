@@ -6,7 +6,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DefaultTransforms implements TransformFactory {
+/**
+ * Factory for creating instances of transforms
+ */
+public class DefaultTransformFactory implements TransformFactory {
 
 	public static final String HOUSING = "R23";
 	public static final String ALLOYS = "R21";
@@ -16,11 +19,20 @@ public class DefaultTransforms implements TransformFactory {
 
 	private final Collection<Transform> transforms;
 
-	public DefaultTransforms(Map<String, Resource> resources) {
+	/**
+	 * Creates transforms using the given resources and default proportions
+	 * @param resources resources used as input and output of transforms
+	 */
+	public DefaultTransformFactory(Map<String, Resource> resources) {
 		this(resources, defaultProportions);
 	}
 
-	public DefaultTransforms(Map<String, Resource> resources, Double[] proportions) {
+	/**
+	 * Creates transforms using the given resources
+	 * @param resources resources used as input and output of transforms
+	 * @param proportions the proportions of a country's total resources that may be transformed
+	 */
+	public DefaultTransformFactory(Map<String, Resource> resources, Double[] proportions) {
 		transforms = Stream.of(proportions)
 		.flatMap(p -> createTransforms(resources, p))
 		.collect(Collectors.toSet());
@@ -65,10 +77,18 @@ public class DefaultTransforms implements TransformFactory {
 				);
 	}
 
+	/**
+	 * Gets the transforms
+	 * @return a collection of the transforms
+	 */
 	public Collection<Transform> getTransforms() {
 		return Collections.unmodifiableCollection(transforms);
 	}
 
+	/**
+	 * Gets a stream of the transforms
+	 * @return a stream of the transforms
+	 */
 	public Stream<Transform> stream() {
 		return transforms.stream();
 	}

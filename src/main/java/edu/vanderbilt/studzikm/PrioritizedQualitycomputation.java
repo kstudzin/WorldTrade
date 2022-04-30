@@ -1,5 +1,6 @@
 package edu.vanderbilt.studzikm;
 
+// TODO Remove unused implementation
 public class PrioritizedQualitycomputation implements QualityComputation {
 
 	@Override

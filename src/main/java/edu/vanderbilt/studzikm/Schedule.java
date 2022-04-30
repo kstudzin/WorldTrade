@@ -4,6 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Represents a country's schedule of actions to perform
+ */
 public class Schedule implements Iterable<ScheduleItem> {
 
 	private List<ScheduleItem> items = new LinkedList<>();
@@ -13,6 +16,12 @@ public class Schedule implements Iterable<ScheduleItem> {
 
 	}
 
+	/**
+	 * Factory method to create schedule
+	 * @param result the leaf node to create the schedule from
+	 * @param averageNodesGenerated average number of nodes generated at each search level
+	 * @return the schedule
+	 */
 	public static Schedule create(SearchNode result,
 								  double averageNodesGenerated) {
 		Schedule schedule = new Schedule();
@@ -40,23 +49,44 @@ public class Schedule implements Iterable<ScheduleItem> {
 		.collect(Collectors.joining("\n")) + "\n]";
 	}
 
+	/**
+	 * Gets the number of items in the schedule
+	 * @return the number of items
+	 */
 	public int size() {
 		return items.size();
 	}
 
+	/**
+	 * Gets a schedule item at a specific position
+	 * @param index the position of the schedule item to retrieve
+	 * @return the schedule item
+	 */
 	public ScheduleItem get(int index) {
 		return items.get(index);
 	}
 
+	/**
+	 * Iterator of schedule items
+	 * @return the iterator
+	 */
 	@Override
 	public Iterator<ScheduleItem> iterator() {
 		return items.iterator();
 	}
 
+	/**
+	 * Stream of schedule items
+	 * @return the stream
+	 */
 	public Stream<ScheduleItem> stream() {
 		return items.stream();
 	}
 
+	/**
+	 * Gets the average number of nodes generated at each search level
+	 * @return the average number of nodes generated
+	 */
 	public double getAverageNodesGenerated() {
 		return averageNodesGenerated;
 	}

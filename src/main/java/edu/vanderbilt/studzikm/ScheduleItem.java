@@ -2,8 +2,15 @@ package edu.vanderbilt.studzikm;
 
 import java.util.Map;
 
+/**
+ * Represents a component of a schedule item. There is an
+ * item for each action that a country performs
+ */
 public class ScheduleItem {
 
+	/**
+	 * The type of action this schedule item represents
+	 */
 	enum Type {
 		TRANSFER, TRANSFORM
 	}
@@ -18,12 +25,17 @@ public class ScheduleItem {
 	private double otherQuality;
 	private double selfReward;
 	private double otherReward;
-	private int schedulePostion;
+	private int schedulePosition;
 
 	private ScheduleItem() {
 		
 	}
 
+	/**
+	 * Create a schedule item from a search node
+	 * @param node the node to create this schedule item from
+	 * @return the schedule item
+	 */
 	public static ScheduleItem create(SearchNode node) {
 		ScheduleItem item = new ScheduleItem();
 
@@ -36,7 +48,7 @@ public class ScheduleItem {
 			TransformResult result = (TransformResult) node.getActionResult();
 			createFromTransformResult(item, result);
 		}
-		item.schedulePostion = node.getActionResult().getSchedulePosition();
+		item.schedulePosition = node.getActionResult().getSchedulePosition();
 
 
 		return item;
@@ -64,47 +76,98 @@ public class ScheduleItem {
 		item.selfQuality = result.getQuality();
 	}
 
+	/**
+	 * Gets the quality of the country whose schedule this is
+	 * @return a numeric quality
+	 */
 	public double getSelfQuality() {
 		return selfQuality;
 	}
 
+	/**
+	 * Gets the quality of the another country involved in this schedule
+	 * @return a numeric quality
+	 */
 	public double getOtherQuality() {
 		return otherQuality;
 	}
 
+	/**
+	 * Gets the type of action this schedule item represents
+	 * @return the action type
+	 */
 	public Type getType() {
 		return type;
 	}
 
+	/**
+	 * Gets the name to print first for this item.
+	 *
+	 * This is the owner of the schedule unless the action is a resource
+	 * being transferred to the owner
+	 * @return the name
+	 */
 	public String getFirstName() {
 		return firstName;
 	}
 
+	/**
+	 * Gets the name to print second for this item
+	 *
+	 * This is only relevant for transfer actions.
+	 * @return the name
+	 */
 	public String getSecondName() {
 		return secondName;
 	}
 
+	/**
+	 * Gets the input consumed by the action
+	 * @return a map of strings to amounts
+	 */
 	public Map<String, Integer> getInputs() {
 		return inputs;
 	}
 
+	/**
+	 * Gets the outputs produced by the action
+	 * @return a map of strings to ammounts
+	 */
 	public Map<String, Integer> getOutputs() {
 		return outputs;
 	}
 
+	/**
+	 * Gets the expected utility of this schedule item
+	 * @return a numeric utility
+	 */
 	public double getExpectedUtility() {
 		return expectedUtility;
 	}
 
+	/**
+	 * Gets the reward for the country owning the schedule
+	 * @return the numeric reward
+	 */
 	public double getSelfReward() {
 		return selfReward;
 	}
 
+	/**
+	 * Gets the reward for a country involved in this schedule item
+	 * @return the numeric reward
+	 */
 	public double getOtherReward() {
 		return otherReward;
 	}
 
-	public int getSchedulePostion() {return schedulePostion; }
+	/**
+	 * Gets the position of the schedule item within this schedule
+	 * @return the schedule position
+	 */
+	public int getSchedulePosition() {
+		return schedulePosition;
+	}
 
 	public StringBuilder toStringBuilder() {
 		StringBuilder builder = new StringBuilder()
@@ -180,6 +243,7 @@ public class ScheduleItem {
 		return builder.append(") EU: ")
 				.append(expectedUtility);
 	}
+
 
 	public String toExpectedUtilityTypeString() {
 		return Double.toString(expectedUtility) + "," + type;

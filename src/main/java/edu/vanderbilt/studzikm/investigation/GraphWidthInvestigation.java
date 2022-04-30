@@ -86,7 +86,7 @@ public class GraphWidthInvestigation {
                                     count + "," +
                                     schedule.getAverageNodesGenerated() + "," +
                                     proportionInit + "," +
-                                    item.getSchedulePostion() + "," +
+                                    item.getSchedulePosition() + "," +
                                     item.getExpectedUtility() + "," +
                                     (end - start);
                             writer.write(line + "\n");

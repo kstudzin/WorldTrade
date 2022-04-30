@@ -41,7 +41,7 @@ public class SearchNode {
 	public SearchNode(World current, Country self,
 					  ExpectedUtilityComputation expectedUtilityComputation,
 					  Planner planner) {
-		this.actionResult = new NullActionResult(current, new NullAction(), self, new DefaultRewardComputation(), 0, null);
+		this.actionResult = new NullActionResult(current, new NullAction(), self, new ZeroRewardComputation(), 0, null);
 		this.expectedUtilityComputation = expectedUtilityComputation;
 		this.planner = planner;
 	}

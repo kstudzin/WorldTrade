@@ -2,12 +2,27 @@ package edu.vanderbilt.studzikm;
 
 import java.util.Objects;
 
+/**
+ * The result of a country performing a transfer
+ */
 public class TransferResult extends ActionResult<Transfer> {
 
 	private Country other;
 	private double otherReward;
 	private Role selfRole;
 
+	/**
+	 * Creates a transfer result
+	 * @param world the world state resulting from the action
+	 * @param transform the transform that was applied
+	 * @param self the country that initiated the transfer
+	 * @param other the other country involved in the transfer
+	 * @param rewardCompuation the computation to find the reward of the action for the initiating country
+	 * @param schedulePosition the position within the schedule of this action
+	 * @param selfRole whether the initiating country transferred resources to another country or
+	 *                   had resources transferred to it
+	 * @param delta the amount of resource change
+	 */
 	public TransferResult(World world, 
 			Transfer transform, 
 			Country self, 
@@ -22,14 +37,26 @@ public class TransferResult extends ActionResult<Transfer> {
 		this.selfRole = selfRole;
 	}
 
+	/**
+	 * Gets the role
+	 * @return  whether the initiating country sent or received the items
+	 */
 	public Role getRole() {
 		return selfRole;
 	}
 
+	/**
+	 * Gets the other country involved in the transfer
+	 * @return the other involved country
+	 */
 	public Country getOther() {
 		return other;
 	}
 
+	/**
+	 * Gets the reward of the action for the other involved country
+	 * @return the reward for the other country
+	 */
 	public Double getOtherReward() {
 		return otherReward;
 	}

@@ -41,7 +41,7 @@ public class Z3PlannerTest {
     }
 
     TransformFactory setupTransformFactory(Map<String, Resource> resources) {
-        return new DefaultTransforms(resources);
+        return new DefaultTransformFactory(resources);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class Z3PlannerTest {
         when(result.getAction()).thenReturn(transform);
         when(transform.getName()).thenReturn("timbr_resrc");
         when(transform.getType()).thenReturn(Action.Type.TRANSFER);
-        when(result.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(result.getRole()).thenReturn(TransferResult.Role.RECEIVER);
         when(result.getSelf()).thenReturn(country);
 
         Double score = model.score(result);
@@ -101,7 +101,7 @@ public class Z3PlannerTest {
         when(result.getAction()).thenReturn(transfer);
         when(transfer.getName()).thenReturn("timbr_resrc");
         when(transfer.getType()).thenReturn(Action.Type.TRANSFER);
-        when(result.getRole()).thenReturn(TransferResult.Role.RECIEVER);
+        when(result.getRole()).thenReturn(TransferResult.Role.RECEIVER);
         when(result.getSelf()).thenReturn(country);
 
         Double score = model.score(result);

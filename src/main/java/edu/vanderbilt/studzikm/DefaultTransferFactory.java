@@ -6,11 +6,19 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DefaultTransfers implements TransferFactory {
+/**
+ * Factory for creating instances of Transfers
+ */
+public class DefaultTransferFactory implements TransferFactory {
 
 	private Collection<Transfer> transfers = new ArrayList<>();
 
-	public DefaultTransfers(Map<String, Resource> resources, Double[] allowableTransferPercents) {
+	/**
+	 * Creates transforms for each combination of resource and allowable transfer percents
+	 * @param resources
+	 * @param allowableTransferPercents
+	 */
+	public DefaultTransferFactory(Map<String, Resource> resources, Double[] allowableTransferPercents) {
 		transfers = resources.entrySet()
 		.stream()
 		.filter(r -> !r.getKey().equals("R1")) // Don't allow trading people
@@ -24,6 +32,10 @@ public class DefaultTransfers implements TransferFactory {
 		.collect(Collectors.toSet());
 	}
 
+	/**
+	 * Gets the transfers
+	 * @return a collection of transfers
+	 */
 	public Collection<Transfer> getTransfers() {
 		return transfers;
 	}

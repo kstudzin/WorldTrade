@@ -57,7 +57,7 @@ public class DefaultStateGenerator implements StateGenerator {
 				new Country(self), 
 				new Country(sender), 
 				depth, 
-				ActionResult.Role.RECIEVER));
+				ActionResult.Role.RECEIVER));
 	}
 
 	private Stream<? extends ActionResult<?>> generateTransferAsSender(
@@ -108,8 +108,8 @@ public class DefaultStateGenerator implements StateGenerator {
 		world.addCountry(sender);
 		world.addCountry(reciever);
 
-		Country self = selfRole == ActionResult.Role.RECIEVER ? reciever : sender;
-		Country other = selfRole == ActionResult.Role.RECIEVER ? sender : reciever;
+		Country self = selfRole == ActionResult.Role.RECEIVER ? reciever : sender;
+		Country other = selfRole == ActionResult.Role.RECEIVER ? sender : reciever;
 
 		return new TransferResult(world, transfer, self, other, rewardComputation, depth, selfRole, delta);
 	}

@@ -71,13 +71,13 @@ public class Driver {
 
 			List<ScheduleItem> items = searchResult.stream()
 					.map(schedule -> schedule.stream()
-							.max((x, y) -> Double.compare(x.getExpectedUtility(), y.getExpectedUtility()))
+							.max((x, y) -> Double.compare(x.getExpectedUtility(), y.getExpectedUtility())) // TODO Is this used?
 							.orElse(null))
 					.collect(Collectors.toList());
 
 			items.forEach(item ->
 					System.out.println("\nMax Expected Utility: " + item.getExpectedUtility() +
-							" at search depth: " +item.getSchedulePostion() + "\n")
+							" at search depth: " +item.getSchedulePosition() + "\n")
 			);
 
 

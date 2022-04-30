@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.DoubleStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +18,7 @@ public class TargetResourceAmountComputationTest {
     }
 
     TransformFactory setupTransforms(Map<String, Resource> resources) {
-        return new DefaultTransforms(resources, setupProportions());
+        return new DefaultTransformFactory(resources, setupProportions());
     }
 
     Map<String, Resource> setupResources() {

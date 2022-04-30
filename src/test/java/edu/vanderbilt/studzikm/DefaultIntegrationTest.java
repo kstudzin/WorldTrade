@@ -41,7 +41,7 @@ public class DefaultIntegrationTest {
 	}
 
 	private World setUpWorld() {
-		Supplier<QualityComputation> qualityComputation = DefaultQualityComputation::new;
+		Supplier<QualityComputation> qualityComputation = LinearQualityComputation::new;
 
 		return new WorldBuilder(resources)
 
